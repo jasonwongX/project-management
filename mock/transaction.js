@@ -27,10 +27,10 @@ const List = []
 const count = 20
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
-    order_no: `存在项目风险${i + 1}`,
+    order_no: '@ctitle(20,50)',
     timestamp: +Mock.Random.date('T'),
     username: '@name()',
-    price: `项目${i + 1}`,
+    price: '@ctitle(5,12)',
     'status|1': ['无风险', '低风险']
   }))
 }

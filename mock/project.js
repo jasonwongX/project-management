@@ -5,17 +5,14 @@ const { param2Obj } = require('./utils')
 const List = []
 const count = 100
 
-const baseContent = '<p>我是测试数据我是测试数据</p><p><img src="https://wpimg.wallstcn.com/4c69009c-0fd4-4153-b112-6cb53d1cf943"></p>'
-
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
     id: '@increment',
     timestamp: +Mock.Random.date('T'),
-    qa: '@first',
-    pm: '@first',
-    name: '@title(5, 10)',
+    qa: '@cname',
+    pm: '@cname',
+    name: '@ctitle(5, 10)',
     content_short: '我是测试数据',
-    content: baseContent,
     forecast: '@float(0, 100, 2, 2)',
     control_mode: '@integer(1, 3)',
     scale: '@integer(1, 5)',
@@ -29,9 +26,12 @@ module.exports = [
     url: '/vue-admin-template/project/list',
     type: 'get',
     response: config => {
-      const { pm, qa, name, page = 1, limit = 20 } = param2Obj(config.url)
-
+      const { control_mode, scale, risk, pm, qa, name, page = 1, limit = 20 } = param2Obj(config.url)
       const mockList = List.filter(item => {
+        if (control_mode && item.control_mode !== parseInt(control_mode)) return false
+        if (scale && item.scale !== parseInt(scale)) return false
+        if (risk && item.risk !== parseInt(risk)) return false
+
         if (name && item.name.indexOf(name) < 0) return false
         if (pm && item.pm.indexOf(pm) < 0) return false
         if (qa && item.qa.indexOf(qa) < 0) return false

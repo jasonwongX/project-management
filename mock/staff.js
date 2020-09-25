@@ -27,7 +27,7 @@ const List = []
 const count = 20
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
-    name: '@name()',
+    name: '@cname()',
     num: '@natural(5,40)'
   }))
 }
