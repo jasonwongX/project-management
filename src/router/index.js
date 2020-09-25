@@ -56,23 +56,50 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/project',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '项目管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '项目列表', icon: 'table' }
-      },
+        path: 'project',
+        component: () => import('@/views/project/index'),
+        name: 'Project',
+        meta: { title: '项目列表', icon: 'el-icon-folder' }
+      }
+    ]
+  },
+  {
+    path: '/risk',
+    component: Layout,
+    children: [
       {
-        path: 'table2',
-        name: 'Table2',
+        path: 'risk',
         component: () => import('@/views/table/index'),
-        meta: { title: '风险列表', icon: 'table' }
+        name: 'Risk',
+        meta: { title: '风险分析', icon: 'el-icon-bell' }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'user',
+        component: () => import('@/views/table/index'),
+        name: 'User',
+        meta: { title: '人员管理', icon: 'el-icon-user' }
+      }
+    ]
+  },
+  {
+    path: '/log',
+    component: Layout,
+    children: [
+      {
+        path: 'log',
+        component: () => import('@/views/table/index'),
+        name: 'Log',
+        meta: { title: '操作日志', icon: 'el-icon-files' }
       }
     ]
   },

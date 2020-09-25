@@ -5,11 +5,13 @@ const user = require('./user')
 const table = require('./table')
 const transaction = require('./transaction')
 const staff = require('./staff')
+const project = require('./project')
 
 const mocks = [
   ...user,
   ...table,
   ...staff,
+  ...project,
   ...transaction
 ]
 
