@@ -64,6 +64,12 @@ export const constantRoutes = [
         component: () => import('@/views/project/index'),
         name: 'Project',
         meta: { title: '项目列表', icon: 'el-icon-folder' }
+      },
+      {
+        path: 'info',
+        component: () => import('@/views/project/detail'),
+        name: 'ProjectInfo',
+        hidden: true
       }
     ]
   },

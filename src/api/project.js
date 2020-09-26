@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchProject(id) {
   return request({
-    url: '/vue-admin-template/project/detail',
+    url: '/vue-admin-template/project/info',
     method: 'get',
     params: { id }
   })

@@ -2,6 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-edit" @click="handleCreate">新建项目</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;" icon="el-icon-upload" @click="handleDownload">批量导入</el-button>
+
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
     <div class="filter-container">
@@ -70,14 +72,14 @@
       <el-table-column label="项目风险" class-name="status-col" width="100">
         <template slot-scope="scope">
           <!-- <span>{{ scope.row.risk | riskFilter }}</span> -->
-          <el-tag :color="scope.row.risk | riskColorFilter" effect="light" style="color:#fff">{{ scope.row.risk | riskFilter }}</el-tag>
+          <el-tag size="mini" :color="scope.row.risk | riskColorFilter" effect="plain" style="color:#fff">{{ scope.row.risk | riskFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">详情
+          <el-button size="mini" type="info" @click="handleDetail(scope.row)">详情
           </el-button>
-          <el-button size="mini" @click="handleModifyStatus(scope.row,'draft')">编辑
+          <el-button size="mini" type="primary" @click="handleModifyStatus(scope.row,'draft')">编辑
           </el-button>
           <el-button size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
           </el-button>
@@ -213,6 +215,9 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleDetail(row) {
+      this.$router.push({ path: 'info', query: { id: row.id }})
     },
     handleModifyStatus(row, status) {
       this.$message({
