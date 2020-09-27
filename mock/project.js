@@ -1,7 +1,5 @@
 const Mock = require('mockjs')
 
-const { param2Obj } = require('./utils')
-
 const List = []
 const count = 100
 
@@ -81,7 +79,7 @@ module.exports = [
     url: '/vue-admin-template/project/list',
     type: 'get',
     response: config => {
-      const { control_mode, scale, risk, pm, qa, name, page = 1, limit = 20 } = param2Obj(config.url)
+      const { control_mode, scale, risk, pm, qa, name, page = 1, limit = 20 } = config.query
       const mockList = List.filter(item => {
         if (control_mode && item.control_mode !== parseInt(control_mode)) return false
         if (scale && item.scale !== parseInt(scale)) return false
@@ -110,7 +108,7 @@ module.exports = [
     url: '/vue-admin-template/project/info\.*',
     type: 'get',
     response: config => {
-      const { id } = param2Obj(config.url)
+      const { id } = config.query
       let info = {}
       for (const project of List) {
         if (project.id === +id) {

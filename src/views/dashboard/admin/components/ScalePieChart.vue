@@ -51,7 +51,7 @@ export default {
       this.chart.setOption({
         title: {
           show: true,
-          text: '项目类型',
+          text: '项目规模',
           x: 'center',
           y: 'top',
           textStyle: {
@@ -67,12 +67,12 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['传统项目', '敏捷项目']
+          data: ['AA', 'A', 'B', 'C', 'D']
         },
         calculable: true,
         series: [
           {
-            name: '项目类型',
+            name: '项目规模',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
@@ -87,8 +87,11 @@ export default {
               }
             },
             data: [
-              { value: 86, name: '传统项目' },
-              { value: 12, name: '敏捷项目' }
+              { value: 16, name: 'AA' },
+              { value: 56, name: 'A' },
+              { value: 32, name: 'B' },
+              { value: 8, name: 'C' },
+              { value: 6, name: 'D' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

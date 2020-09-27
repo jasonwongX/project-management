@@ -51,7 +51,7 @@ export default {
       this.chart.setOption({
         title: {
           show: true,
-          text: '项目类型',
+          text: '研发模式',
           x: 'center',
           y: 'top',
           textStyle: {
@@ -67,16 +67,16 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['传统项目', '敏捷项目']
+          data: ['自主研发', '掌控研发', '引进产品', '完全外包']
         },
         calculable: true,
         series: [
           {
-            name: '项目类型',
+            name: '研发模式',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
-            center: ['50%', '48%'],
+            center: ['50%', '38%'],
             label: {
               normal: {
                 formatter: '{b}({d}%)',
@@ -87,8 +87,10 @@ export default {
               }
             },
             data: [
-              { value: 86, name: '传统项目' },
-              { value: 12, name: '敏捷项目' }
+              { value: 23, name: '自主研发' },
+              { value: 56, name: '掌控研发' },
+              { value: 20, name: '引进产品' },
+              { value: 1, name: '完全外包' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

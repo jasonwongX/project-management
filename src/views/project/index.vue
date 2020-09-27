@@ -217,7 +217,7 @@ export default {
       this.getList()
     },
     handleDetail(row) {
-      this.$router.push({ path: 'info', query: { id: row.id }})
+      this.$router.push({ path: '/project/info', query: { id: row.id }})
     },
     handleModifyStatus(row, status) {
       this.$message({

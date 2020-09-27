@@ -187,11 +187,12 @@ export default {
   },
   data() {
     return {
-      id: this.$route.query.id,
+      id: 0,
       item: {} // 项目信息
     }
   },
   async created() {
+    this.id = this.$route.query.id ? this.$route.query.id : 0
     await this.getInfo(this.id)
   },
   methods: {

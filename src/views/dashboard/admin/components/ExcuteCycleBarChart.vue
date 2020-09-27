@@ -53,7 +53,7 @@ export default {
       this.chart.setOption({
         title: {
           show: true,
-          text: '项目阶段分布',
+          text: '项目实施周期统计',
           x: 'center',
           y: 'top',
           textStyle: {
@@ -77,7 +77,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['需求', '概要设计', '启动', '编码', '测试', '上线准备', '上线成功'],
+          data: ['1-3个月', '4-6个月', '6-9个月', '9-12个月', '12个月以上'],
           axisTick: {
             alignWithLabel: true
           }
@@ -89,10 +89,10 @@ export default {
           }
         }],
         series: [{
-          name: '项目个数',
+          name: '实施周期',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '40%',
+          barWidth: '30%',
           itemStyle: {
             normal: {
             // 随机显示
@@ -112,7 +112,7 @@ export default {
               }
             }
           },
-          data: [7, 5, 20, 34, 90, 30, 20],
+          data: [7, 5, 20, 34, 10],
           animationDuration
         }]
       })

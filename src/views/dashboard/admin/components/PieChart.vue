@@ -19,7 +19,7 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '360px'
     }
   },
   data() {
@@ -49,6 +49,17 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
+        title: {
+          show: true,
+          text: '项目风险',
+          x: 'center',
+          y: 'top',
+          textStyle: {
+            fontSize: 14,
+            fontStyle: 'normal',
+            fontWeight: 'normal'
+          }
+        },
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -65,7 +76,16 @@ export default {
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
-            center: ['50%', '38%'],
+            center: ['50%', '48%'],
+            label: {
+              normal: {
+                formatter: '{b}({d}%)',
+                textStyle: {
+                  fontWeight: 'normal',
+                  fontSize: 10
+                }
+              }
+            },
             data: [
               { value: 78, name: '无风险' },
               { value: 12, name: '低风险' },

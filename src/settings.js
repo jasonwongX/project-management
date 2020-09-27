@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '项目质量分析',
+  title: '项目质量管理系统',
 
   /**
    * @type {boolean} true | false
