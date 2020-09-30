@@ -56,6 +56,7 @@ export default {
           text: '项目阶段分布',
           x: 'center',
           y: 'top',
+          // padding: 10,
           textStyle: {
             fontSize: 16,
             fontStyle: 'normal',
@@ -70,7 +71,7 @@ export default {
           }
         },
         grid: {
-          top: 10,
+          // top: 25,
           left: '2%',
           right: '2%',
           bottom: '3%',
@@ -78,7 +79,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['调研', '启动', '软件需求', '概要设计', '编码', '测试', '上线'],
+          data: ['启动', '软件需求', '概要设计', '编码', '测试', '上线', '敏捷迭代'],
           axisTick: {
             alignWithLabel: true
           }
@@ -113,7 +114,7 @@ export default {
               }
             }
           },
-          data: [2, 1, 30, 20, 31, 28, 17],
+          data: [3, 29, 16, 30, 23, 9, 17],
           animationDuration
         }]
       })
