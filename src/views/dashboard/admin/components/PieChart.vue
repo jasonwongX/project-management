@@ -81,8 +81,9 @@ export default {
               normal: {
                 formatter: '{b}({d}%)',
                 textStyle: {
-                  fontWeight: 'normal',
-                  fontSize: 10
+                  fontWeight: 'bolder',
+                  fontSize: 16,
+                  color: '#000'
                 }
               }
             },

@@ -34,14 +34,30 @@
         </div>
       </el-col>
     </el-row>
-    <el-row v-show="false" :gutter="32">
+    <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <raddar-chart />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="16">
+        <div class="chart-wrapper">
+          <risk-bar-chart />
+        </div>
+      </el-col>
+      <el-col v-show="false" :xs="24" :sm="24" :lg="12">
         <div class="chart-wrapper">
           <pie-chart />
         </div>
       </el-col>
     </el-row>
-
+    <el-row v-show="false" :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="24">
+        <div class="chart-wrapper">
+          <test-bar-chart />
+        </div>
+      </el-col>
+    </el-row>
     <el-row :gutter="8">
       <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 16}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
         <transaction-table />
@@ -62,9 +78,13 @@ import PieChart from './components/PieChart'
 import ClassifyPieChart from './components/ClassifyPieChart'
 import ScalePieChart from './components/ScalePieChart'
 import ControlmodePieChart from './components/ControlmodePieChart'
+import TestBarChart from './components/TestBarChart'
 
 import BarChart from './components/BarChart'
+import RiskBarChart from './components/RiskBarChart'
+
 import ExcuteCycleBarChart from './components/ExcuteCycleBarChart'
+import RaddarChart from './components/RaddarChart'
 
 import TransactionTable from './components/TransactionTable'
 import StaffTable from './components/StaffTable'
@@ -85,6 +105,9 @@ export default {
     ControlmodePieChart,
     PieChart,
     BarChart,
+    TestBarChart,
+    RaddarChart,
+    RiskBarChart,
     ExcuteCycleBarChart,
     StaffTable,
     TransactionTable

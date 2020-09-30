@@ -55,8 +55,9 @@ export default {
           x: 'center',
           y: 'top',
           textStyle: {
-            fontSize: 14,
-            fontStyle: 'normal',
+            color: '#000',
+            fontSize: 16,
+            fontStyle: 'bolder',
             fontWeight: 'normal'
           }
         },
@@ -82,13 +83,13 @@ export default {
                 formatter: '{b}({d}%)',
                 textStyle: {
                   fontWeight: 'normal',
-                  fontSize: 10
+                  fontSize: 12
                 }
               }
             },
             data: [
-              { value: 86, name: '传统项目' },
-              { value: 12, name: '敏捷项目' }
+              { value: 110, name: '传统项目' },
+              { value: 17, name: '敏捷项目' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

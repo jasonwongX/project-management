@@ -21,7 +21,7 @@ export default {
     },
     height: {
       type: String,
-      default: '360px'
+      default: '420px'
     }
   },
   data() {
@@ -51,71 +51,77 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
+        // color: ['#91d5ff', '#40a9ff', '#096dd9'],
+        color: ['#bae7ff', '#69c0ff', '#1890ff'],
+        // color: ['#6E9D4E', '#EDDB4F', '#F7923A'],
         title: {
-          show: true,
-          text: '项目阶段分布',
-          x: 'center',
-          y: 'top',
+          text: '项目缺陷数分布',
+          x: '2%',
+          y: '1%',
+          barWidth: '20%',
           textStyle: {
-            fontSize: 16,
-            fontStyle: 'normal',
-            fontWeight: 'bolder',
-            color: '#000'
+            fontSize: '16'
           }
         },
         tooltip: {
           trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          axisPointer: {
+            type: 'shadow',
+            textStyle: {
+              color: '#fff',
+              fontSize: '16'
+            }
+          }
+        },
+        legend: {
+          data: ['平均功能点缺陷数', '平均测试用例缺陷数', '千行代码平均缺陷数'],
+          align: 'right',
+          right: '1%',
+          top: '3%',
+          textStyle: {
+            fontSize: '12'
           }
         },
         grid: {
-          top: 10,
-          left: '2%',
-          right: '2%',
+          left: '3%',
+          right: '%',
+          top: '15%',
+
           bottom: '3%',
           containLabel: true
         },
         xAxis: [{
           type: 'category',
-          data: ['调研', '启动', '软件需求', '概要设计', '编码', '测试', '上线'],
+          axisLine: {
+            lineStyle: {
+              // color: '#bae7ff'
+            }
+          },
+          data: ['0-10个', '10-20个', '20-30个', '30-40个', '40-50个', '50个以上'],
           axisTick: {
             alignWithLabel: true
           }
         }],
         yAxis: [{
           type: 'value',
-          axisTick: {
-            show: false
+          axisLabel: {
+            formatter: '{value}'
           }
         }],
         series: [{
-          name: '项目个数',
+          name: '平均功能点缺陷数',
           type: 'bar',
-          stack: 'vistors',
-          barWidth: '40%',
-          itemStyle: {
-            normal: {
-            // 随机显示
-            // color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
-
-              // 定制显示（按顺序）
-              color: function(params) {
-                var colorList = ['#bae7ff', '#91d5ff', '#69c0ff', '#40a9ff', '#1890ff', '#096dd9', '#0050b3', '#003a8c', '#002766']
-                return colorList[params.dataIndex]
-              },
-              label: {
-                show: true,
-                position: 'top',
-                textStyle: {
-                  color: '#29AAE3'
-                }
-              }
-            }
-          },
-          data: [2, 1, 30, 20, 31, 28, 17],
-          animationDuration
-        }]
+          data: [60, 110, 180, 100, 130, 140]
+        }, {
+          name: '平均测试用例缺陷数',
+          type: 'bar',
+          data: [90, 130, 170, 130, 150, 160]
+        }, {
+          name: '千行代码平均缺陷数',
+          type: 'bar',
+          data: [120, 160, 140, 160, 170, 180]
+        }],
+        animationDuration
       })
     }
   }

@@ -55,9 +55,10 @@ export default {
           x: 'center',
           y: 'top',
           textStyle: {
-            fontSize: 14,
+            color: '#000',
+            fontSize: 16,
             fontStyle: 'normal',
-            fontWeight: 'normal'
+            fontWeight: 'bolder'
           }
         },
         tooltip: {
@@ -82,16 +83,16 @@ export default {
                 formatter: '{b}({d}%)',
                 textStyle: {
                   fontWeight: 'normal',
-                  fontSize: 10
+                  fontSize: 12
                 }
               }
             },
             data: [
-              { value: 16, name: 'AA' },
-              { value: 56, name: 'A' },
-              { value: 32, name: 'B' },
-              { value: 8, name: 'C' },
-              { value: 6, name: 'D' }
+              { value: 6, name: 'AA' },
+              { value: 36, name: 'A' },
+              { value: 63, name: 'B' },
+              { value: 18, name: 'C' },
+              { value: 4, name: 'D' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

@@ -55,8 +55,9 @@ export default {
           x: 'center',
           y: 'top',
           textStyle: {
-            fontSize: 14,
-            fontStyle: 'normal',
+            color: '#000',
+            fontSize: 16,
+            fontStyle: 'bolder',
             fontWeight: 'normal'
           }
         },
@@ -76,20 +77,20 @@ export default {
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
-            center: ['50%', '38%'],
+            center: ['50%', '48%'],
             label: {
               normal: {
                 formatter: '{b}({d}%)',
                 textStyle: {
                   fontWeight: 'normal',
-                  fontSize: 10
+                  fontSize: 12
                 }
               }
             },
             data: [
-              { value: 23, name: '自主研发' },
-              { value: 56, name: '掌控研发' },
-              { value: 20, name: '引进产品' },
+              { value: 25, name: '自主研发' },
+              { value: 76, name: '掌控研发' },
+              { value: 25, name: '引进产品' },
               { value: 1, name: '完全外包' }
             ],
             animationEasing: 'cubicInOut',

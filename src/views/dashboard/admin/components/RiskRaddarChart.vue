@@ -8,7 +8,7 @@ require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
 
 const animationDuration = 3000
-
+const maxCount = 20 // 所有出现风险的最高项目数
 export default {
   props: {
     className: {
@@ -21,7 +21,7 @@ export default {
     },
     height: {
       type: String,
-      default: '360px'
+      default: '380px'
     }
   },
   data() {
@@ -51,16 +51,14 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
-        color: ['red', '#69c0ff'],
         title: {
           show: true,
-          text: '整体项目风险分析',
+          text: '风险项目分布',
           x: 'center',
           y: 'top',
           textStyle: {
-            fontSize: 16,
-            color: '#000',
-            fontStyle: 'bolder',
+            fontSize: 14,
+            fontStyle: 'normal',
             fontWeight: 'normal'
           }
         },
@@ -72,7 +70,7 @@ export default {
         },
         radar: {
           radius: '66%',
-          center: ['50%', '50%'],
+          center: ['50%', '42%'],
           splitNumber: 8,
           splitArea: {
             areaStyle: {
@@ -85,67 +83,48 @@ export default {
             }
           },
           indicator: [
-            { name: '外部依赖', max: 10 },
-            { name: '关联系统', max: 10 },
-            { name: '项目招标', max: 10 },
-            { name: '软硬件采购', max: 10 },
-            { name: '技术风险', max: 10 },
-            { name: '需求变更', max: 10 },
-            { name: '人力资源', max: 10 },
-            { name: '外包合作', max: 10 },
-            { name: '项目进度', max: 10 },
-            { name: '生产环境保障', max: 10 }
+            { name: '外部依赖', max: maxCount },
+            { name: '关联系统', max: maxCount },
+            { name: '项目招标', max: maxCount },
+            { name: '软硬件采购', max: maxCount },
+            { name: '技术风险', max: maxCount },
+            { name: '需求变更', max: maxCount },
+            { name: '人力资源', max: maxCount },
+            { name: '外包合作', max: maxCount },
+            { name: '项目进度', max: maxCount },
+            { name: '生产环境保障', max: maxCount }
           ]
-        },
-        legend: {
-          left: 'center',
-          bottom: '10',
-          data: [{
-            name: '可控基线',
-            areaStyle: { // 图例项的文本样式。
-              backgroundColor: 'red'
-            }
-          }, {
-            name: '实际值',
-            areaStyle: {
-              backgroundColor: '#69c0ff'
-
-            }
-          }]
         },
         series: [{
           type: 'radar',
-          symbolSize: 0,
-          // areaStyle: {
-          //   normal: {
-          //     shadowBlur: 13,
-          //     shadowColor: 'rgba(0,0,0,.2)',
-          //     shadowOffsetX: 0,
-          //     shadowOffsetY: 10
-          //   }
-          // },
+          // symbolSize: 0,s
+          areaStyle: {
+            normal: {
+              shadowBlur: 13,
+              shadowColor: 'rgba(0,0,0,.2)',
+              shadowOffsetX: 0,
+              shadowOffsetY: 5,
+              opacity: 0.8
+            }
+          },
           data: [
             {
-              value: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
-              name: '可控基线',
-              symbolSize: 2,
-              // areaStyle: {
-              //   opacity: 0.7
-              // }
-              lineStyle: {
-                color: 'red',
-                type: 'dotted' // 'dotted'虚线 'solid'实线
-              }
-            },
-            {
-              value: [9, 9, 9.38, 9.18, 9.12, 9.02, 9.15, 9.13, 8.87, 9.14],
-              name: '实际值',
+              value: [9, 11, 6, 10, 5, 12, 8, 5, 20, 3],
+              name: '存在风险分布',
+              label: {
+                show: true,
+                formatter: function(params) {
+                  return params.value
+                },
+                textStyle: {
+                  color: '#000'
+                }
+              },
               areaStyle: {
-                opacity: 0.7,
                 color: '#69c0ff'
               },
               lineStyle: {
-                color: 'rgba(127,95,132,.3)'
+                color: '#69c0ff'
               }
             }
           ],

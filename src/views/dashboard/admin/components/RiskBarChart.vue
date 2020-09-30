@@ -53,7 +53,7 @@ export default {
       this.chart.setOption({
         title: {
           show: true,
-          text: '项目阶段分布',
+          text: '项目风险分析',
           x: 'center',
           y: 'top',
           textStyle: {
@@ -70,7 +70,7 @@ export default {
           }
         },
         grid: {
-          top: 10,
+          top: 20,
           left: '2%',
           right: '2%',
           bottom: '3%',
@@ -78,7 +78,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['调研', '启动', '软件需求', '概要设计', '编码', '测试', '上线'],
+          data: ['外部依赖', '关联系统', '项目招标', '软硬件采购', '技术风险', '需求变更', '人力资源', '外包合作', '项目进度', '生产环境保障'],
           axisTick: {
             alignWithLabel: true
           }
@@ -93,7 +93,7 @@ export default {
           name: '项目个数',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '40%',
+          barWidth: '35%',
           itemStyle: {
             normal: {
             // 随机显示
@@ -101,7 +101,7 @@ export default {
 
               // 定制显示（按顺序）
               color: function(params) {
-                var colorList = ['#bae7ff', '#91d5ff', '#69c0ff', '#40a9ff', '#1890ff', '#096dd9', '#0050b3', '#003a8c', '#002766']
+                var colorList = ['#bae7ff', '#91d5ff', '#69c0ff', '#40a9ff', '#1890ff', '#096dd9', '#0050b3', '#003a8c', '#003a8c', '#002766']
                 return colorList[params.dataIndex]
               },
               label: {
@@ -113,7 +113,7 @@ export default {
               }
             }
           },
-          data: [2, 1, 30, 20, 31, 28, 17],
+          data: [9, 11, 6, 10, 5, 12, 8, 5, 20, 3],
           animationDuration
         }]
       })
