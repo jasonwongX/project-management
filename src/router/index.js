@@ -63,7 +63,7 @@ export const constantRoutes = [
         path: 'project',
         component: () => import('@/views/project/index'),
         name: 'Project',
-        meta: { title: '项目列表', icon: 'el-icon-folder' }
+        meta: { title: '项目列表', icon: 'project' }
       },
       {
         path: 'info',
@@ -79,9 +79,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'risk',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/risk/index'),
         name: 'Risk',
-        meta: { title: '风险分析', icon: 'el-icon-bell' }
+        meta: { title: '风险分析', icon: 'risk' }
       }
     ]
   },
@@ -93,7 +93,7 @@ export const constantRoutes = [
         path: 'user',
         component: () => import('@/views/table/index'),
         name: 'User',
-        meta: { title: '人员管理', icon: 'el-icon-user' }
+        meta: { title: '人员管理', icon: 'people' }
       }
     ]
   },
