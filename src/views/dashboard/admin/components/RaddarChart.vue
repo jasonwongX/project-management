@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-
+import { getRiskScoreStatistics } from '@/api/riskScore'
 const animationDuration = 3000
 
 export default {
@@ -26,11 +26,14 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      list: [],
+      stander: [],
+      max: 0
     }
   },
   mounted() {
-    this.initChart()
+    this.fetchData()
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -47,6 +50,26 @@ export default {
     this.chart = null
   },
   methods: {
+    fetchData() {
+      getRiskScoreStatistics().then(response => {
+        const that = this
+        this.list = response.data.actual_value
+        this.stander = response.data.stander_value
+        this.max = response.data.total
+        this.label = this.list.map(function(value, index) {
+          return {
+            'name': value['name'],
+            'max': that.max
+          }
+        })
+        console.log(this.label)
+        this.listValue = this.list.map(function(value, index) {
+          return value['value']
+        })
+        console.log(this.listValue)
+        this.initChart()
+      })
+    },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
 
@@ -59,7 +82,7 @@ export default {
           y: 'top',
           textStyle: {
             fontSize: 16,
-            color: '#000',
+            color: '#666',
             fontStyle: 'bolder',
             fontWeight: 'normal'
           }
@@ -84,18 +107,7 @@ export default {
               shadowOffsetY: 15
             }
           },
-          indicator: [
-            { name: '外部依赖', max: 10 },
-            { name: '关联系统', max: 10 },
-            { name: '项目招标', max: 10 },
-            { name: '软硬件采购', max: 10 },
-            { name: '技术风险', max: 10 },
-            { name: '需求变更', max: 10 },
-            { name: '人力资源', max: 10 },
-            { name: '外包合作', max: 10 },
-            { name: '项目进度', max: 10 },
-            { name: '生产环境保障', max: 10 }
-          ]
+          indicator: this.label
         },
         legend: {
           left: 'center',
@@ -126,7 +138,7 @@ export default {
           // },
           data: [
             {
-              value: [9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+              value: this.stander,
               name: '可控基线',
               symbolSize: 2,
               // areaStyle: {
@@ -138,7 +150,7 @@ export default {
               }
             },
             {
-              value: [9, 9, 9.38, 9.18, 9.12, 9.02, 9.15, 9.13, 8.87, 9.14],
+              value: this.listValue,
               name: '实际值',
               areaStyle: {
                 opacity: 0.7,

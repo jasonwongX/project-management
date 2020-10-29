@@ -51,37 +51,67 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '概览', icon: 'dashboard' }
+      meta: { title: '首页概览', icon: 'dashboard' }
     }]
   },
 
   {
     path: '/project',
     component: Layout,
+    redirect: '/project/index',
+    meta: { title: '项目管理', icon: 'project' },
     children: [
       {
-        path: 'project',
+        path: 'index',
         component: () => import('@/views/project/index'),
-        name: 'Project',
-        meta: { title: '项目列表', icon: 'project' }
+        name: 'projectIndex',
+        meta: { title: '项目列表', icon: 'table' }
       },
       {
         path: 'info',
         component: () => import('@/views/project/detail'),
-        name: 'ProjectInfo',
-        hidden: true
+        name: 'projectInfo'
+        // hidden: true
       }
     ]
   },
   {
     path: '/risk',
     component: Layout,
+    redirect: '/risk/index',
+    meta: { title: '风险管理', icon: 'risk' },
     children: [
       {
-        path: 'risk',
+        path: 'index',
         component: () => import('@/views/risk/index'),
-        name: 'Risk',
-        meta: { title: '风险分析', icon: 'risk' }
+        name: 'riskIndex',
+        meta: { title: '风险列表', icon: 'table' }
+      },
+      {
+        path: 'add',
+        component: () => import('@/views/risk/create'),
+        name: 'riskAdd'
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/risk/edit'),
+        name: 'riskEdit'
+      },
+      {
+        path: 'score',
+        component: () => import('@/views/RiskScore/index'),
+        name: 'riskScore',
+        meta: { title: '风险评分', icon: 'score' }
+      },
+      {
+        path: 'addScore',
+        component: () => import('@/views/RiskScore/create'),
+        name: 'addRiskScore'
+      },
+      {
+        path: 'editScore',
+        component: () => import('@/views/RiskScore/edit'),
+        name: 'editRiskScore'
       }
     ]
   },
@@ -90,22 +120,10 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'user',
-        component: () => import('@/views/table/index'),
+        path: 'index',
+        component: () => import('@/views/user/index'),
         name: 'User',
-        meta: { title: '人员管理', icon: 'people' }
-      }
-    ]
-  },
-  {
-    path: '/log',
-    component: Layout,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/table/index'),
-        name: 'Log',
-        meta: { title: '操作日志', icon: 'el-icon-files' }
+        meta: { title: '人员列表', icon: 'people' }
       }
     ]
   },

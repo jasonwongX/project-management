@@ -6,6 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
+import { getProjectDevModeStatistics } from '@/api/project'
 
 export default {
   props: {
@@ -24,11 +25,13 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      list: []
     }
   },
   mounted() {
-    this.initChart()
+    this.fetchData()
+
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -45,6 +48,15 @@ export default {
     this.chart = null
   },
   methods: {
+    fetchData() {
+      getProjectDevModeStatistics().then(response => {
+        this.list = response.data
+        this.label = this.list.map(function(value, index) {
+          return value['name']
+        })
+        this.initChart()
+      })
+    },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
 
@@ -55,7 +67,7 @@ export default {
           x: 'center',
           y: 'top',
           textStyle: {
-            color: '#000',
+            color: '#666',
             fontSize: 16,
             fontStyle: 'bolder',
             fontWeight: 'normal'
@@ -68,7 +80,7 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['传统项目', '敏捷项目']
+          data: this.label
         },
         calculable: true,
         series: [
@@ -87,10 +99,7 @@ export default {
                 }
               }
             },
-            data: [
-              { value: 110, name: '传统项目' },
-              { value: 17, name: '敏捷项目' }
-            ],
+            data: this.list,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

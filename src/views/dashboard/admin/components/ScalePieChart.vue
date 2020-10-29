@@ -7,6 +7,7 @@ import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
 
+import { getProjectScaleStatistics } from '@/api/project'
 export default {
   props: {
     className: {
@@ -24,11 +25,12 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      list: []
     }
   },
   mounted() {
-    this.initChart()
+    this.fetchData()
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -45,6 +47,15 @@ export default {
     this.chart = null
   },
   methods: {
+    fetchData() {
+      getProjectScaleStatistics().then(response => {
+        this.list = response.data
+        this.label = this.list.map(function(value, index) {
+          return value['name']
+        })
+        this.initChart()
+      })
+    },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
 
@@ -55,7 +66,7 @@ export default {
           x: 'center',
           y: 'top',
           textStyle: {
-            color: '#000',
+            color: '#666',
             fontSize: 16,
             fontStyle: 'normal',
             fontWeight: 'bolder'
@@ -68,7 +79,7 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['AA', 'A', 'B', 'C', 'D']
+          data: this.label
         },
         calculable: true,
         series: [
@@ -87,13 +98,7 @@ export default {
                 }
               }
             },
-            data: [
-              { value: 6, name: 'AA' },
-              { value: 36, name: 'A' },
-              { value: 63, name: 'B' },
-              { value: 18, name: 'C' },
-              { value: 4, name: 'D' }
-            ],
+            data: this.list,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

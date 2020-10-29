@@ -1,8 +1,8 @@
 <template>
   <a :class="className" class="link--mallki" href="#">
     {{ text }}
-    <span :data-letters="text"/>
-    <span :data-letters="text"/>
+    <span :data-letters="text" />
+    <span :data-letters="text" />
   </a>
 </template>
 
@@ -25,8 +25,8 @@ export default {
 /* Mallki */
 
 .link--mallki {
-  font-weight: 800;
-  color: #4dd9d5;
+  font-weight: 600;
+  color: #3888fa;
   font-family: 'Dosis', sans-serif;
   -webkit-transition: color 0.5s 0.25s;
   transition: color 0.5s 0.25s;

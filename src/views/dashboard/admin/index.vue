@@ -1,11 +1,14 @@
 <template>
   <div class="dashboard-editor-container">
+    <!-- 总数分析 -->
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <!-- 项目趋势图 -->
+    <el-row v-show="false" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
     </el-row>
-
+    <!-- 饼图 -->
     <el-row :gutter="32">
+      <!-- 项目规模 -->
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <scale-pie-chart />
@@ -22,18 +25,16 @@
         </div>
       </el-col>
     </el-row>
+    <!-- 项目阶段柱状图 -->
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
+      <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
           <bar-chart />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <excute-cycle-bar-chart />
-        </div>
-      </el-col>
+
     </el-row>
+    <!-- 风险分析雷达图 和 风险因素分布图 -->
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
@@ -51,6 +52,7 @@
         </div>
       </el-col>
     </el-row>
+    <!-- 测试缺陷数柱状图（暂时隐藏） -->
     <el-row v-show="false" :gutter="32">
       <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
@@ -58,12 +60,13 @@
         </div>
       </el-col>
     </el-row>
+    <!-- 关键风险列表 和 人员负责项目分布 -->
     <el-row :gutter="8">
       <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 16}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
+        <risk-table />
       </el-col>
       <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 8}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <staff-table />
+        <box-card />
       </el-col>
     </el-row>
 
@@ -83,11 +86,10 @@ import TestBarChart from './components/TestBarChart'
 import BarChart from './components/BarChart'
 import RiskBarChart from './components/RiskBarChart'
 
-import ExcuteCycleBarChart from './components/ExcuteCycleBarChart'
 import RaddarChart from './components/RaddarChart'
 
-import TransactionTable from './components/TransactionTable'
-import StaffTable from './components/StaffTable'
+import RiskTable from './components/RiskTable'
+import BoxCard from './components/BoxCard'
 
 const lineChartData = {
   expectedData: [12, 9, 22, 23, 18, 32, 21],
@@ -108,9 +110,8 @@ export default {
     TestBarChart,
     RaddarChart,
     RiskBarChart,
-    ExcuteCycleBarChart,
-    StaffTable,
-    TransactionTable
+    RiskTable,
+    BoxCard
   },
   data() {
     return {

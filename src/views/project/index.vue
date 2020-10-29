@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-edit" @click="handleCreate">新建项目</el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;" icon="el-icon-upload" @click="handleDownload">批量导入</el-button>
+      <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-edit" disabled @click="handleCreate">新建项目</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;" icon="el-icon-upload" disabled @click="handleDownload">批量导入</el-button>
 
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" disabled @click="handleDownload">导出</el-button>
     </div>
     <div class="filter-container">
       <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -12,10 +12,10 @@
       <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
       <el-select v-model="listQuery.scale" placeholder="请选择规模类型" clearable style="width: 130px" class="filter-item">
-        <el-option v-for="item in scaleOptions" :key="item" :label="item | scaleFilter" :value="item" />
+        <el-option v-for="(item, index) in scaleList" :key="index" :label="item" :value="index" />
       </el-select>
       <el-select v-model="listQuery.control_mode" placeholder="请选择管控模式" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in controlModeOptions" :key="item" :label="item | controlModeFilter" :value="item" />
+        <el-option v-for="(item, index) in controlModeList" :key="index" :label="item" :value="index" />
       </el-select>
       <el-select v-model="listQuery.risk" placeholder="请选择风险等级" clearable class="filter-item" style="width: 130px">
         <el-option v-for="item in riskOptions" :key="item" :label="item | riskFilter" :value="item" />
@@ -40,27 +40,27 @@
       </el-table-column>
       <el-table-column label="阶段" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.stage }}</span>
+          <span>{{ stageFilter(scope.row.stage) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="规模" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.scale | scaleFilter }}</span>
+          <span>{{ scaleFilter(scope.row.scale) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="掌控模式" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.control_mode| controlModeFilter }}</span>
+          <span>{{ controlModeFilter(scope.row.control_mode) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目经理" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.pm }}</span>
+          <span>{{ scope.row.contact.pm }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.qa }}</span>
+          <span>{{ scope.row.contact.qa }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column label="项目描述" width="110px" align="center">
@@ -81,7 +81,7 @@
           </el-button>
           <el-button size="mini" type="primary" @click="handleModifyStatus(scope.row,'draft')">编辑
           </el-button>
-          <el-button size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -104,7 +104,9 @@
 }
 </style>
 <script>
-import { fetchList, fetchPv } from '@/api/project'
+// import { mapState } from 'vuex'
+
+import { fetchList, fetchPv, deleteProject } from '@/api/project'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -131,25 +133,8 @@ export default {
         3: 'red'
       }
       return riskMap[risk]
-    },
-    scaleFilter(val) {
-      const valMap = {
-        1: 'AA1',
-        2: 'AA2',
-        3: 'B1',
-        4: 'B2',
-        5: 'C1'
-      }
-      return valMap[val]
-    },
-    controlModeFilter(val) {
-      const valMap = {
-        1: '自主研发',
-        2: '掌控研发',
-        3: '代理研发'
-      }
-      return valMap[val]
     }
+
   },
   data() {
     return {
@@ -165,10 +150,10 @@ export default {
         type: undefined,
         sort: '+id'
       },
-      scaleOptions: [1, 2, 3, 4, 5],
-      controlModeOptions: [1, 2, 3],
       riskOptions: [0, 1, 2, 3],
-
+      scaleList: [],
+      stageList: [],
+      controlModeList: [],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
@@ -196,20 +181,43 @@ export default {
       downloadLoading: false
     }
   },
-  created() {
+  computed: {
+    // ...mapState('project', {
+    //   scaleList: state => state.scaleList,
+    //   stageList: state => state.stageList,
+    //   controlModeList: state => state.controlModeList
+    // })
+  },
+  async created() {
+    await this.$store.dispatch('project/initStageList')
+    await this.$store.dispatch('project/initControlModeList')
+    await this.$store.dispatch('project/initScaleList')
+    this.scaleList = this.$store.state.project.scaleList
+    this.stageList = this.$store.state.project.stageList
+    this.controlModeList = this.$store.state.project.controlModeList
     this.getList()
   },
   methods: {
+    scaleFilter(val) {
+      const valMap = this.scaleList
+      return valMap[val] ? valMap[val] : '未知'
+    },
+    stageFilter(val) {
+      const valMap = this.stageList
+      return valMap[val] ? valMap[val] : '未知'
+    },
+    controlModeFilter(val) {
+      const valMap = this.controlModeList
+      return valMap[val] ? valMap[val] : '未知'
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
+        this.list = response.data
+        this.total = response.total ? response.total : 0
+        this.listQuery.limit = parseInt(response.per_page)
         // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -269,15 +277,26 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
+      this.$confirm('是否确认删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteProject(row.id).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getList()
+        }).catch((_) => {
+          this.$message({
+            type: 'success',
+            message: '删除失败!'
+          })
+        })
       })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
     },
+
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {
         this.pvData = response.data.pvData

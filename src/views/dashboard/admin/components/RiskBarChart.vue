@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-
+import { getRiskTypeStatistics } from '@/api/risk'
 const animationDuration = 6000
 
 export default {
@@ -26,11 +26,12 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      list: []
     }
   },
   mounted() {
-    this.initChart()
+    this.fetchData()
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -47,6 +48,18 @@ export default {
     this.chart = null
   },
   methods: {
+    fetchData() {
+      getRiskTypeStatistics().then(response => {
+        this.list = response.data
+        this.label = this.list.map(function(value, index) {
+          return value['name']
+        })
+        this.listValue = this.list.map(function(value, index) {
+          return value['value']
+        })
+        this.initChart()
+      })
+    },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
 
@@ -60,7 +73,7 @@ export default {
             fontSize: 16,
             fontStyle: 'normal',
             fontWeight: 'bolder',
-            color: '#000'
+            color: '#666'
           }
         },
         tooltip: {
@@ -78,7 +91,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['外部依赖', '关联系统', '项目招标', '软硬件采购', '技术风险', '需求变更', '人力资源', '外包合作', '项目进度', '生产环境保障'],
+          data: this.label,
           axisTick: {
             alignWithLabel: true
           }
@@ -113,7 +126,7 @@ export default {
               }
             }
           },
-          data: [9, 11, 6, 10, 5, 12, 8, 5, 20, 3],
+          data: this.listValue,
           animationDuration
         }]
       })

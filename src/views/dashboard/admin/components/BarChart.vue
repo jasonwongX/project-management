@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-
+import { getProjectStageStatistics } from '@/api/project'
 const animationDuration = 6000
 
 export default {
@@ -26,11 +26,12 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      list: []
     }
   },
   mounted() {
-    this.initChart()
+    this.fetchData()
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -47,6 +48,18 @@ export default {
     this.chart = null
   },
   methods: {
+    fetchData() {
+      getProjectStageStatistics().then(response => {
+        this.list = response.data
+        this.label = this.list.map(function(value, index) {
+          return value['name']
+        })
+        this.listValue = this.list.map(function(value, index) {
+          return value['value']
+        })
+        this.initChart()
+      })
+    },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
 
@@ -61,7 +74,7 @@ export default {
             fontSize: 16,
             fontStyle: 'normal',
             fontWeight: 'bolder',
-            color: '#000'
+            color: '#666'
           }
         },
         tooltip: {
@@ -79,7 +92,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['启动', '软件需求', '概要设计', '编码', '测试', '上线', '敏捷迭代'],
+          data: this.label,
           axisTick: {
             alignWithLabel: true
           }
@@ -94,7 +107,7 @@ export default {
           name: '项目个数',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '40%',
+          barWidth: '30%',
           itemStyle: {
             normal: {
             // 随机显示
@@ -114,7 +127,7 @@ export default {
               }
             }
           },
-          data: [3, 29, 16, 30, 23, 9, 17],
+          data: this.listValue,
           animationDuration
         }]
       })

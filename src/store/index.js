@@ -1,19 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+import modules from './modules'
 import getters from './getters'
-import app from './modules/app'
-import settings from './modules/settings'
-import user from './modules/user'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  modules: {
-    app,
-    settings,
-    user
-  },
-  getters
+  modules,
+  getters,
+  strict: process.env.NODE_ENV !== 'production'
 })
 
 export default store
