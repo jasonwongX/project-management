@@ -77,7 +77,7 @@ export default {
         color: ['red', '#69c0ff'],
         title: {
           show: true,
-          text: '整体项目风险分析',
+          text: '整体项目健康指数',
           x: 'center',
           y: 'top',
           textStyle: {
@@ -112,18 +112,21 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: [{
-            name: '可控基线',
-            areaStyle: { // 图例项的文本样式。
-              backgroundColor: 'red'
-            }
-          }, {
-            name: '实际值',
-            areaStyle: {
-              backgroundColor: '#69c0ff'
+          data: [
+          //   {
+          //   name: '可控基线',
+          //   areaStyle: { // 图例项的文本样式。
+          //     backgroundColor: 'red'
+          //   }
+          // },
+            // {
+            //   name: '风险值',
+            //   areaStyle: {
+            //     backgroundColor: '#69c0ff'
 
-            }
-          }]
+            //   }
+            // }
+          ]
         },
         series: [{
           type: 'radar',
@@ -137,21 +140,21 @@ export default {
           //   }
           // },
           data: [
-            {
-              value: this.stander,
-              name: '可控基线',
-              symbolSize: 2,
-              // areaStyle: {
-              //   opacity: 0.7
-              // }
-              lineStyle: {
-                color: 'red',
-                type: 'dotted' // 'dotted'虚线 'solid'实线
-              }
-            },
+            // {
+            //   value: this.stander,
+            //   name: '可控基线',
+            //   symbolSize: 2,
+            //   // areaStyle: {
+            //   //   opacity: 0.7
+            //   // }
+            //   lineStyle: {
+            //     color: 'red',
+            //     type: 'dotted' // 'dotted'虚线 'solid'实线
+            //   }
+            // },
             {
               value: this.listValue,
-              name: '实际值',
+              name: '风险值',
               areaStyle: {
                 opacity: 0.7,
                 color: '#69c0ff'
