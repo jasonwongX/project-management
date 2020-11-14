@@ -1,41 +1,58 @@
 <template>
-  <el-container class="app-container">
+  <div class="edit-container">
     <h3 class="title">{{ isEdit ? '编辑风险项评分' : '新增风险评分' }}</h3>
-    <el-main class="main">
-      <el-form ref="form" :model="postForm" :rules="rules" label-width="80px">
-        <el-form-item label="所属项目" prop="name">
-          <el-select
-            v-model="postForm.project_id"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入项目名称"
-            :remote-method="searchProjectList"
-            :loading="loadingProject"
-            :disabled="isEdit"
-          >
-            <el-option
-              v-for="item in projectList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="月份">
-          <el-date-picker v-model="postForm.update_date" :readonly="isEdit" type="month" format="yyyy-MM" placeholder="选择月份" />
-        </el-form-item>
-        <el-form-item v-for="(item, index) in typeList" :key="index" :label="item" prop="score">
-          <el-input-number v-model="postForm.scores[index]" :min="1" :max="100" label="风险评分（1-100）" />
-        </el-form-item>
-      </el-form>
-    </el-main>
-    <el-footer class="footer">
-      <el-button type="info" @click="cancel">取消</el-button>
-      <el-button type="primary" @click="submitForm">保存</el-button>
-    </el-footer>
-  </el-container>
+    <el-form ref="form" :model="postForm" :rules="rules" label-width="120px">
+      <el-row :gutter="24">
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
+          <el-form-item label="所属项目" prop="name">
+            <el-select
+              v-model="postForm.project_id"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入项目名称"
+              :remote-method="searchProjectList"
+              :loading="loadingProject"
+              :disabled="isEdit"
+            >
+              <el-option
+                v-for="item in projectList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
+          <el-form-item label="月份">
+            <el-date-picker v-model="postForm.update_date" :readonly="isEdit" type="month" format="yyyy-MM" placeholder="选择月份" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col v-for="(item, index) in typeList" :key="index" :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
+          <el-form-item :label="item" prop="score">
+            <el-input-number v-model="postForm.scores[index]" :min="1" :max="100" label="风险评分（1-100）" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-row type="flex" justify="center">
+      <el-col :span="2">
+        <el-button type="info" style="width:80%" @click="cancel">取消</el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="primary" style="width:80%" @click="submitForm">保存</el-button>
+      </el-col>
+    </el-row>
+  </div>
 </template>
+<style lang="less" scoped>
+.edit-container {
+  padding: 10px 20px;
+}
+</style>
 <script>
 const defaultForm = {
   project_id: null, // 所属项目ID

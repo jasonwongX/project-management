@@ -1,94 +1,127 @@
 <template>
-  <el-container class="app-container">
+  <div class="edit-container">
     <h3 class="title">{{ isEdit ? '编辑风险项' : '新增风险项' }}</h3>
-    <el-main class="main">
-      <el-form ref="form" :model="postForm" :rules="rules" label-width="80px">
-        <el-form-item label="所属项目" prop="name">
-          <el-select
-            v-model="postForm.project_id"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入项目名称"
-            :remote-method="searchProjectList"
-            :loading="loadingProject"
-          >
-            <el-option
-              v-for="item in projectList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
+    <el-form ref="form" :model="postForm" :rules="rules" label-width="120px">
+      <el-row :gutter="24">
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="所属项目" prop="name">
+            <el-select
+              v-model="postForm.project_id"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入项目名称"
+              :remote-method="searchProjectList"
+              :loading="loadingProject"
+            >
+              <el-option
+                v-for="item in projectList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="风险类型" prop="type">
+            <el-select v-model="postForm.type" placeholder="请选择类型">
+              <el-option
+                v-for="(item, index) in typeList"
+                :key="index"
+                :label="item"
+                :value="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="风险严重等级" prop="level">
+            <el-select v-model="postForm.level" placeholder="请选择等级">
+              <el-option
+                v-for="(item, index) in levelList"
+                :key="index"
+                :label="item"
+                :value="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="风险状态" prop="status">
+            <el-select v-model="postForm.status" placeholder="请选择状态">
+              <el-option
+                v-for="(item, index) in statusList"
+                :key="index"
+                :label="item"
+                :value="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="续存期" prop="exist_time">
+            <el-input v-model="postForm.exist_time" style="width:48%" placeholder="请输入续存期" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="风险评分" prop="score">
+            <el-input-number v-model="postForm.score" :min="1" :max="100" label="风险评分（1-100）" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col>
+          <el-form-item label="原因分析">
+            <el-input
+              v-model="postForm.reason"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入原因"
+              type="textarea"
             />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="风险类型" prop="type">
-          <el-select v-model="postForm.type" placeholder="请选择类型">
-            <el-option
-              v-for="(item, index) in typeList"
-              :key="index"
-              :label="item"
-              :value="index"
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col>
+          <el-form-item label="措施">
+            <el-input
+              v-model="postForm.measure"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入措施"
+              type="textarea"
             />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="风险严重等级" prop="level">
-          <el-select v-model="postForm.level" placeholder="请选择等级">
-            <el-option
-              v-for="(item, index) in levelList"
-              :key="index"
-              :label="item"
-              :value="index"
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col>
+          <el-form-item label="风险描述">
+            <el-input
+              v-model="postForm.description"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入描述"
+              type="textarea"
             />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="风险状态" prop="status">
-          <el-select v-model="postForm.status" placeholder="请选择状态">
-            <el-option
-              v-for="(item, index) in statusList"
-              :key="index"
-              :label="item"
-              :value="index"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="续存期" prop="exist_time">
-          <el-input v-model="postForm.exist_time" label="续存期:" placeholder="请输入续存期" />
-        </el-form-item>
-        <el-form-item label="风险评分" prop="score">
-          <el-input-number v-model="postForm.score" :min="1" :max="100" label="风险评分（1-100）" />
-        </el-form-item>
-        <el-form-item label="原因分析">
-          <el-input
-            v-model="postForm.reason"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            placeholder="请输入原因"
-            type="textarea"
-          />
-        </el-form-item>
-        <el-form-item label="措施">
-          <el-input
-            v-model="postForm.measure"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            placeholder="请输入措施"
-            type="textarea"
-          />
-        </el-form-item>
-        <el-form-item label="风险描述">
-          <el-input
-            v-model="postForm.description"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            placeholder="请输入描述"
-            type="textarea"
-          />
-        </el-form-item>
-      </el-form>
-    </el-main>
-    <el-footer class="footer">
-      <el-button type="info" @click="cancel">取消</el-button>
-      <el-button type="primary" @click="submitForm">保存</el-button>
-    </el-footer>
-  </el-container>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-row type="flex" justify="center">
+      <el-col :span="2">
+        <el-button type="info" style="width:80%" @click="cancel">取消</el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="primary" style="width:80%" @click="submitForm">保存</el-button>
+      </el-col>
+    </el-row>
+  </div>
 </template>
+<style lang="less" scoped>
+.edit-container {
+  padding: 10px 20px;
+}
+</style>
 <script>
 const defaultForm = {
   description: '', // 风险描述
