@@ -15,6 +15,21 @@ export function fetchProject(id) {
     params: { id }
   })
 }
+export function addProject(data) {
+  return request({
+    url: '/project/add',
+    method: 'post',
+    params: data
+  })
+}
+
+export function editProject(data) {
+  return request({
+    url: '/porject/modify',
+    method: 'post',
+    params: data
+  })
+}
 export function deleteProject(id) {
   return request({
     url: '/project/delete',

@@ -1,9 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-edit" disabled @click="handleCreate">新建项目</el-button>
+      <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-edit" @click="handleCreate">新建项目</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;" icon="el-icon-upload" disabled @click="handleDownload">批量导入</el-button>
-
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" disabled @click="handleDownload">导出</el-button>
     </div>
     <div class="filter-container">
@@ -24,14 +23,12 @@
     </div>
 
     <el-table
-      :key="tableKey"
       v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
       <el-table-column label="项目名称" min-width="150px" align="center">
         <template slot-scope="scope">
@@ -55,19 +52,14 @@
       </el-table-column>
       <el-table-column label="项目经理" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact.pm }}</span>
+          <span>{{ scope.row.contact && scope.row.contact.pm ? scope.row.contact.pm : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact.qa }}</span>
+          <span>{{ scope.row.contact && scope.row.contact.qa ? scope.row.contact.qa : '' }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="项目描述" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column> -->
 
       <el-table-column label="项目风险" class-name="status-col" width="100">
         <template slot-scope="scope">
@@ -79,7 +71,7 @@
         <template slot-scope="scope">
           <el-button size="mini" type="info" @click="handleDetail(scope.row)">详情
           </el-button>
-          <el-button size="mini" type="primary" @click="handleModifyStatus(scope.row,'draft')">编辑
+          <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑
           </el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除
           </el-button>
@@ -106,7 +98,7 @@
 <script>
 // import { mapState } from 'vuex'
 
-import { fetchList, fetchPv, deleteProject } from '@/api/project'
+import { fetchList, deleteProject } from '@/api/project'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -138,7 +130,6 @@ export default {
   },
   data() {
     return {
-      tableKey: 0,
       list: null,
       total: 0,
       listLoading: true,
@@ -182,11 +173,6 @@ export default {
     }
   },
   computed: {
-    // ...mapState('project', {
-    //   scaleList: state => state.scaleList,
-    //   stageList: state => state.stageList,
-    //   controlModeList: state => state.controlModeList
-    // })
   },
   async created() {
     await this.$store.dispatch('project/initStageList')
@@ -227,54 +213,11 @@ export default {
     handleDetail(row) {
       this.$router.push({ path: '/project/info', query: { id: row.id }})
     },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.status = status
-    },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
-      }
+    handleModify(row) {
+      this.$router.push({ path: '/project/edit', query: { id: row.id }})
     },
     handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+      this.$router.push({ path: '/project/add' })
     },
     handleDelete(row) {
       this.$confirm('是否确认删除?', '提示', {
@@ -294,13 +237,6 @@ export default {
             message: '删除失败!'
           })
         })
-      })
-    },
-
-    handleFetchPv(pv) {
-      fetchPv(pv).then(response => {
-        this.pvData = response.data.pvData
-        this.dialogPvVisible = true
       })
     },
     handleDownload() {

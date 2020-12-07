@@ -71,7 +71,16 @@ export const constantRoutes = [
         path: 'info',
         component: () => import('@/views/project/detail'),
         name: 'projectInfo'
-        // hidden: true
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/project/edit'),
+        name: 'projectEdit'
+      },
+      {
+        path: 'add',
+        component: () => import('@/views/project/create'),
+        name: 'projectAdd'
       }
     ]
   },
