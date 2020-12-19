@@ -179,7 +179,6 @@ export default {
   },
   data() {
     return {
-      postForm: this.basic,
       statusList: {
         1: '在建',
         2: '暂停',
@@ -228,6 +227,11 @@ export default {
       }
     }
   },
+  computed: {
+    postForm() {
+      return this.basic
+    }
+  },
 
   watch: {
     postForm: {
@@ -240,6 +244,7 @@ export default {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
+    this.postForm.stage = 1
   },
   methods: {
 

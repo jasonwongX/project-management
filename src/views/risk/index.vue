@@ -3,7 +3,6 @@
     <div class="filter-container">
       <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-plus" @click="handleCreate">新增风险项</el-button>
       <el-button v-show="false" v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;" icon="el-icon-upload" @click="handleDownload">批量导入</el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
     <div class="filter-container">
       <el-input v-model="listQuery.description" placeholder="风险描述" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -51,14 +50,19 @@
           <span>{{ statusFilter(scope.row.status) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属项目" width="160px" align="center">
+      <el-table-column label="续存期" width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.project.name }}</span>
+          <span>{{ scope.row.exist_time }}</span>
         </template>
       </el-table-column>
       <el-table-column label="QA" width="110px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.project.contact.qa }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="所属项目" width="160px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.project.name }}</span>
         </template>
       </el-table-column>
 
@@ -117,6 +121,8 @@ export default {
     }
   },
   async created() {
+    this.listQuery.project_name = this.$route.query.project_name ? this.$route.query.project_name : ''
+
     await this.$store.dispatch('risk/initStatusList')
     await this.$store.dispatch('risk/initLevelList')
     await this.$store.dispatch('risk/initTypeList')

@@ -149,3 +149,7 @@ export function debounce(func, wait, immediate) {
     return result
   }
 }
+
+export function formatPercent(val) {
+  return `${parseInt(val * 100)}%`
+}

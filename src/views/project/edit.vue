@@ -8,7 +8,7 @@
         <contact-form :is-edit="true" :contact="contact" @updateContact="updateContact" />
       </el-collapse-item>
       <el-collapse-item title="关键时间点" name="3">
-        <time-line-form :is-edit="true" :time-line="timeline" @updateTimeline="updateTimeline" />
+        <time-line-form :is-edit="true" :time-line="timeLine" @updateTimeline="updateTimeline" />
       </el-collapse-item>
     </el-collapse>
     <el-row type="flex" justify="center">
@@ -27,7 +27,7 @@
 import BasicForm from './BasicForm'
 import ContactForm from './ContactForm'
 import TimeLineForm from './TimeLineForm'
-import { fetchProject } from '@/api/project'
+import { fetchProject, editProject } from '@/api/project'
 const _ = require('lodash')
 
 export default {
@@ -39,12 +39,12 @@ export default {
       activeNames: ['1'],
       basic: {},
       contact: {},
-      timeline: {}
+      timeLine: {}
     }
   },
-  created() {
+  async created() {
     this.projectId = this.$route.query && this.$route.query.id
-    this.getInfo(this.projectId)
+    await this.getInfo(this.projectId)
   },
   methods: {
     updateBasic(value) {
@@ -54,23 +54,22 @@ export default {
       this.contact = value
     },
     updateTimeline(value) {
-      this.timeline = value
+      this.timeLine = value
     },
     submit() {
-      debugger
       const postData = this.basic
       postData.contact = this.contact
-      postData.timeline = this.timeline
-      // editProject(this.projectId, postData).then(response => {
-      //   this.$router.push('/project/index')
-      // })
+      postData.timeLine = this.timeLine
+      editProject(postData).then(response => {
+        this.$router.push('/project/index')
+      })
     },
     // 项目详情
     getInfo(id) {
       const that = this
       fetchProject(id).then(response => {
         that.contact = _.cloneDeep(response.data.contact)
-        that.timeline = _.cloneDeep(response.data.timeLine)
+        that.timeLine = _.cloneDeep(response.data.timeLine)
         that.basic = _.cloneDeep(response.data)
       }).catch(err => {
         console.log(err)

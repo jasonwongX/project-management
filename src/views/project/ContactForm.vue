@@ -165,7 +165,6 @@ export default {
   },
   data() {
     return {
-      postForm: this.contact,
       loadingProject: false, // 项目查询加载
       rules: {
         pm: [
@@ -181,6 +180,11 @@ export default {
           { required: true, message: '业务联系人不能为空' }
         ]
       }
+    }
+  },
+  computed: {
+    postForm() {
+      return this.contact
     }
   },
   watch: {

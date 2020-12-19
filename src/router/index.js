@@ -81,6 +81,22 @@ export const constantRoutes = [
         path: 'add',
         component: () => import('@/views/project/create'),
         name: 'projectAdd'
+      },
+      {
+        path: 'change',
+        component: () => import('@/views/ProjectChange/index'),
+        name: 'projectChangeIndex',
+        meta: { title: '项目变更', icon: 'table' }
+      },
+      {
+        path: 'change/edit',
+        component: () => import('@/views/ProjectChange/edit'),
+        name: 'projectChangeEdit'
+      },
+      {
+        path: 'change/add',
+        component: () => import('@/views/ProjectChange/create'),
+        name: 'projectChangeAdd'
       }
     ]
   },

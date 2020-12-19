@@ -25,7 +25,7 @@ export function addProject(data) {
 
 export function editProject(data) {
   return request({
-    url: '/porject/modify',
+    url: '/project/modify',
     method: 'post',
     params: data
   })
