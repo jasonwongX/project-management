@@ -6,7 +6,7 @@
     </div>
     <div class="filter-container">
       <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-if="!isMyProject" v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.devMode" placeholder="项目类型" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in devModeList" :key="index" :label="item" :value="index" />
@@ -114,7 +114,7 @@
 }
 </style>
 <script>
-import { fetchList, deleteProject } from '@/api/project'
+import { fetchList, fetchMyProjectList, deleteProject } from '@/api/project'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -165,6 +165,12 @@ export default {
       return riskMap[risk]
     }
 
+  },
+  props: {
+    isMyProject: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -256,13 +262,22 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data
-        this.total = response.total ? response.total : 0
-        this.listQuery.limit = parseInt(response.per_page)
-        // Just to simulate the time of the request
-        this.listLoading = false
-      })
+      if (this.isMyProject) {
+        this.listQuery.username = this.$store.state.user.name
+        fetchMyProjectList(this.listQuery).then(response => {
+          this.list = response.data
+          this.total = response.total ? response.total : 0
+          this.listQuery.limit = parseInt(response.per_page)
+          this.listLoading = false
+        })
+      } else {
+        fetchList(this.listQuery).then(response => {
+          this.list = response.data
+          this.total = response.total ? response.total : 0
+          this.listQuery.limit = parseInt(response.per_page)
+          this.listLoading = false
+        })
+      }
     },
     gotoRisk(projectName) {
       this.$router.push({ path: '/risk/index', query: { project_name: projectName }})

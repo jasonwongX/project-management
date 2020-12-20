@@ -8,6 +8,15 @@ export function fetchList(query) {
   })
 }
 
+// 我的项目列表
+export function fetchMyProjectList(query) {
+  return request({
+    url: '/project/my',
+    method: 'get',
+    params: query
+  })
+}
+
 export function fetchProject(id) {
   return request({
     url: '/project/info',

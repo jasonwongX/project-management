@@ -193,13 +193,13 @@ export default {
       this.getList()
     },
     handleDetail(row) {
-      this.$router.push({ path: '/projectChange/info', query: { id: row.id }})
+      this.$router.push({ path: '/project/change/info', query: { id: row.id }})
     },
     handleModify(row) {
-      this.$router.push({ path: '/projectChange/edit', query: { id: row.id }})
+      this.$router.push({ path: '/project/change/edit', query: { id: row.id }})
     },
     handleCreate(row) {
-      this.$router.push({ path: '/projectChange/add' })
+      this.$router.push({ path: '/project/change/add' })
     },
     handleDelete(row) {
       this.$confirm('是否确认删除?', '提示', {

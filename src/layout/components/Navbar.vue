@@ -16,6 +16,11 @@
               首页
             </el-dropdown-item>
           </router-link>
+          <router-link to="/project/my">
+            <el-dropdown-item>
+              我的项目
+            </el-dropdown-item>
+          </router-link>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">注销</span>
           </el-dropdown-item>

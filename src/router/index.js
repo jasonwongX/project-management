@@ -97,6 +97,11 @@ export const constantRoutes = [
         path: 'change/add',
         component: () => import('@/views/ProjectChange/create'),
         name: 'projectChangeAdd'
+      },
+      {
+        path: 'my',
+        component: () => import('@/views/project/MyProject'),
+        name: 'myProjectList'
       }
     ]
   },
