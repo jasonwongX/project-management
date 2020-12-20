@@ -237,7 +237,8 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '项目变更信息'
+          filename: '项目变更信息',
+          autoWidth: false
         })
         this.downloadLoading = false
       })
