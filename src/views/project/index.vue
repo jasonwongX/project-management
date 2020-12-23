@@ -267,14 +267,14 @@ export default {
         fetchMyProjectList(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total ? response.total : 0
-          this.listQuery.limit = parseInt(response.per_page)
+          this.listQuery.limit = response.per_page ? parseInt(response.per_page) : this.listQuery.limit
           this.listLoading = false
         })
       } else {
         fetchList(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total ? response.total : 0
-          this.listQuery.limit = parseInt(response.per_page)
+          this.listQuery.limit = response.per_page ? parseInt(response.per_page) : this.listQuery.limit
           this.listLoading = false
         })
       }
@@ -335,6 +335,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
+          autoWidth: false,
           filename: '在建项目状态跟踪表'
         })
         this.downloadLoading = false
