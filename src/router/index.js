@@ -74,19 +74,13 @@ export const constantRoutes = [
       },
       {
         path: 'edit',
-        component: () => import('@/views/project/edit'),
+        component: () => import('@/views/project/modify'),
         name: 'projectEdit'
       },
       {
         path: 'add',
-        component: () => import('@/views/project/create'),
+        component: () => import('@/views/project/add'),
         name: 'projectAdd'
-      },
-      {
-        path: 'change',
-        component: () => import('@/views/ProjectChange/index'),
-        name: 'projectChangeIndex',
-        meta: { title: '项目变更', icon: 'table' }
       },
       {
         path: 'change/edit',
@@ -106,42 +100,117 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/risk',
+    path: '/report',
     component: Layout,
-    redirect: '/risk/index',
-    meta: { title: '风险管理', icon: 'risk' },
+    redirect: '/report/project/status',
+    meta: { title: '数据报表', icon: 'risk' },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/risk/index'),
-        name: 'riskIndex',
-        meta: { title: '风险列表', icon: 'table' }
+        path: '/report/project/status',
+        component: () => import('@/views/project/index'),
+        name: 'ProjectStatus',
+        meta: { title: '项目状态报表', icon: 'table' }
       },
       {
-        path: 'add',
-        component: () => import('@/views/risk/create'),
-        name: 'riskAdd'
+        path: '/report/project/follow',
+        component: () => import('@/views/project/index'),
+        name: 'ProjectFollow',
+        meta: { title: '项目监理跟踪报表', icon: 'table' }
       },
       {
-        path: 'edit',
-        component: () => import('@/views/risk/edit'),
-        name: 'riskEdit'
+        path: '/report/project/change',
+        component: () => import('@/views/ProjectChange/index'),
+        name: 'ProjectChangeReport',
+        meta: { title: '项目变更报表', icon: 'table' }
       },
       {
-        path: 'score',
+        path: '/report/project/complete',
+        component: () => import('@/views/ProjectChange/index'),
+        name: 'ProjectCompleteReport',
+        meta: { title: '项目投产报表', icon: 'table' }
+      },
+      {
+        path: '/report/project/health',
         component: () => import('@/views/RiskScore/index'),
-        name: 'riskScore',
-        meta: { title: '风险评分', icon: 'score' }
+        name: 'ProjectHealthReport',
+        meta: { title: '健康度分析', icon: 'score' }
+      }
+    ]
+  },
+  {
+    path: '/wiki',
+    component: Layout,
+    redirect: '/wiki/system',
+    meta: { title: '知识库', icon: 'risk' },
+    children: [
+      {
+        path: '/wiki/system',
+        component: Layout,
+        meta: { title: '制度类', icon: 'table' },
+        children: [
+          {
+            path: '/wiki/system/workfollow',
+            component: () => import('@/views/project/index'),
+            name: 'workfollow',
+            meta: { title: '项目流程', icon: 'table' }
+          },
+          {
+            path: '/wiki/system/security',
+            component: () => import('@/views/project/index'),
+            name: 'security',
+            meta: { title: '安全合规', icon: 'table' }
+          },
+          {
+            path: '/wiki/system/notification',
+            component: () => import('@/views/project/index'),
+            name: 'notification',
+            meta: { title: '重要通知', icon: 'table' }
+          }
+        ]
       },
       {
-        path: 'addScore',
-        component: () => import('@/views/RiskScore/create'),
-        name: 'addRiskScore'
+        path: '/wiki/tool',
+        component: Layout,
+        meta: { title: '工具类', icon: 'table' },
+        children: [
+          {
+            path: '/wiki/tool/devlop',
+            component: () => import('@/views/project/index'),
+            name: 'WikiToolDevlop',
+            meta: { title: '研发工具', icon: 'table' }
+          },
+          {
+            path: '/wiki/tool/follow',
+            component: () => import('@/views/project/index'),
+            name: 'WikiToolFollow',
+            meta: { title: '流程工具', icon: 'table' }
+          },
+          {
+            path: '/wiki/tool/test',
+            component: () => import('@/views/project/index'),
+            name: 'WikiToolTest',
+            meta: { title: '测试工具', icon: 'table' }
+          }
+        ]
       },
       {
-        path: 'editScore',
-        component: () => import('@/views/RiskScore/edit'),
-        name: 'editRiskScore'
+        path: '/wiki/experience',
+        component: Layout,
+        meta: { title: '经验分享类', icon: 'table' },
+        children: [
+          {
+            path: '/wiki/experience/management',
+            component: () => import('@/views/project/index'),
+            name: 'WikiExperienceManagement',
+            meta: { title: '管理经验分享', icon: 'table' }
+          },
+          {
+            path: '/wiki/experience/tech',
+            component: () => import('@/views/project/index'),
+            name: 'WikiExperienceTech',
+            meta: { title: '技术经验分享', icon: 'table' }
+          }
+        ]
       }
     ]
   },

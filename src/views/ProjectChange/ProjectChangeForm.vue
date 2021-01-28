@@ -1,6 +1,6 @@
 <template>
   <div class="edit-container">
-    <h3 class="title">{{ isEdit ? '编辑风险项' : '新增风险项' }}</h3>
+    <h3 class="title">{{ isEdit ? '编辑项目变更' : '新增项目变更' }}</h3>
     <el-form ref="form" :model="postForm" :rules="rules" label-width="120px">
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">

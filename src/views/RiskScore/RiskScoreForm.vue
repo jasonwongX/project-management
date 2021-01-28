@@ -73,7 +73,6 @@ export default {
   data() {
     return {
       postForm: _.cloneDeep(defaultForm),
-      typeList: this.$store.state.risk.typeList,
       loadingProject: false, // 项目查询加载
       projectList: [], // 项目列表
       rules: {
@@ -86,7 +85,7 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
     if (this.isEdit) {
       const projectId = this.$route.query && this.$route.query.project_id
       const month = this.$route.query && this.$route.query.month
@@ -95,6 +94,8 @@ export default {
     } else {
       this.postForm = Object.assign({}, defaultForm)
     }
+    await this.$store.dispatch('risk/initTypeList')
+    this.typeList = this.$store.state.risk.typeList
   },
   methods: {
     // 风险详情
