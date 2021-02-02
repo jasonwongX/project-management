@@ -2,9 +2,6 @@
   <div class="app-container">
     <div class="filter-container">
       <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-edit" @click="handleCreate">新建项目</el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="getExportList">导出</el-button>
-    </div>
-    <div class="filter-container">
       <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-if="!isMyProject" v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />

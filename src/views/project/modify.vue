@@ -1,8 +1,11 @@
 <template>
   <div class="edit-container">
-    <el-row>
-      <el-col><div class="title">{{ project.name }}</div></el-col>
-    </el-row>
+    <div class="title-row">
+      <div class="title-name">{{ project.name }}</div>
+      <div class="title-col">{{ project.dev_mode | devModeFilter }}</div>
+      <div class="title-col">{{ scaleFilter(project.scale) }}</div>
+      <div class="title-col">{{ stageFilter(project.stage) }}</div>
+    </div>
     <el-row :gutter="32">
       <el-col :xs="24" :sm="16" :lg="16">
         <line-chart :chart-data="lineChartData" />
@@ -13,8 +16,14 @@
     </el-row>
     <el-row>
       <el-tabs type="border-card">
-        <el-tab-pane label="基础信息"><add-project /></el-tab-pane>
-        <el-tab-pane label="过程管理">配置管理</el-tab-pane>
+        <el-tab-pane v-if="project.dev_mode == 1" label="基础信息"><add-project /></el-tab-pane>
+        <el-tab-pane v-else label="基础信息"><add-agile-project /></el-tab-pane>
+        <el-tab-pane v-if="project.dev_mode == 1" label="过程管理">
+          <process-common />
+        </el-tab-pane>
+        <el-tab-pane v-else label="过程管理">
+          <process-agile />
+        </el-tab-pane>
         <el-tab-pane label="风险管理"><create-risk /></el-tab-pane>
         <el-tab-pane label="风险评分"><create-risk-score /></el-tab-pane>
         <el-tab-pane label="项目变更"><create-project-change /></el-tab-pane>
@@ -27,13 +36,23 @@
 .edit-container {
   padding: 10px 20px;
 }
-.title {
-    line-height: 32px;
-    font-size: 18px;
+.title-row {
+    height: 48px;
+    font-size: 16px;
+    padding:0px 10px;
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
+    display: flex;
+    align-items: center;
     color: #666;
+    .title-name {
+      margin-right:40px;
+    }
+    .title-col {
+      font-size: 14px;
+      margin-right:20px;
+    }
 }
 .card-panel {
     height: 108px;
@@ -106,11 +125,15 @@
 import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import AddProject from './add'
+import AddAgileProject from './AddAgile'
+
 import EditProject from './edit'
 import CreateRiskScore from '../RiskScore/create'
 import CreateRisk from '../risk/create'
 import CreateProjectChange from '../ProjectChange/create'
 import { fetchProject } from '@/api/project'
+import ProcessCommon from './components/ProcessCommon'
+import ProcessAgile from './components/ProcessAgile'
 
 const _ = require('lodash')
 const lineChartData = {
@@ -123,10 +146,22 @@ export default {
     LineChart,
     RaddarChart,
     AddProject,
+    AddAgileProject,
     EditProject,
     CreateRiskScore,
     CreateRisk,
+    ProcessCommon,
+    ProcessAgile,
     CreateProjectChange
+  },
+  filters: {
+    devModeFilter(val) {
+      const map = {
+        1: '传统项目',
+        2: '敏捷项目'
+      }
+      return map[val]
+    }
   },
   data() {
     return {
@@ -135,10 +170,20 @@ export default {
     }
   },
   async created() {
+    this.scaleList = this.$store.state.project.scaleList
+    this.stageList = this.$store.state.project.stageList
     this.projectId = this.$route.query && this.$route.query.id
     await this.getInfo(this.projectId)
   },
   methods: {
+    scaleFilter(val) {
+      const valMap = this.scaleList
+      return valMap[val] ? valMap[val] : '未知'
+    },
+    stageFilter(val) {
+      const valMap = this.stageList
+      return valMap[val] ? valMap[val] : '未知'
+    },
     // 项目详情
     getInfo(id) {
       const that = this
