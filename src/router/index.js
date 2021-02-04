@@ -106,34 +106,34 @@ export const constantRoutes = [
     meta: { title: '数据报表', icon: 'risk' },
     children: [
       {
-        path: '/report/project/status',
-        component: () => import('@/views/project/index'),
-        name: 'ProjectStatus',
-        meta: { title: '项目状态报表', icon: 'table' }
-      },
-      {
         path: '/report/project/follow',
-        component: () => import('@/views/project/index'),
+        component: () => import('@/views/report/ProjectStatusReport'),
         name: 'ProjectFollow',
         meta: { title: '项目监理跟踪报表', icon: 'table' }
       },
       {
+        path: '/report/project/agile/follow',
+        component: () => import('@/views/report/AgileProjectStatusReport'),
+        name: 'AgileProjectFollow',
+        meta: { title: '敏捷项目报表', icon: 'table' }
+      },
+      {
         path: '/report/project/change',
-        component: () => import('@/views/ProjectChange/index'),
+        component: () => import('@/views/report/ProjectChangeReport'),
         name: 'ProjectChangeReport',
         meta: { title: '项目变更报表', icon: 'table' }
       },
       {
         path: '/report/project/complete',
-        component: () => import('@/views/ProjectChange/index'),
+        component: () => import('@/views/report/ProjectCompleteReport'),
         name: 'ProjectCompleteReport',
         meta: { title: '项目投产报表', icon: 'table' }
       },
       {
-        path: '/report/project/health',
-        component: () => import('@/views/RiskScore/index'),
-        name: 'ProjectHealthReport',
-        meta: { title: '健康度分析', icon: 'score' }
+        path: '/report/project/month',
+        component: () => import('@/views/report/ProjectMonthReport'),
+        name: 'ProjectMonthReport',
+        meta: { title: '项目月度报告', icon: 'score' }
       }
     ]
   },

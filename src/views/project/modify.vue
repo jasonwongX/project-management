@@ -2,9 +2,9 @@
   <div class="edit-container">
     <div class="title-row">
       <div class="title-name">{{ project.name }}</div>
-      <div class="title-col">{{ project.dev_mode | devModeFilter }}</div>
-      <div class="title-col">{{ scaleFilter(project.scale) }}</div>
-      <div class="title-col">{{ stageFilter(project.stage) }}</div>
+      <div class="title-col"><el-tag>{{ project.dev_mode | devModeFilter }}</el-tag></div>
+      <div class="title-col"><el-tag>{{ scaleFilter(project.scale) }}</el-tag></div>
+      <div class="title-col"><el-tag>{{ stageFilter(project.stage) }}</el-tag></div>
     </div>
     <el-row :gutter="32">
       <el-col :xs="24" :sm="16" :lg="16">
@@ -37,7 +37,7 @@
   padding: 10px 20px;
 }
 .title-row {
-    height: 48px;
+    height: 60px;
     font-size: 16px;
     padding:0px 10px;
     background: #fff;
@@ -48,6 +48,7 @@
     color: #666;
     .title-name {
       margin-right:40px;
+      font-size:18px;
     }
     .title-col {
       font-size: 14px;
