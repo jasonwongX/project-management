@@ -248,7 +248,7 @@
         <el-button type="info" style="width:80%" @click="cancel()">取消</el-button>
       </el-col>
       <el-col :span="3">
-        <el-button type="primary" style="width:80%" @click="submit">保存</el-button>
+        <el-button type="primary" style="width:80%" @click="submit()">保存</el-button>
       </el-col>
     </el-row>
   </div>
@@ -350,7 +350,12 @@ export default {
     this.postForm.stage = 1
   },
   methods: {
+    cancel() {
 
+    },
+    submit() {
+
+    }
   }
 }
 </script>

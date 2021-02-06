@@ -1,7 +1,7 @@
 <template>
   <div class="process-container">
     <div class="process-header">
-      <el-button class="filter-item" type="primary" size="small" plain icon="el-icon-plus" @click="dialogFormVisible = true">新增迭代</el-button>
+      <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="dialogFormVisible = true">新增迭代</el-button>
     </div>
     <div class="process-content">
       <el-card v-for="(item,index) in sprints" :key="index" class="box-card">

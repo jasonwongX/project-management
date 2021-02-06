@@ -1,35 +1,73 @@
 <template>
   <div class="edit-container">
-    <div class="title-row">
-      <div class="title-name">{{ project.name }}</div>
-      <div class="title-col"><el-tag>{{ project.dev_mode | devModeFilter }}</el-tag></div>
-      <div class="title-col"><el-tag>{{ scaleFilter(project.scale) }}</el-tag></div>
-      <div class="title-col"><el-tag>{{ stageFilter(project.stage) }}</el-tag></div>
-    </div>
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="16" :lg="16">
+    <el-row class="title-row" :gutter="24" type="flex" justify="space-between">
+      <el-col class="left-title-row" :span="16">
+        <div class="title-name">{{ project.name }}</div>
+        <div class="title-col"><el-tag type="info">{{ project.dev_mode | devModeFilter }}</el-tag></div>
+        <div class="title-col"><el-tag type="info">{{ scaleFilter(project.scale) }}</el-tag></div>
+        <div class="title-col"><el-tag type="info">{{ stageFilter(project.stage) }}</el-tag></div>
+      </el-col>
+      <el-col :span="8" class="right-title-row">
+        <el-radio-group v-model="project.status" size="medium" @change="statusChange($event)">
+          <el-radio-button label="1">在建</el-radio-button>
+          <el-radio-button label="2">投产</el-radio-button>
+          <el-radio-button label="3">暂停</el-radio-button>
+        </el-radio-group>
+      </el-col>
+    </el-row>
+    <el-row :gutter="32" type="flex" align="middle">
+      <el-col :xs="24" :sm="14" :lg="14">
         <line-chart :chart-data="lineChartData" />
       </el-col>
-      <el-col :xs="24" :sm="8" :lg="8">
+      <el-col :xs="24" :sm="6" :lg="6">
         <raddar-chart />
+      </el-col>
+      <el-col :xs="24" :sm="4" :lg="4">
+        <el-row :gutter="24" class="data-row">
+          <el-col :span="24">
+            <div class="data-group group-red">
+              <div class="title">项目变更</div>
+              <div class="count">0</div>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24" class="data-row">
+          <el-col :span="24">
+            <div class="data-group group-red">
+              <div class="title">项目风险点</div>
+              <div class="count">3</div>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="24">
+            <div class="data-group group-blue">
+              <div class="title">健康评分</div>
+              <div class="count">86</div>
+            </div>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
     <el-row>
       <el-tabs type="border-card">
         <el-tab-pane v-if="project.dev_mode == 1" label="基础信息"><add-project /></el-tab-pane>
         <el-tab-pane v-else label="基础信息"><add-agile-project /></el-tab-pane>
-        <el-tab-pane v-if="project.dev_mode == 1" label="过程管理">
+        <el-tab-pane v-if="project.dev_mode == 1" label="过程跟踪">
           <process-common />
         </el-tab-pane>
-        <el-tab-pane v-else label="过程管理">
+        <el-tab-pane v-else label="过程跟踪">
           <process-agile />
         </el-tab-pane>
-        <el-tab-pane label="风险管理"><create-risk /></el-tab-pane>
-        <el-tab-pane label="风险评分"><create-risk-score /></el-tab-pane>
-        <el-tab-pane label="项目变更"><create-project-change /></el-tab-pane>
+        <el-tab-pane label="项目风险"><risk-board /></el-tab-pane>
+        <el-tab-pane label="风险评分"><risk-score-board /></el-tab-pane>
+        <el-tab-pane label="项目变更"><project-change-board /></el-tab-pane>
         <el-tab-pane label="其他信息"><edit-project /></el-tab-pane>
       </el-tabs>
     </el-row>
+    <project-complete-dialog :dialog-complete-visible="ProjectCompleteDialogVisible" @closeCompleteDialog="closeCompleteDialog" />
+    <project-cancel-dialog :dialog-cancel-visible="ProjectCancelDialogVisible" @closeCancelDialog="closeCancelDialog" />
+
   </div>
 </template>
 <style lang="less" scoped>
@@ -39,10 +77,12 @@
 .title-row {
     height: 60px;
     font-size: 16px;
-    padding:0px 10px;
+    padding:0px 20px;
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
+}
+.left-title-row {
     display: flex;
     align-items: center;
     color: #666;
@@ -55,72 +95,33 @@
       margin-right:20px;
     }
 }
-.card-panel {
-    height: 108px;
-    cursor: pointer;
-    font-size: 12px;
-    position: relative;
-    overflow: hidden;
-    color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
-    &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
-      }
-      .icon-people {
-         background: #40c9c6;
-      }
-      .icon-message {
-        background: #36a3f7;
-      }
-      .icon-money {
-        background: #f4516c;
-      }
-      .icon-shopping {
-        background: #34bfa3
-      }
+.right-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.data-row {
+    margin-bottom: 10px;
+}
+.group-red {
+    color: rgba(242, 83, 110, .85);
+
+}
+.group-blue {
+    color: rgba(61, 190, 99, .85);
+}
+.data-group {
+    min-height: 60px;
+    padding: 5px 20px;
+    background-color: #f7f8fa;
+    color: #666666;
+    size:14px;
+    .count {
+        font-weight: 500;
+        font-size: 24px;
+        padding-top:10px;
     }
-    .icon-people {
-      color: #40c9c6;
-    }
-    .icon-message {
-      color: #36a3f7;
-    }
-    .icon-money {
-      color: #f4516c;
-    }
-    .icon-shopping {
-      color: #34bfa3
-    }
-    .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
-      padding: 16px;
-      transition: all 0.38s ease-out;
-      border-radius: 6px;
-    }
-    .card-panel-icon {
-      float: left;
-      font-size: 48px;
-    }
-    .card-panel-description {
-      float: right;
-      font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
-      .card-panel-text {
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        margin-bottom: 12px;
-      }
-      .card-panel-num {
-        font-size: 20px;
-      }
-    }
-  }
+}
 </style>
 <script>
 import LineChart from './components/LineChart'
@@ -129,13 +130,14 @@ import AddProject from './add'
 import AddAgileProject from './AddAgile'
 
 import EditProject from './edit'
-import CreateRiskScore from '../RiskScore/create'
-import CreateRisk from '../risk/create'
-import CreateProjectChange from '../ProjectChange/create'
+import RiskScoreBoard from '../RiskScore/RiskScoreBoard'
+import ProjectChangeBoard from '../ProjectChange/ProjectChangeBoard'
 import { fetchProject } from '@/api/project'
 import ProcessCommon from './components/ProcessCommon'
 import ProcessAgile from './components/ProcessAgile'
-
+import RiskBoard from '../risk/RiskBoard'
+import ProjectCancelDialog from './components/ProjectCancelDialog'
+import ProjectCompleteDialog from './components/ProjectCompleteDialog'
 const _ = require('lodash')
 const lineChartData = {
   expectedData: [1, 3, 5, 8, 10, 12],
@@ -149,11 +151,13 @@ export default {
     AddProject,
     AddAgileProject,
     EditProject,
-    CreateRiskScore,
-    CreateRisk,
+    RiskScoreBoard,
     ProcessCommon,
     ProcessAgile,
-    CreateProjectChange
+    ProjectChangeBoard,
+    RiskBoard,
+    ProjectCancelDialog,
+    ProjectCompleteDialog
   },
   filters: {
     devModeFilter(val) {
@@ -167,7 +171,9 @@ export default {
   data() {
     return {
       project: {},
-      lineChartData: lineChartData
+      lineChartData: lineChartData,
+      ProjectCompleteDialogVisible: false,
+      ProjectCancelDialogVisible: false
     }
   },
   async created() {
@@ -192,6 +198,32 @@ export default {
         that.project = _.cloneDeep(response.data)
       }).catch(err => {
         console.log(err)
+      })
+    },
+    closeCompleteDialog() {
+      this.ProjectCompleteDialogVisible = false
+    },
+    closeCancelDialog() {
+      this.ProjectCancelDialogVisible = false
+    },
+    statusChange(status) {
+      let statusName = '在建'
+      const that = this
+      if (status === '2') {
+        statusName = '投产'
+      } else if (status === '3') {
+        statusName = '暂停'
+      }
+      this.$confirm(`是否确认修改项目状态为${statusName}?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (status === '2') {
+          that.ProjectCompleteDialogVisible = true
+        } else if (status === '3') {
+          that.ProjectCancelDialogVisible = true
+        }
       })
     }
   }

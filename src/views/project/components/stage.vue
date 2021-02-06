@@ -12,7 +12,7 @@
         <div v-for="(checkItem, checkIndex) in item.checkItems" :key="checkIndex" class="text item">
           <el-row :gutter="32" class="item-row">
             <el-col :span="8">
-              <span>{{ checkItem.name }}</span>
+              <span class="item-row-title">{{ checkItem.name }}</span>
             </el-col>
             <el-col :span="4">
               <el-select v-model="checkItem.result" size="small" placeholder="请选择">
@@ -51,7 +51,7 @@
         <el-button type="info" style="width:80%" @click="cancel()">取消</el-button>
       </el-col>
       <el-col :span="3">
-        <el-button type="primary" style="width:80%" @click="submit">保存</el-button>
+        <el-button type="primary" style="width:80%" @click="submit()">保存</el-button>
       </el-col>
     </el-row>
   </div>
@@ -61,6 +61,9 @@
   margin-bottom: 8px;
   .item-row {
     padding-bottom:5px;
+    .item-row-title {
+      font-size: 14px;
+    }
   }
 }
 </style>
@@ -85,6 +88,14 @@ export default {
         value: 3,
         label: '不涉及'
       }]
+    }
+  },
+  methods: {
+    cancel() {
+
+    },
+    submit() {
+
     }
   }
 

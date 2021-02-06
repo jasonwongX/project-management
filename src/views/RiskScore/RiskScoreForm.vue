@@ -75,6 +75,7 @@ export default {
       postForm: _.cloneDeep(defaultForm),
       loadingProject: false, // 项目查询加载
       projectList: [], // 项目列表
+      typeList: [],
       rules: {
         project_id: [
           { required: true, message: '请选择项目' }

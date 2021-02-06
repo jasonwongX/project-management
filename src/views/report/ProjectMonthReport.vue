@@ -4,7 +4,7 @@
       <el-col :span="5"><div class="title">项目月度数据汇总</div></el-col>
       <el-col :span="5">
         <el-date-picker
-          v-model="value1"
+          v-model="curMonth"
           type="month"
           placeholder="选择月份"
         />
@@ -113,6 +113,11 @@ export default {
     BarChart,
     RiskTable,
     ProjectRiskCountTable
+  },
+  data() {
+    return {
+      curMonth: '2021-02'
+    }
   }
 }
 </script>

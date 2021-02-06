@@ -145,24 +145,25 @@ export const constantRoutes = [
     children: [
       {
         path: '/wiki/system',
-        component: Layout,
+        component: () => import('@/views/wiki/index'),
+        redirect: '/wiki/system/workfollow',
         meta: { title: '制度类', icon: 'table' },
         children: [
           {
             path: '/wiki/system/workfollow',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'workfollow',
             meta: { title: '项目流程', icon: 'table' }
           },
           {
             path: '/wiki/system/security',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'security',
             meta: { title: '安全合规', icon: 'table' }
           },
           {
             path: '/wiki/system/notification',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'notification',
             meta: { title: '重要通知', icon: 'table' }
           }
@@ -170,24 +171,24 @@ export const constantRoutes = [
       },
       {
         path: '/wiki/tool',
-        component: Layout,
+        component: () => import('@/views/wiki/index'),
         meta: { title: '工具类', icon: 'table' },
         children: [
           {
             path: '/wiki/tool/devlop',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'WikiToolDevlop',
             meta: { title: '研发工具', icon: 'table' }
           },
           {
             path: '/wiki/tool/follow',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'WikiToolFollow',
             meta: { title: '流程工具', icon: 'table' }
           },
           {
             path: '/wiki/tool/test',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'WikiToolTest',
             meta: { title: '测试工具', icon: 'table' }
           }
@@ -195,18 +196,18 @@ export const constantRoutes = [
       },
       {
         path: '/wiki/experience',
-        component: Layout,
+        component: () => import('@/views/wiki/index'),
         meta: { title: '经验分享类', icon: 'table' },
         children: [
           {
             path: '/wiki/experience/management',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'WikiExperienceManagement',
             meta: { title: '管理经验分享', icon: 'table' }
           },
           {
             path: '/wiki/experience/tech',
-            component: () => import('@/views/project/index'),
+            component: () => import('@/views/wiki/index'),
             name: 'WikiExperienceTech',
             meta: { title: '技术经验分享', icon: 'table' }
           }
