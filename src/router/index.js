@@ -65,13 +65,13 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/project/index'),
         name: 'projectIndex',
-        meta: { title: '传统项目', icon: 'table' }
+        meta: { title: '传统项目', icon: 'common-project' }
       },
       {
         path: 'agile',
         component: () => import('@/views/project/AgileProjectList'),
         name: 'AgileProjectList',
-        meta: { title: '敏捷项目', icon: 'table' }
+        meta: { title: '敏捷项目', icon: 'agile' }
       },
       {
         path: 'info',
@@ -114,37 +114,37 @@ export const constantRoutes = [
     path: '/report',
     component: Layout,
     redirect: '/report/project/status',
-    meta: { title: '数据报表', icon: 'risk' },
+    meta: { title: '数据报表', icon: 'data-report' },
     children: [
       {
         path: '/report/project/follow',
         component: () => import('@/views/report/ProjectStatusReport'),
         name: 'ProjectFollow',
-        meta: { title: '项目监理跟踪报表', icon: 'table' }
+        meta: { title: '项目监理跟踪报表', icon: 'report-table' }
       },
       {
         path: '/report/project/agile/follow',
         component: () => import('@/views/report/AgileProjectStatusReport'),
         name: 'AgileProjectFollow',
-        meta: { title: '敏捷项目报表', icon: 'table' }
+        meta: { title: '敏捷项目报表', icon: 'report-table' }
       },
       {
         path: '/report/project/change',
         component: () => import('@/views/report/ProjectChangeReport'),
         name: 'ProjectChangeReport',
-        meta: { title: '项目变更报表', icon: 'table' }
+        meta: { title: '项目变更报表', icon: 'report-table' }
       },
       {
         path: '/report/project/complete',
         component: () => import('@/views/report/ProjectCompleteReport'),
         name: 'ProjectCompleteReport',
-        meta: { title: '项目投产报表', icon: 'table' }
+        meta: { title: '项目投产报表', icon: 'report-table' }
       },
       {
         path: '/report/project/month',
         component: () => import('@/views/report/ProjectMonthReport'),
         name: 'ProjectMonthReport',
-        meta: { title: '项目月度报告', icon: 'score' }
+        meta: { title: '项目月度报告', icon: 'report-month' }
       }
     ]
   },
@@ -152,75 +152,75 @@ export const constantRoutes = [
     path: '/wiki',
     component: Layout,
     redirect: '/wiki/system',
-    meta: { title: '知识库', icon: 'risk' },
+    meta: { title: '知识库', icon: 'wiki' },
     children: [
       {
         path: '/wiki/system',
         component: () => import('@/views/wiki/index'),
         redirect: '/wiki/system/workfollow',
-        meta: { title: '制度类', icon: 'table' },
+        meta: { title: '制度类', icon: 'regulation' },
         children: [
           {
             path: '/wiki/system/workfollow',
             component: () => import('@/views/wiki/index'),
             name: 'workfollow',
-            meta: { title: '项目流程', icon: 'table' }
+            meta: { title: '项目流程', icon: 'list' }
           },
           {
             path: '/wiki/system/security',
             component: () => import('@/views/wiki/index'),
             name: 'security',
-            meta: { title: '安全合规', icon: 'table' }
+            meta: { title: '安全合规', icon: 'list' }
           },
           {
             path: '/wiki/system/notification',
             component: () => import('@/views/wiki/index'),
             name: 'notification',
-            meta: { title: '重要通知', icon: 'table' }
+            meta: { title: '重要通知', icon: 'list' }
           }
         ]
       },
       {
         path: '/wiki/tool',
         component: () => import('@/views/wiki/index'),
-        meta: { title: '工具类', icon: 'table' },
+        meta: { title: '工具类', icon: 'tool' },
         children: [
           {
             path: '/wiki/tool/devlop',
             component: () => import('@/views/wiki/index'),
             name: 'WikiToolDevlop',
-            meta: { title: '研发工具', icon: 'table' }
+            meta: { title: '研发工具', icon: 'list' }
           },
           {
             path: '/wiki/tool/follow',
             component: () => import('@/views/wiki/index'),
             name: 'WikiToolFollow',
-            meta: { title: '流程工具', icon: 'table' }
+            meta: { title: '流程工具', icon: 'list' }
           },
           {
             path: '/wiki/tool/test',
             component: () => import('@/views/wiki/index'),
             name: 'WikiToolTest',
-            meta: { title: '测试工具', icon: 'table' }
+            meta: { title: '测试工具', icon: 'list' }
           }
         ]
       },
       {
         path: '/wiki/experience',
         component: () => import('@/views/wiki/index'),
-        meta: { title: '经验分享类', icon: 'table' },
+        meta: { title: '经验分享类', icon: 'share' },
         children: [
           {
             path: '/wiki/experience/management',
             component: () => import('@/views/wiki/index'),
             name: 'WikiExperienceManagement',
-            meta: { title: '管理经验分享', icon: 'table' }
+            meta: { title: '管理经验分享', icon: 'list' }
           },
           {
             path: '/wiki/experience/tech',
             component: () => import('@/views/wiki/index'),
             name: 'WikiExperienceTech',
-            meta: { title: '技术经验分享', icon: 'table' }
+            meta: { title: '技术经验分享', icon: 'list' }
           }
         ]
       }
