@@ -68,9 +68,8 @@
           <span>{{ scope.row.contact && scope.row.contact.qa ? scope.row.contact.qa : '' }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="项目风险" class-name="status-col" min-width="80px">
-        <template slot-scope="scope" align="center">
+      <el-table-column label="项目风险" align="center" class-name="status-col" min-width="80px">
+        <template slot-scope="scope">
           <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
           <a v-else style="color:red" @click="gotoRisk(scope.row.name)">{{ riskCount(scope.row.risk) }}个风险</a>
         </template>
@@ -174,7 +173,7 @@ export default {
         title: undefined,
         type: undefined,
         sort: '+id',
-        devMode: '1'
+        devMode: '2'
       },
       riskOptions: [0, 1, 2, 3],
       scaleList: [],
@@ -284,7 +283,7 @@ export default {
       this.$router.push({ path: '/project/edit', query: { id: row.id }})
     },
     handleCreate() {
-      this.$router.push({ path: '/project/add' })
+      this.$router.push({ path: '/project/addAgile' })
     },
     handleDelete(row) {
       this.$confirm('是否确认删除?', '提示', {

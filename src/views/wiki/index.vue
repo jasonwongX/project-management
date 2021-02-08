@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column label="附件下载" min-width="260px" align="center">
         <template slot-scope="scope">
-          <a @click="handleDownload(scope.row.file_url)">{{ scope.row.file_name }}</a>
+          <a @click="handleDownload(scope.row.file_url)"><el-link type="primary">{{ scope.row.file_name }}</el-link></a>
         </template>
       </el-table-column>
 

@@ -146,9 +146,9 @@ export default {
     return {
       dialogVisible: false,
       isEdit: false,
-      risks: [
+      changes: [
         {
-          type: '项目进度',
+          stage: '项目进度',
           level: '低',
           status: '新增',
           exist_time: '5M',

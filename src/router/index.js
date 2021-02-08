@@ -65,7 +65,13 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/project/index'),
         name: 'projectIndex',
-        meta: { title: '项目列表', icon: 'table' }
+        meta: { title: '传统项目', icon: 'table' }
+      },
+      {
+        path: 'agile',
+        component: () => import('@/views/project/AgileProjectList'),
+        name: 'AgileProjectList',
+        meta: { title: '敏捷项目', icon: 'table' }
       },
       {
         path: 'info',
@@ -81,6 +87,11 @@ export const constantRoutes = [
         path: 'add',
         component: () => import('@/views/project/add'),
         name: 'projectAdd'
+      },
+      {
+        path: 'addAgile',
+        component: () => import('@/views/project/AddAgile'),
+        name: 'agileProjectAdd'
       },
       {
         path: 'change/edit',

@@ -12,6 +12,7 @@
           <el-radio-button label="1">在建</el-radio-button>
           <el-radio-button label="2">投产</el-radio-button>
           <el-radio-button label="3">暂停</el-radio-button>
+          <el-radio-button label="4">取消</el-radio-button>
         </el-radio-group>
       </el-col>
     </el-row>
@@ -49,7 +50,7 @@
         </el-row>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row class="project-menu-item">
       <el-tabs type="border-card">
         <el-tab-pane v-if="project.dev_mode == 1" label="基础信息"><add-project /></el-tab-pane>
         <el-tab-pane v-else label="基础信息"><add-agile-project /></el-tab-pane>
@@ -62,7 +63,10 @@
         <el-tab-pane label="项目风险"><risk-board /></el-tab-pane>
         <el-tab-pane label="风险评分"><risk-score-board /></el-tab-pane>
         <el-tab-pane label="项目变更"><project-change-board /></el-tab-pane>
-        <el-tab-pane label="其他信息"><edit-project /></el-tab-pane>
+        <el-tab-pane label="其他信息">
+          <div class="editor-container">
+            <Tinymce ref="editor" v-model="projectContent" :height="400" />
+          </div></el-tab-pane>
       </el-tabs>
     </el-row>
     <project-complete-dialog :dialog-complete-visible="ProjectCompleteDialogVisible" @closeCompleteDialog="closeCompleteDialog" />
@@ -70,7 +74,17 @@
 
   </div>
 </template>
+<style lang="less">
+.project-menu-item {
+  .el-tabs__item {
+    height:48px!important;
+    line-height: 48px!important;
+    font-size: 16px!important;
+  }
+}
+</style>
 <style lang="less" scoped>
+
 .edit-container {
   padding: 10px 20px;
 }
@@ -118,7 +132,7 @@
     size:14px;
     .count {
         font-weight: 500;
-        font-size: 24px;
+        font-size: 20px;
         padding-top:10px;
     }
 }
@@ -129,7 +143,6 @@ import RaddarChart from './components/RaddarChart'
 import AddProject from './add'
 import AddAgileProject from './AddAgile'
 
-import EditProject from './edit'
 import RiskScoreBoard from '../RiskScore/RiskScoreBoard'
 import ProjectChangeBoard from '../ProjectChange/ProjectChangeBoard'
 import { fetchProject } from '@/api/project'
@@ -138,6 +151,8 @@ import ProcessAgile from './components/ProcessAgile'
 import RiskBoard from '../risk/RiskBoard'
 import ProjectCancelDialog from './components/ProjectCancelDialog'
 import ProjectCompleteDialog from './components/ProjectCompleteDialog'
+import Tinymce from '@/components/Tinymce'
+
 const _ = require('lodash')
 const lineChartData = {
   expectedData: [1, 3, 5, 8, 10, 12],
@@ -150,14 +165,14 @@ export default {
     RaddarChart,
     AddProject,
     AddAgileProject,
-    EditProject,
     RiskScoreBoard,
     ProcessCommon,
     ProcessAgile,
     ProjectChangeBoard,
     RiskBoard,
     ProjectCancelDialog,
-    ProjectCompleteDialog
+    ProjectCompleteDialog,
+    Tinymce
   },
   filters: {
     devModeFilter(val) {
@@ -171,6 +186,7 @@ export default {
   data() {
     return {
       project: {},
+      projectContent: '',
       lineChartData: lineChartData,
       ProjectCompleteDialogVisible: false,
       ProjectCancelDialogVisible: false
@@ -213,6 +229,8 @@ export default {
         statusName = '投产'
       } else if (status === '3') {
         statusName = '暂停'
+      } else if (status === '4') {
+        statusName = '取消'
       }
       this.$confirm(`是否确认修改项目状态为${statusName}?`, '提示', {
         confirmButtonText: '确定',

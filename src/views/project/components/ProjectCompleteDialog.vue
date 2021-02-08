@@ -1,11 +1,34 @@
 <template>
   <el-dialog title="项目投产" :visible.sync="dialogCompleteVisible">
-    <el-form ref="form" :model="postForm" :rules="rules" label-width="120px">
+    <el-form ref="form" :model="postForm" label-width="120px">
+      <el-row :gutter="24">
+        <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-form-item label="投产方式" prop="is_all_complete">
+            <el-switch
+              v-model="isAllComplete"
+              active-text="完全投产"
+              inactive-text="分阶段"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="!isAllComplete" :gutter="24">
+        <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-form-item label="投产阶段" prop="stage">
+            <el-input
+              v-model="postForm.stage"
+              placeholder="请输入投产阶段"
+              type="text"
+              size="medium"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
           <el-form-item label="投产时间" prop="change_date">
             <el-date-picker
-              v-model="postForm.change_date"
+              v-model="postForm.complete_date"
               type="date"
               size="small"
               placeholder="选择日期"
@@ -43,8 +66,9 @@ export default {
   },
   data() {
     return {
+      isAllComplete: false,
       postForm: {
-        change_date: null,
+        complete_date: null,
         remark: ''
       }
     }

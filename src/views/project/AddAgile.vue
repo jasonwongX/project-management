@@ -272,12 +272,12 @@ export default {
       postForm: {
         name: '',
         sequence: '',
-        status: 1, // 在建
-        stage: 0,
-        type: 0,
-        control_mode: 0,
-        scale: 0,
-        dev_mode: 0,
+        status: null, // 在建
+        stage: null,
+        type: null,
+        control_mode: null,
+        scale: null,
+        dev_mode: null,
         dev_unit: '',
         dev_team: '',
         demand_dev_mode: '',
@@ -351,7 +351,7 @@ export default {
   },
   methods: {
     cancel() {
-
+      this.$router.go(-1)
     },
     submit() {
 
