@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
     <div class="title-container">
+      <img class="logo-img" src="@/assets/images/logo.png">
       <h3 class="title">项目质量管理系统</h3>
     </div>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
@@ -144,7 +145,7 @@ $cursor: #fff;
     width: 85%;
 
     input {
-      background: transparent;
+      background: none;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
@@ -156,6 +157,9 @@ $cursor: #fff;
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
         -webkit-text-fill-color: $cursor !important;
+      }
+      &:internal-autofill-selected {
+        background-color: none !important;
       }
     }
   }
@@ -173,7 +177,6 @@ $cursor: #fff;
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
-
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -183,12 +186,20 @@ $light_gray:#eee;
   .title-container {
     margin-top:120px;
     position: relative;
-
+    display: flex;
+    align-items: center;
+    flex-direction: column;;
+    .logo-img {
+      width:120px;
+      height:120px;
+      padding:8px;
+      border-radius: 50%;
+      text-align: center;
+      background: #fff;
+    }
     .title {
       font-size: 32px;
       color: #fff;
-      margin: 0px auto 40px auto;
-      text-align: center;
       font-weight: bold;
     }
   }
@@ -197,7 +208,7 @@ $light_gray:#eee;
     width: 420px;
     max-width: 100%;
     margin: 0 auto;
-    margin-top:120px;
+    margin-top:40px;
     overflow: hidden;
   }
 
