@@ -145,6 +145,11 @@ export const constantRoutes = [
         component: () => import('@/views/report/ProjectMonthReport'),
         name: 'ProjectMonthReport',
         meta: { title: '项目月度报告', icon: 'report-month' }
+      },
+      {
+        path: '/risk/index',
+        component: () => import('@/views/risk/index'),
+        name: 'riskIndex'
       }
     ]
   },

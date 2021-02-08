@@ -71,7 +71,7 @@ export default {
       } else if (item === 'risk') {
         this.$router.push({ path: 'risk/index' })
       } else if (item === 'projectChange') {
-        this.$router.push({ path: '/project/change' })
+        this.$router.push({ path: '/report/project/change' })
       }
     },
     fetchData() {
