@@ -1,10 +1,14 @@
 <template>
-  <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-
-    <breadcrumb class="breadcrumb-container" />
-
-    <div v-show="false" class="right-menu">
+  <div class="app-header">
+    <div class="left-header">
+      <img
+        class="logo-img"
+        src="@/assets/images/logo.png"
+      >
+      <span class="title">QMS</span>
+      <span class="title-desc">让质量管理工作如此与众不同</span>
+    </div>
+    <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <span>您好， {{ real_name }}</span>
@@ -32,14 +36,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
 
 export default {
-  components: {
-    Breadcrumb,
-    Hamburger
-  },
+  name: 'AppHeader',
   computed: {
     ...mapGetters([
       'sidebar',
@@ -59,36 +58,34 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.navbar {
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
-
-    &:hover {
-      background: rgba(0, 0, 0, .025)
+<style lang="less" scoped>
+  .left-header {
+    color: #fff;
+    margin-left: 20px;
+    display:flex;
+    align-items: center;
+    .logo-img {
+      width:32px;
+      height:32px;
+      padding: 3px 3px;
+      background: #fff;
+      border-radius: 50%;
+    }
+    .title {
+      font-weight: 800;
+      font-size:24px;
+      margin:0 10px;
+    }
+    .title-desc {
+      margin-left:20px;
+      font-size:16px;
     }
   }
-
-  .breadcrumb-container {
-    float: left;
-  }
-
   .right-menu {
     float: right;
     height: 100%;
     line-height: 50px;
+    color: #fff;
 
     &:focus {
       outline: none;
@@ -99,7 +96,7 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: #fff;
       vertical-align: text-bottom;
 
       &.hover-effect {
@@ -114,7 +111,7 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
-
+      color:#fff;
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
@@ -136,5 +133,4 @@ export default {
       }
     }
   }
-}
 </style>

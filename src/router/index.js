@@ -59,7 +59,7 @@ export const constantRoutes = [
     path: '/project',
     component: Layout,
     redirect: '/project/index',
-    meta: { title: '项目管理', icon: 'project' },
+    meta: { title: '项目管理', icon: 'project-manage' },
     children: [
       {
         path: 'index',
