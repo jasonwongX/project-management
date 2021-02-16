@@ -1,127 +1,187 @@
 <template>
-  <div class="process-container">
-    <div class="process-header">
-      <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="dialogFormVisible = true">新增迭代</el-button>
+  <div class="app-container">
+    <div class="box-header">
+      <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="addItem()">新增迭代</el-button>
     </div>
-    <div class="process-content">
-      <el-card v-for="(item,index) in sprints" :key="index" class="box-card">
-        <div slot="header" class="clearfix">
-          <span>{{ item.name }}</span>
-          <el-button style="float: right; padding: 0px 10px" type="text">保存</el-button>
-          <el-button style="float: right; padding: 0px 10px" type="text">移除</el-button>
-        </div>
-        <div>
-          <el-form>
+    <el-row v-for="(sprintRows,index) in sprintArr" :key="index" :gutter="24">
+      <el-col v-for="(item,colIndex) in sprintRows" :key="colIndex" :span="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>迭代{{ item.sequence }}</span>
+            <el-button style="float: right; padding: 0px 10px" type="text" @click="modifyItem(item)">编辑</el-button>
+            <el-button style="float: right; padding: 0px 10px;color:#f56c6c" type="text" @click="remove(item)">移除</el-button>
+          </div>
+          <div>
             <el-row :gutter="32" class="item-row">
-              <el-col :span="8">
-                <el-form-item label="用户故事数">
-                  <el-input-number v-model="item.story" :min="0" label="用户故事数" />
-                </el-form-item>
+              <el-col :span="8" class="item-col">
+                <span class="item-title">用户故事数:</span>
+                <span class="item-content">{{ item.story_num }}</span>
               </el-col>
-              <el-col :span="8">
-                <el-form-item label="工作点数">
-                  <el-input-number v-model="item.task" :min="0" label="工作点数" />
-                </el-form-item>
+              <el-col :span="8" class="item-col">
+                <span class="item-title">工作点数:</span>
+                <span class="item-content">{{ item.task_num }}</span>
               </el-col>
-              <el-col :span="8">
-                <el-form-item label="完成率">
-                  <el-input-number v-model="item.percent" :min="0" :max="100" label="完成率" />
-                </el-form-item>
+              <el-col :span="8" class="item-col">
+                <span class="item-title">完成率:</span>
+                <span class="item-content">{{ item.complete_percent }}</span>
               </el-col>
             </el-row>
             <el-row :gutter="24">
-              <el-col>
-                <el-form-item label="敏捷活动">
-                  <el-input
-                    v-model="item.activity"
-                    :autosize="{ minRows: 2, maxRows: 4}"
-                    placeholder="业务梳理会/计划会/站立会/评审会/回顾会执行情况"
-                    type="textarea"
-                  />
-                </el-form-item>
+              <el-col :span="24" class="item-col">
+                <span class="item-title">迭代时间:</span>
+                <span class="item-content">{{ item.sprint_start_date }} ~ {{ item.sprint_end_date }}</span>
               </el-col>
             </el-row>
             <el-row :gutter="24">
-              <el-col>
-                <el-form-item label="敏捷团队建设">
-                  <el-input
-                    v-model="item.team"
-                    :autosize="{ minRows: 2, maxRows: 4}"
-                    placeholder="团队自组织、角色分配及团队协作方面情况"
-                    type="textarea"
-                  />
-                </el-form-item>
+              <el-col :span="24" class="item-col">
+                <span class="item-title">内容描述:</span>
+                <span class="item-content">{{ item.description }}</span>
               </el-col>
             </el-row>
             <el-row :gutter="24">
-              <el-col>
-                <el-form-item label="敏捷需求管理">
-                  <el-input
-                    v-model="item.requirement"
-                    :autosize="{ minRows: 2, maxRows: 4}"
-                    placeholder="用户故事拆分与估算情况"
-                    type="textarea"
-                  />
-                </el-form-item>
+              <el-col :span="24" class="item-col">
+                <span class="item-title">敏捷活动:</span>
+                <span class="item-content">{{ item.activity_summary }}</span>
               </el-col>
             </el-row>
             <el-row :gutter="24">
-              <el-col>
-                <el-form-item label="敏捷技术实践">
-                  <el-input
-                    v-model="item.teach"
-                    :autosize="{ minRows: 2, maxRows: 4}"
-                    placeholder="代码管理、流水线、自动化测试、CI/CD、代码扫描实践情况"
-                    type="textarea"
-                  />
-                </el-form-item>
+              <el-col :span="24" class="item-col">
+                <span class="item-title">敏捷团队建设:</span>
+                <span class="item-content">{{ item.team_summary }}</span>
               </el-col>
             </el-row>
-          </el-form>
-        </div>
-      </el-card>
-    </div>
-    <el-dialog title="新增迭代" :visible.sync="dialogFormVisible">
-      <el-form>
-        <el-form-item label="迭代名称">
-          <el-input v-model="newSprintName" autocomplete="off" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addItem()">确 定</el-button>
-      </div>
-    </el-dialog>
+            <el-row :gutter="24">
+              <el-col :span="24" class="item-col">
+                <span class="item-title">敏捷需求管理:</span>
+                <span class="item-content">{{ item.requirement_summary }}</span>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="24" class="item-col">
+                <span class="item-title">敏捷技术实践:</span>
+                <span class="item-content">{{ item.tech_summary }}</span>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <process-agile-dialog
+      :id="curProcessId"
+      :is-edit="isEdit"
+      :project-id="projectId"
+      :post-form="processInfo"
+      :dialog-agile-process-visible="dialogAgileProcessVisible"
+      @closeAgileProcessDialog="closeAgileProcessDialog"
+    />
   </div>
 </template>
 <style lang="less" scoped>
-.process-header {
+.app-container {
+    padding: 10px 10px;
+}
+.box-header {
     margin-bottom: 10px;
+}
+.box-card {
+  margin-bottom: 10px;
+}
+.item-col {
+    padding: 5px 0;
+    font-size: 14px;
+    line-height: 20px;
+    .item-title {
+        margin-right:10px;
+    }
+    .item-content {
+        font-weight: 500;
+    }
 }
 </style>
 <script>
+import { fetchList, deleteAgileProcess, fetchAgileProcess } from '@/api/agileProcess'
+import ProcessAgileDialog from './ProcessAgileDialog'
+const _ = require('lodash')
 export default {
-  data() {
-    return {
-      dialogFormVisible: false,
-      newSprintName: '',
-      sprints: []
+  components: {
+    ProcessAgileDialog
+  },
+  props: {
+    projectId: {
+      type: Number,
+      default: 0
     }
   },
+  data() {
+    return {
+      dialogAgileProcessVisible: false,
+      sequence: null,
+      sprints: [],
+      isEdit: false,
+      curProcessId: 0,
+      processInfo: {}
+    }
+  },
+  computed: {
+    sprintArr() {
+      return _.chunk(this.sprints, 2)
+    }
+  },
+  created() {
+    this.getList()
+  },
   methods: {
-    addItem() {
-      this.sprints.push({
-        name: this.newSprintName,
-        story: null,
-        task: null,
-        percent: null,
-        activity: '',
-        team: '',
-        requirement: '',
-        tech: ''
+    closeAgileProcessDialog() {
+      this.dialogAgileProcessVisible = false
+    },
+    getList() {
+      const listQuery = {
+        limit: 20,
+        project_id: this.projectId
+      }
+      fetchList(listQuery).then(response => {
+        this.sprints = _.cloneDeep(response.data)
       })
-      this.newSprintName = ''
-      this.dialogFormVisible = false
+    },
+    addItem() {
+      this.processInfo = {
+        sequence: null,
+        project_id: this.projectId,
+        story_num: null,
+        task_num: null,
+        complete_percent: null,
+        activity_summary: '',
+        team_summary: '',
+        requirement_summary: '',
+        tech_summary: '',
+        sprint_start_date: null,
+        sprint_end_date: null,
+        description: ''
+      }
+      this.id = 0
+      this.isEdit = false
+      this.dialogAgileProcessVisible = true
+    },
+    modifyItem(sprint) {
+      this.id = sprint.id
+      fetchAgileProcess(this.id).then(response => {
+        this.processInfo = response.data
+        this.isEdit = true
+        this.dialogAgileProcessVisible = true
+      })
+    },
+    remove(sprint) {
+      this.$confirm('是否确认删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteAgileProcess(sprint.id).then(response => {
+          this.$message.success('成功删除迭代')
+          this.getList()
+        })
+      })
     }
   }
 }

@@ -59,8 +59,8 @@
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="process-outline" /> 过程跟踪</span>
-          <process-common v-if="project.dev_mode == 1" />
-          <process-agile v-else />
+          <process-common v-if="project.dev_mode == 1" :project-id="projectId" />
+          <process-agile v-else :project-id="projectId" />
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="risk-outline" /> 项目风险</span>
