@@ -3,26 +3,6 @@
     <el-form ref="form" :model="postForm" :rules="rules">
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="所属项目" prop="name">
-            <el-select
-              v-model="postForm.project_id"
-              filterable
-              remote
-              reserve-keyword
-              placeholder="请输入项目名称"
-              :remote-method="searchProjectList"
-              :loading="loadingProject"
-            >
-              <el-option
-                v-for="item in projectList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="风险类型" prop="type">
             <el-select v-model="postForm.type" placeholder="请选择类型">
               <el-option
@@ -118,21 +98,7 @@
 }
 </style>
 <script>
-const defaultForm = {
-  description: '', // 风险描述
-  project_id: null, // 所属项目ID
-  status: null, // 风险状态
-  type: null, // 风险类型
-  level: null, // 等级
-  reason: '', // 原因
-  measure: '', // 措施
-  exist_time: '', // 续存期
-  score: 0 // 评分
-
-}
-const _ = require('lodash')
-import { fetchInfo, addRisk, editRisk } from '@/api/risk'
-import { fetchList, fetchProject } from '@/api/project'
+import { addRisk, editRisk } from '@/api/risk'
 export default {
   name: 'RiskModifyDialog',
   props: {
@@ -143,22 +109,30 @@ export default {
     dialogRiskVisible: {
       type: Boolean,
       default: false
+    },
+    postForm: {
+      type: Object,
+      default: () => {}
+    },
+    statusList: {
+      type: Array,
+      default: () => []
+    },
+    levelList: {
+      type: Array,
+      default: () => []
+    },
+    typeList: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
-      postForm: _.cloneDeep(defaultForm),
-      statusList: this.$store.state.risk.statusList,
-      levelList: this.$store.state.risk.levelList,
-      typeList: this.$store.state.risk.typeList,
       loadingProject: false, // 项目查询加载
-      projectList: [], // 项目列表
       rules: {
         description: [
           { required: true, message: '描述不能为空' }
-        ],
-        project_id: [
-          { required: true, message: '请选择项目' }
         ],
         level: [
           { required: true, message: '请选择风险等级' }
@@ -172,45 +146,8 @@ export default {
       }
     }
   },
-  created() {
-    if (this.isEdit) {
-      const id = this.$route.query && this.$route.query.id
-      this.getInfo(id)
-    } else {
-      this.postForm = Object.assign({}, defaultForm)
-    }
-  },
   methods: {
     // 风险详情
-    getInfo(id) {
-      fetchInfo(id).then(response => {
-        this.postForm = _.cloneDeep(response.data)
-        this.postForm.level = this.postForm.level.toString()
-        this.postForm.status = this.postForm.status.toString()
-        this.postForm.type = this.postForm.type.toString()
-        delete this.postForm['project']
-        this.initProjectById(this.postForm.project_id)
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    initProjectById(id) {
-      fetchProject(id).then(response => {
-        this.projectList = []
-        const temp = {}
-        temp.id = response.data.id
-        temp.name = response.data.name
-        this.projectList.push(temp)
-      })
-    },
-    // 查询项目列表
-    searchProjectList(label) {
-      this.loadingProject = true
-      fetchList({ name: label }).then(response => {
-        this.projectList = response.data
-        this.loadingProject = false
-      })
-    },
     cancel() {
       this.$emit('closeRiskDialog')
     },
@@ -221,10 +158,12 @@ export default {
       }
       if (this.isEdit) {
         editRisk(this.postForm).then(response => {
+          this.$message.success('成功更新风险信息')
           this.$emit('closeRiskDialog')
         })
       } else {
         addRisk(this.postForm).then(response => {
+          this.$message.success('成功添加风险')
           this.$emit('closeRiskDialog')
         })
       }

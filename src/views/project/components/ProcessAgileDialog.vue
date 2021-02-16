@@ -122,14 +122,6 @@ export default {
       type: Boolean,
       default: false
     },
-    projectId: {
-      type: Number,
-      default: 0
-    },
-    id: {
-      type: Number,
-      default: 0
-    },
     isEdit: {
       type: Boolean,
       default: false

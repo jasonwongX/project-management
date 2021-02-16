@@ -68,7 +68,6 @@
     </el-row>
 
     <process-agile-dialog
-      :id="curProcessId"
       :is-edit="isEdit"
       :project-id="projectId"
       :post-form="processInfo"
@@ -134,6 +133,7 @@ export default {
   methods: {
     closeAgileProcessDialog() {
       this.dialogAgileProcessVisible = false
+      this.getList()
     },
     getList() {
       const listQuery = {
@@ -159,12 +159,10 @@ export default {
         sprint_end_date: null,
         description: ''
       }
-      this.id = 0
       this.isEdit = false
       this.dialogAgileProcessVisible = true
     },
     modifyItem(sprint) {
-      this.id = sprint.id
       fetchAgileProcess(this.id).then(response => {
         this.processInfo = response.data
         this.isEdit = true

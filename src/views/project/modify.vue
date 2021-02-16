@@ -64,7 +64,7 @@
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="risk-outline" /> 项目风险</span>
-          <risk-board />
+          <risk-board :project-id="projectId" />
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="score-outline" /> 风险评分</span>
