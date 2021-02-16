@@ -48,18 +48,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="开发模式" prop="dev_mode">
-            <el-select v-model="postForm.dev_mode" placeholder="开发模式">
-              <el-option
-                v-for="(item, index) in devModeList"
-                :key="index"
-                :label="item"
-                :value="index"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
+
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="研发单位" prop="dev_unit">
             <el-input v-model="postForm.dev_unit" placeholder="研发" />
@@ -72,7 +61,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="项目经理" prop="pm">
-            <el-input v-model="postForm.contact.pm" placeholder="项目经理" />
+            <el-input v-model="postForm.pm" placeholder="项目经理" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -82,23 +71,23 @@
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="产品经理" prop="po">
-            <el-input v-model="postForm.contact.po" placeholder="产品经理" />
+            <el-input v-model="postForm.po" placeholder="产品经理" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="测试经理" prop="ptm">
-            <el-input v-model="postForm.contact.ptm" placeholder="˜测试经理" />
+            <el-input v-model="postForm.ptm" placeholder="˜测试经理" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="质量控制人员" prop="qa">
-            <el-input v-model="postForm.contact.qa" placeholder="质量控制人员" />
+            <el-input v-model="postForm.qa" placeholder="质量控制人员" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="申请日期" prop="application_date">
             <el-date-picker
-              v-model="postForm.timeline.application_date"
+              v-model="postForm.application_date"
               type="date"
               placeholder="选择日期"
               value-format="yyyy-MM-dd"
@@ -108,11 +97,23 @@
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="章程发布日期" prop="charter_release_date">
             <el-date-picker
-              v-model="postForm.timeline.charter_release_date"
+              v-model="postForm.charter_release_date"
               type="date"
               placeholder="选择日期"
               value-format="yyyy-MM-dd"
             />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="系统类型" prop="dev_mode">
+            <el-select v-model="postForm.sys_type" placeholder="系统类型">
+              <el-option
+                v-for="(item, index) in sysTypeList"
+                :key="index"
+                :label="item"
+                :value="index"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -157,10 +158,21 @@
 }
 </style>
 <script>
-import { addProject } from '@/api/project'
-
+import { addProject, editProject } from '@/api/project'
+const _ = require('lodash')
 export default {
   name: 'AddProject',
+  props: {
+    isEdit: {
+      type: Boolean,
+      default: false
+    },
+    projectInfo: {
+      type: Object,
+      default: () => {}
+    }
+  },
+
   data() {
     return {
       postForm: {
@@ -171,7 +183,7 @@ export default {
         type: null,
         control_mode: null,
         scale: null,
-        dev_mode: null,
+        dev_mode: 1,
         dev_unit: '',
         dev_team: '',
         demand_dev_mode: '',
@@ -179,25 +191,19 @@ export default {
         description: '',
         is_phased: 0,
         complete_percent: 0,
-        contact: {
-          business_contact: '',
-          po: '',
-          ptm: '',
-          qa: ''
-        },
-        timeline: {
-          application_date: '',
-          charter_release_date: ''
-        }
+        business_contact: '',
+        sys_type: null,
+        pm: '',
+        po: '',
+        ptm: '',
+        qa: '',
+        application_date: '',
+        charter_release_date: ''
       },
       statusList: {
         1: '在建',
         2: '暂停',
         3: '投产'
-      },
-      devModeList: {
-        1: '传统模式',
-        2: '敏捷模式'
       },
       testModeList: {
         1: '自主测试',
@@ -205,13 +211,14 @@ export default {
         3: '性能测试',
         4: '专项测试'
       },
+      sysTypeList: {
+        1: '项目',
+        2: '迭代开发'
+      },
       loadingProject: false, // 项目查询加载
       rules: {
         name: [
           { required: true, message: '项目名称不能为空' }
-        ],
-        devMode: [
-          { required: true, message: '请选择开发模式' }
         ],
         type: [
           { required: true, message: '请选择项目类型' }
@@ -232,15 +239,27 @@ export default {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
+    if (this.isEdit) {
+      this.postForm = _.cloneDeep(this.projectInfo)
+    }
   },
   methods: {
     cancel() {
-      this.$router.go(-1)
+      if (!this.isEdit) {
+        this.$router.go(-1)
+      }
     },
     submit() {
-      addProject(this.postForm).then(response => {
-        this.$router.push('/project/index')
-      })
+      if (this.isEdit) {
+        editProject(this.postForm).then(response => {
+          this.$message.success('成功更新项目信息')
+        })
+      } else {
+        addProject(this.postForm).then(response => {
+          this.$message.success('成功添加项目')
+          this.$router.push('/project/index')
+        })
+      }
     }
   }
 }

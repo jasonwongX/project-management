@@ -52,21 +52,34 @@
     </el-row>
     <el-row class="project-menu-item">
       <el-tabs type="border-card">
-        <el-tab-pane v-if="project.dev_mode == 1" label="基础信息"><add-project /></el-tab-pane>
-        <el-tab-pane v-else label="基础信息"><add-agile-project /></el-tab-pane>
-        <el-tab-pane v-if="project.dev_mode == 1" label="过程跟踪">
-          <process-common />
+        <el-tab-pane>
+          <span slot="label"><svg-icon icon-class="info-outline" /> 基础信息</span>
+          <add-project v-if="project.dev_mode == 1" :is-edit="true" :project-info="project" />
+          <add-agile-project v-else :is-edit="true" :project-info="project" />
         </el-tab-pane>
-        <el-tab-pane v-else label="过程跟踪">
-          <process-agile />
+        <el-tab-pane>
+          <span slot="label"><svg-icon icon-class="process-outline" /> 过程跟踪</span>
+          <process-common v-if="project.dev_mode == 1" />
+          <process-agile v-else />
         </el-tab-pane>
-        <el-tab-pane label="项目风险"><risk-board /></el-tab-pane>
-        <el-tab-pane label="风险评分"><risk-score-board /></el-tab-pane>
-        <el-tab-pane label="项目变更"><project-change-board /></el-tab-pane>
-        <el-tab-pane label="其他信息">
+        <el-tab-pane>
+          <span slot="label"><svg-icon icon-class="risk-outline" /> 项目风险</span>
+          <risk-board />
+        </el-tab-pane>
+        <el-tab-pane>
+          <span slot="label"><svg-icon icon-class="score-outline" /> 风险评分</span>
+          <risk-score-board />
+        </el-tab-pane>
+        <el-tab-pane>
+          <span slot="label"><svg-icon icon-class="change-outline" /> 项目变更</span>
+          <project-change-board />
+        </el-tab-pane>
+        <el-tab-pane>
+          <span slot="label"><svg-icon icon-class="other-outline" /> 其他信息</span>
           <div class="editor-container">
             <Tinymce ref="editor" v-model="projectContent" :height="400" />
-          </div></el-tab-pane>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </el-row>
     <project-complete-dialog :dialog-complete-visible="ProjectCompleteDialogVisible" @closeCompleteDialog="closeCompleteDialog" />
@@ -192,7 +205,7 @@ export default {
       ProjectCancelDialogVisible: false
     }
   },
-  async created() {
+  async mounted() {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.projectId = this.$route.query && this.$route.query.id

@@ -60,12 +60,12 @@
       </el-table-column>
       <el-table-column label="项目经理" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.pm ? scope.row.contact.pm : '' }}</span>
+          <span>{{ scope.row.pm }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.qa ? scope.row.contact.qa : '' }}</span>
+          <span>{{ scope.row.qa }}</span>
         </template>
       </el-table-column>
 

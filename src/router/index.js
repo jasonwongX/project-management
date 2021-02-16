@@ -74,11 +74,6 @@ export const constantRoutes = [
         meta: { title: '敏捷项目', icon: 'agile' }
       },
       {
-        path: 'info',
-        component: () => import('@/views/project/detail'),
-        name: 'projectInfo'
-      },
-      {
         path: 'edit',
         component: () => import('@/views/project/modify'),
         name: 'projectEdit'
