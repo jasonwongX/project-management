@@ -60,7 +60,7 @@ const defaultForm = {
   scores: [] // 评分
 }
 const _ = require('lodash')
-import { addRiskScore, editRiskScore, getProjectScoreList } from '@/api/riskScore'
+import { addRiskScore, editRiskScore, getProjectScoreByMonth } from '@/api/riskScore'
 import { fetchList, fetchProject } from '@/api/project'
 export default {
   name: 'RiskScoreForm',
@@ -101,7 +101,7 @@ export default {
   methods: {
     // 风险详情
     getInfo(projectId, month) {
-      getProjectScoreList({ project_id: projectId, month }).then(response => {
+      getProjectScoreByMonth({ project_id: projectId, month }).then(response => {
         this.postForm = _.cloneDeep(response.data)
         this.postForm.project_id = this.postForm.project_id.toString()
         this.initProjectById(this.postForm.project_id)

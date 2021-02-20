@@ -24,17 +24,28 @@ export function editRiskScore(data) {
   })
 }
 
-export function deleteRiskScore(id) {
+export function deleteRiskScore(projectId, month) {
   return request({
     url: '/riskScore/delete',
     method: 'post',
-    params: { id }
+    params: {
+      'project_id': projectId,
+      'time': month
+    }
   })
 }
 
 export function getProjectScoreList(query) {
   return request({
     url: '/riskScore/projectScoreList',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getProjectScoreByMonth(query) {
+  return request({
+    url: '/riskScore/projectScoreByMonth',
     method: 'get',
     params: query
   })

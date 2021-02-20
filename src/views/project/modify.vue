@@ -68,11 +68,11 @@
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="score-outline" /> 风险评分</span>
-          <risk-score-board />
+          <risk-score-board :project-id="projectId" />
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="change-outline" /> 项目变更</span>
-          <project-change-board />
+          <project-change-board :project-id="projectId" />
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="other-outline" /> 其他信息</span>
@@ -90,9 +90,9 @@
 <style lang="less">
 .project-menu-item {
   .el-tabs__item {
-    height:48px!important;
-    line-height: 48px!important;
-    font-size: 16px!important;
+    height:40px!important;
+    line-height: 40px!important;
+    font-size: 14px!important;
   }
 }
 </style>

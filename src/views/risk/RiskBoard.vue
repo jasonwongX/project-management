@@ -183,6 +183,10 @@ export default {
     },
     editRisk(item) {
       this.riskInfo = item
+      this.riskInfo.type = this.riskInfo.type.toString()
+      this.riskInfo.status = this.riskInfo.status.toString()
+      this.riskInfo.level = this.riskInfo.level.toString()
+
       this.dialogRiskVisible = true
       this.isEdit = true
     },
