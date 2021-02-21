@@ -10,8 +10,8 @@
       <el-col :span="8" class="right-title-row">
         <el-radio-group v-model="project.status" size="medium" @change="statusChange($event)">
           <el-radio-button label="1">在建</el-radio-button>
-          <el-radio-button label="2">投产</el-radio-button>
-          <el-radio-button label="3">暂停</el-radio-button>
+          <el-radio-button label="2">暂停</el-radio-button>
+          <el-radio-button label="3">投产</el-radio-button>
           <el-radio-button label="4">取消</el-radio-button>
         </el-radio-group>
       </el-col>
@@ -82,8 +82,8 @@
         </el-tab-pane>
       </el-tabs>
     </el-row>
-    <project-complete-dialog :dialog-complete-visible="ProjectCompleteDialogVisible" @closeCompleteDialog="closeCompleteDialog" />
-    <project-cancel-dialog :dialog-cancel-visible="ProjectCancelDialogVisible" @closeCancelDialog="closeCancelDialog" />
+    <project-complete-dialog :project-id="projectId" :dialog-complete-visible="ProjectCompleteDialogVisible" @closeCompleteDialog="closeCompleteDialog" />
+    <project-stop-dialog :project-id="projectId" :dialog-stop-visible="ProjectStopDialogVisible" @closeStopDialog="closeStopDialog" />
 
   </div>
 </template>
@@ -162,9 +162,10 @@ import { fetchProject } from '@/api/project'
 import ProcessCommon from './components/ProcessCommon'
 import ProcessAgile from './components/ProcessAgile'
 import RiskBoard from '../risk/RiskBoard'
-import ProjectCancelDialog from './components/ProjectCancelDialog'
+import ProjectStopDialog from './components/ProjectStopDialog'
 import ProjectCompleteDialog from './components/ProjectCompleteDialog'
 import Tinymce from '@/components/Tinymce'
+import { updateProjectStatus } from '@/api/project'
 
 const _ = require('lodash')
 const lineChartData = {
@@ -183,7 +184,7 @@ export default {
     ProcessAgile,
     ProjectChangeBoard,
     RiskBoard,
-    ProjectCancelDialog,
+    ProjectStopDialog,
     ProjectCompleteDialog,
     Tinymce
   },
@@ -202,7 +203,7 @@ export default {
       projectContent: '',
       lineChartData: lineChartData,
       ProjectCompleteDialogVisible: false,
-      ProjectCancelDialogVisible: false
+      ProjectStopDialogVisible: false
     }
   },
   async mounted() {
@@ -232,16 +233,16 @@ export default {
     closeCompleteDialog() {
       this.ProjectCompleteDialogVisible = false
     },
-    closeCancelDialog() {
-      this.ProjectCancelDialogVisible = false
+    closeStopDialog() {
+      this.ProjectStopDialogVisible = false
     },
     statusChange(status) {
       let statusName = '在建'
       const that = this
       if (status === '2') {
-        statusName = '投产'
-      } else if (status === '3') {
         statusName = '暂停'
+      } else if (status === '3') {
+        statusName = '投产'
       } else if (status === '4') {
         statusName = '取消'
       }
@@ -250,10 +251,17 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        if (status === '2') {
+        if (status === '3') {
           that.ProjectCompleteDialogVisible = true
-        } else if (status === '3') {
-          that.ProjectCancelDialogVisible = true
+        } else if (status === '2') {
+          that.ProjectStopDialogVisible = true
+        } else {
+          updateProjectStatus({ project_id: that.projectId, status }).then(response => {
+            this.$message({
+              type: 'success',
+              message: '更新成功!'
+            })
+          })
         }
       })
     }

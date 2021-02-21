@@ -47,11 +47,27 @@ export function deleteProject(id) {
   })
 }
 
-export function fetchPv(pv) {
+/**
+ * 项目投产
+ * @param {*} data 投产信息
+ */
+export function completeProject(data) {
   return request({
-    url: '/project/pv',
-    method: 'get',
-    params: { pv }
+    url: '/project/complete',
+    method: 'post',
+    params: data
+  })
+}
+
+/**
+ * 项目状态更新
+ * @param {*} data 项目状态
+ */
+export function updateProjectStatus(data) {
+  return request({
+    url: '/project/updateStatus',
+    method: 'post',
+    params: data
   })
 }
 

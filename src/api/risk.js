@@ -24,14 +24,6 @@ export function getRiskTypeStatistics() {
   })
 }
 
-export function fetchPv(pv) {
-  return request({
-    url: '/vue-admin-template/risk/pv',
-    method: 'get',
-    params: { pv }
-  })
-}
-
 export function getStatusList() {
   return request({
     url: '/risk/statusList',

@@ -3,30 +3,27 @@
     <el-form ref="form" :model="postForm" label-width="120px">
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-          <el-form-item label="投产方式" prop="is_all_complete">
-            <el-switch
-              v-model="isAllComplete"
-              active-text="完全投产"
-              inactive-text="分阶段"
-            />
+          <el-form-item label="投产方式:" prop="is_phased">
+            <el-radio v-model="postForm.is_phased" label="0">完全投产</el-radio>
+            <el-radio v-model="postForm.is_phased" label="1">分阶段</el-radio>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="!isAllComplete" :gutter="24">
+      <el-row v-if="postForm.is_phased === '1'" :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-          <el-form-item label="投产阶段" prop="stage">
+          <el-form-item label="投产阶段:" prop="sequence">
             <el-input
-              v-model="postForm.stage"
+              v-model="postForm.sequence"
               placeholder="请输入投产阶段"
               type="text"
-              size="medium"
+              size="small"
             />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-          <el-form-item label="投产时间" prop="change_date">
+          <el-form-item label="投产时间:" prop="change_date">
             <el-date-picker
               v-model="postForm.complete_date"
               type="date"
@@ -38,11 +35,11 @@
       </el-row>
       <el-row :gutter="24">
         <el-col>
-          <el-form-item label="投产意义">
+          <el-form-item label="投产意义:">
             <el-input
               v-model="postForm.remark"
               :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入投产意义）"
+              placeholder="请输入投产意义"
               type="textarea"
             />
           </el-form-item>
@@ -56,18 +53,26 @@
   </el-dialog>
 </template>
 <script>
+
+import { completeProject } from '@/api/project'
 export default {
   name: 'ProjectCompleteDialog',
   props: {
     dialogCompleteVisible: {
       type: Boolean,
       default: false
+    },
+    projectId: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
-      isAllComplete: false,
       postForm: {
+        project_id: this.projectId,
+        is_phased: '0',
+        sequence: null,
         complete_date: null,
         remark: ''
       }
@@ -78,7 +83,13 @@ export default {
       this.$emit('closeCompleteDialog')
     },
     submitForm() {
-
+      completeProject(this.postForm).then(response => {
+        this.$message({
+          type: 'success',
+          message: '更新成功!'
+        })
+        this.$emit('closeCompleteDialog')
+      })
     }
   }
 }

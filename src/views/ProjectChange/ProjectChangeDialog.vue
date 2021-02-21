@@ -102,22 +102,7 @@
 }
 </style>
 <script>
-const defaultForm = {
-  project_id: null, // 所属项目ID
-  change_stage: null, // 变更提出阶段
-  change_date: null, // 变更提交时间
-  type: null, // 类型
-  level: null, // 等级
-  is_external_forced_change: null, // 是否外部强制变更
-  is_add_budget: null, // 是否增加预算
-  workload_changes: 0, // 工作量变化
-  workload_change_rate: null, // 工作量变化率
-  schedule_deviation: null, // 工期偏差
-  remark: '' // 备注
-}
-const _ = require('lodash')
-import { fetchInfo, addProjectChange, editProjectChange } from '@/api/projectChange'
-import { fetchList, fetchProject } from '@/api/project'
+import { addProjectChange, editProjectChange } from '@/api/projectChange'
 export default {
   name: 'ProjectChangeDialog',
   props: {
@@ -128,20 +113,27 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
+    },
+    postForm: {
+      type: Object,
+      default: () => {}
+    },
+    stageList: {
+      type: Array,
+      default: () => []
+    },
+    levelList: {
+      type: Array,
+      default: () => []
+    },
+    typeList: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
-      postForm: _.cloneDeep(defaultForm),
-      stageList: this.$store.state.project.stageList,
-      levelList: this.$store.state.projectChange.levelList,
-      typeList: this.$store.state.projectChange.typeList,
-      loadingProject: false, // 项目查询加载
-      projectList: [], // 项目列表
       rules: {
-        project_id: [
-          { required: true, message: '请选择项目' }
-        ],
         level: [
           { required: true, message: '请选择风险等级' }
         ],
@@ -151,45 +143,7 @@ export default {
       }
     }
   },
-  created() {
-    if (this.isEdit) {
-      const id = this.$route.query && this.$route.query.id
-      this.getInfo(id)
-    } else {
-      this.postForm = Object.assign({}, defaultForm)
-    }
-  },
   methods: {
-    // 详情
-    getInfo(id) {
-      fetchInfo(id).then(response => {
-        this.postForm = _.cloneDeep(response.data)
-        this.postForm.level = this.postForm.level.toString()
-        this.postForm.change_stage = this.postForm.change_stage.toString()
-        this.postForm.type = this.postForm.type.toString()
-        delete this.postForm['project']
-        this.initProjectById(this.postForm.project_id)
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    initProjectById(id) {
-      fetchProject(id).then(response => {
-        this.projectList = []
-        const temp = {}
-        temp.id = response.data.id
-        temp.name = response.data.name
-        this.projectList.push(temp)
-      })
-    },
-    // 查询项目列表
-    searchProjectList(label) {
-      this.loadingProject = true
-      fetchList({ name: label }).then(response => {
-        this.projectList = response.data
-        this.loadingProject = false
-      })
-    },
     cancel() {
       this.$emit('closeDialog')
     },
@@ -204,7 +158,7 @@ export default {
             type: 'success',
             message: '更新成功!'
           })
-          this.$router.push({ path: '/project/change' })
+          this.$emit('closeDialog')
         })
       } else {
         addProjectChange(this.postForm).then(response => {
@@ -212,7 +166,7 @@ export default {
             type: 'success',
             message: '增加成功!'
           })
-          this.$router.push({ path: '/project/change' })
+          this.$emit('closeDialog')
         })
       }
     }
