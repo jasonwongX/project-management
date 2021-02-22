@@ -6,7 +6,6 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-import { getRiskScoreStatistics } from '@/api/riskScore'
 const animationDuration = 3000
 
 export default {
@@ -22,14 +21,20 @@ export default {
     height: {
       type: String,
       default: '260px'
+    },
+    list: {
+      type: Array,
+      default: () => []
+    },
+    max: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
       chart: null,
-      list: [],
-      stander: [],
-      max: 0
+      stander: []
     }
   },
   mounted() {
@@ -51,22 +56,17 @@ export default {
   },
   methods: {
     fetchData() {
-      getRiskScoreStatistics().then(response => {
-        const that = this
-        this.list = response.data.actual_value
-        this.stander = response.data.stander_value
-        this.max = response.data.total
-        this.label = this.list.map(function(value, index) {
-          return {
-            'name': value['name'],
-            'max': that.max
-          }
-        })
-        this.listValue = this.list.map(function(value, index) {
-          return value['value']
-        })
-        this.initChart()
+      const that = this
+      this.label = this.list.map(function(value, index) {
+        return {
+          'name': value['name'],
+          'max': that.max
+        }
       })
+      this.listValue = this.list.map(function(value, index) {
+        return value['value']
+      })
+      this.initChart()
     },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
@@ -75,7 +75,7 @@ export default {
         color: ['red', '#69c0ff'],
         title: {
           show: false,
-          text: '项目健指数',
+          text: '项目健康指数',
           x: 'center',
           y: 'top',
           textStyle: {

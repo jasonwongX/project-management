@@ -71,6 +71,30 @@ export function updateProjectStatus(data) {
   })
 }
 
+/**
+ * 项目汇总信息
+ * @param {*} id 项目ID
+ */
+export function projectCollectDetail(id) {
+  return request({
+    url: '/project/collectDetail',
+    method: 'get',
+    params: { id }
+  })
+}
+
+/**
+ * 保存、新增项目额外内容
+ * @param {*} data 项目信息
+ */
+export function saveProjectContent(data) {
+  return request({
+    url: '/project/saveContent',
+    method: 'post',
+    params: data
+  })
+}
+
 export function getStageList() {
   return request({
     url: '/project/stageList',

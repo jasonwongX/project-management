@@ -21,14 +21,14 @@
         <line-chart :chart-data="lineChartData" />
       </el-col>
       <el-col :xs="24" :sm="6" :lg="6">
-        <raddar-chart />
+        <raddar-chart :list="projectCollectDetail.scores.actual_value" :max="projectCollectDetail.scores.total" />
       </el-col>
       <el-col :xs="24" :sm="4" :lg="4">
         <el-row :gutter="24" class="data-row">
           <el-col :span="24">
             <div class="data-group group-red">
               <div class="title">项目变更</div>
-              <div class="count">0</div>
+              <div class="count">{{ projectCollectDetail.changeCount }}</div>
             </div>
           </el-col>
         </el-row>
@@ -36,7 +36,7 @@
           <el-col :span="24">
             <div class="data-group group-red">
               <div class="title">项目风险点</div>
-              <div class="count">3</div>
+              <div class="count">{{ projectCollectDetail.riskCount }}</div>
             </div>
           </el-col>
         </el-row>
@@ -44,7 +44,7 @@
           <el-col :span="24">
             <div class="data-group group-blue">
               <div class="title">健康评分</div>
-              <div class="count">86</div>
+              <div class="count">{{ projectCollectDetail.averageScore }}</div>
             </div>
           </el-col>
         </el-row>
@@ -78,6 +78,14 @@
           <span slot="label"><svg-icon icon-class="other-outline" /> 其他信息</span>
           <div class="editor-container">
             <Tinymce ref="editor" v-model="projectContent" :height="400" />
+            <el-row type="flex" justify="center" style="margin-top:10px">
+              <el-col :span="3">
+                <el-button type="info" style="width:80%" @click="cancel()">取消</el-button>
+              </el-col>
+              <el-col :span="3">
+                <el-button type="primary" style="width:80%" @click="submit()">保存</el-button>
+              </el-col>
+            </el-row>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -158,14 +166,13 @@ import AddAgileProject from './AddAgile'
 
 import RiskScoreBoard from '../RiskScore/RiskScoreBoard'
 import ProjectChangeBoard from '../ProjectChange/ProjectChangeBoard'
-import { fetchProject } from '@/api/project'
+import { fetchProject, updateProjectStatus, projectCollectDetail, saveProjectContent } from '@/api/project'
 import ProcessCommon from './components/ProcessCommon'
 import ProcessAgile from './components/ProcessAgile'
 import RiskBoard from '../risk/RiskBoard'
 import ProjectStopDialog from './components/ProjectStopDialog'
 import ProjectCompleteDialog from './components/ProjectCompleteDialog'
 import Tinymce from '@/components/Tinymce'
-import { updateProjectStatus } from '@/api/project'
 
 const _ = require('lodash')
 const lineChartData = {
@@ -203,7 +210,8 @@ export default {
       projectContent: '',
       lineChartData: lineChartData,
       ProjectCompleteDialogVisible: false,
-      ProjectStopDialogVisible: false
+      ProjectStopDialogVisible: false,
+      projectCollectDetail: {} // 项目汇总信息
     }
   },
   async mounted() {
@@ -211,6 +219,7 @@ export default {
     this.stageList = this.$store.state.project.stageList
     this.projectId = this.$route.query && this.$route.query.id
     await this.getInfo(this.projectId)
+    await this.getCollectDetail(this.projectId)
   },
   methods: {
     scaleFilter(val) {
@@ -226,6 +235,15 @@ export default {
       const that = this
       fetchProject(id).then(response => {
         that.project = _.cloneDeep(response.data)
+        that.projectContent = that.project.content ? that.project.content.content : ''
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    getCollectDetail(id) {
+      const that = this
+      projectCollectDetail(id).then(response => {
+        that.projectCollectDetail = response.data
       }).catch(err => {
         console.log(err)
       })
@@ -235,6 +253,16 @@ export default {
     },
     closeStopDialog() {
       this.ProjectStopDialogVisible = false
+    },
+    cancel() {
+      this.projectContent = this.project.content ? this.project.content.content : ''
+    },
+    submit() {
+      saveProjectContent({ project_id: this.projectId, content: this.projectContent }).then(response => {
+        this.$message.success('更新成功')
+      }).catch(err => {
+        this.$message.success(`更新失败：${err}`)
+      })
     },
     statusChange(status) {
       let statusName = '在建'
