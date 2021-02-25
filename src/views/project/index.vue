@@ -2,20 +2,17 @@
   <div class="app-container">
     <div class="filter-container">
       <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-plus" @click="handleCreate">新建项目</el-button>
-      <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.name" placeholder="项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-if="!isMyProject" v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.pm" placeholder="项目经理" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-select v-model="listQuery.scale" placeholder="请选择规模类型" clearable style="width: 130px" class="filter-item">
+      <el-select v-model="listQuery.scale" placeholder="规模类型" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in scaleList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-select v-model="listQuery.control_mode" placeholder="请选择研发模式" clearable class="filter-item" style="width: 130px">
+      <el-select v-model="listQuery.control_mode" placeholder="研发模式" clearable class="filter-item" style="width: 130px">
         <el-option v-for="(item, index) in controlModeList" :key="index" :label="item" :value="index" />
-      </el-select>
-      <el-select v-model="listQuery.risk" placeholder="请选择风险等级" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in riskOptions" :key="item" :label="item | riskFilter" :value="item" />
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;" @click="handleFilter">查询</el-button>
     </div>

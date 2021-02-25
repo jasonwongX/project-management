@@ -14,9 +14,6 @@
       <el-select v-model="listQuery.control_mode" placeholder="请选择研发模式" clearable class="filter-item" style="width: 130px">
         <el-option v-for="(item, index) in controlModeList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-select v-model="listQuery.risk" placeholder="请选择风险等级" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in riskOptions" :key="item" :label="item | riskFilter" :value="item" />
-      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;" @click="handleFilter">查询</el-button>
     </div>
 
