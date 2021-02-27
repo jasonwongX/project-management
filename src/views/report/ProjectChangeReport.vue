@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-date-picker
+        v-model="listQuery.month"
+        class="filter-item"
+        type="month"
+        placeholder="选择月"
+        @change="handleFilter"
+      />
       <el-input v-model="listQuery.project_name" placeholder="所属项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
       <el-select v-model="listQuery.type" placeholder="请选择分类" clearable class="filter-item" style="width: 130px">
@@ -9,13 +16,7 @@
       <el-select v-model="listQuery.level" placeholder="请选择等级" clearable class="filter-item" style="width: 130px">
         <el-option v-for="(item, index) in levelList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-date-picker
-        v-model="listQuery.timeRange"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
+
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;float:right" @click="handleFilter">查询</el-button>
     </div>
@@ -99,6 +100,7 @@ import { fetchList, deleteProjectChange } from '@/api/projectChange'
 import waves from '@/directive/waves' // Waves directive
 import { formatPercent } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+const moment = require('moment')
 
 export default {
   name: 'ProjectChangeReport',
@@ -115,7 +117,8 @@ export default {
       listQuery: {
         project_name: '',
         page: 1,
-        limit: 20
+        limit: 20,
+        month: moment().format('YYYY-MM')
       },
       downloadLoading: false
     }

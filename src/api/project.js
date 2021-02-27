@@ -60,6 +60,18 @@ export function completeProject(data) {
 }
 
 /**
+ * 已投产项目列表
+ * @param {*} query
+ */
+export function fetchCompleteProjectList(query) {
+  return request({
+    url: '/project/complete/list',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
  * 项目状态更新
  * @param {*} data 项目状态
  */

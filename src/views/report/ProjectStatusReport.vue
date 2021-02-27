@@ -30,9 +30,12 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;" @click="handleFilter">查询</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="exportProject">导出</el-button>
     </div>
-
+    <div v-if="!listLoading && !list.length" class="empty-container">
+      <img src="@/assets/images/empty-box.png">
+      <span>本月还未创建报表，<a @click="createReport">立即生成</a></span>
+    </div>
     <el-table
-      v-if="list && list.length"
+      v-else
       v-loading="listLoading"
       :data="list"
       border
@@ -80,7 +83,6 @@
           <span>{{ scope.row.contact && scope.row.contact.qa ? scope.row.contact.qa : '' }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="项目风险" class-name="status-col" min-width="80px">
         <template slot-scope="scope" align="center">
           <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
@@ -88,10 +90,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <div v-else class="empty-container">
-      <img src="@/assets/images/empty-box.png">
-      <span>本月还未创建报表，<a @click="createReport">立即生成</a></span>
-    </div>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
   </div>
 </template>

@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-date-picker
+        v-model="listQuery.month"
+        class="filter-item"
+        type="month"
+        placeholder="选择月"
+        @change="handleFilter"
+      />
       <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-if="!isMyProject" v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-date-picker
-        v-model="listQuery.timeRange"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;float:right" @click="handleFilter">查询</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;float:right" @click="handleFilter">查询</el-button>
     </div>
 
     <el-table
@@ -25,42 +25,32 @@
     >
       <el-table-column label="项目类型" min-width="100px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.dev_mode | devModeFilter }}</span>
+          <span>{{ scope.row.project.dev_mode | devModeFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目名称" min-width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="系统名称" min-width="150px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="规模" min-width="80px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scaleFilter(scope.row.scale) }}</span>
+          <span>{{ scope.row.project.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目经理" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.pm ? scope.row.contact.pm : '' }}</span>
+          <span>{{ scope.row.project && scope.row.project.pm ? scope.row.project.pm : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.qa ? scope.row.contact.qa : '' }}</span>
+          <span>{{ scope.row.project && scope.row.project.qa ? scope.row.project.qa : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="研发单位" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.dev_team }}</span>
+          <span>{{ scope.row.project.dev_unit }}</span>
         </template>
       </el-table-column>
       <el-table-column label="完全投产时间" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
+          <span>{{ formatDate(scope.row.complete_date) }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -82,9 +72,10 @@
 }
 </style>
 <script>
-import { fetchList, fetchMyProjectList, deleteProject } from '@/api/project'
+import { fetchCompleteProjectList } from '@/api/project'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+const moment = require('moment')
 
 export default {
   name: 'ProjectCompleteReport',
@@ -151,7 +142,7 @@ export default {
         importance: undefined,
         title: undefined,
         type: undefined,
-        sort: '+id'
+        month: moment().format('YYYY-MM')
       },
       riskOptions: [0, 1, 2, 3],
       scaleList: [],
@@ -230,22 +221,12 @@ export default {
     },
     getList() {
       this.listLoading = true
-      if (this.isMyProject) {
-        this.listQuery.username = this.$store.state.user.name
-        fetchMyProjectList(this.listQuery).then(response => {
-          this.list = response.data
-          this.total = response.total ? response.total : 0
-          this.listQuery.limit = response.per_page ? parseInt(response.per_page) : this.listQuery.limit
-          this.listLoading = false
-        })
-      } else {
-        fetchList(this.listQuery).then(response => {
-          this.list = response.data
-          this.total = response.total ? response.total : 0
-          this.listQuery.limit = response.per_page ? parseInt(response.per_page) : this.listQuery.limit
-          this.listLoading = false
-        })
-      }
+      fetchCompleteProjectList(this.listQuery).then(response => {
+        this.list = response.data
+        this.total = response.total ? response.total : 0
+        this.listQuery.limit = response.per_page ? parseInt(response.per_page) : this.listQuery.limit
+        this.listLoading = false
+      })
     },
     gotoRisk(projectName) {
       this.$router.push({ path: '/risk/index', query: { project_name: projectName }})
@@ -262,37 +243,6 @@ export default {
     },
     handleCreate() {
       this.$router.push({ path: '/project/add' })
-    },
-    handleDelete(row) {
-      this.$confirm('是否确认删除?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteProject(row.id).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.getList()
-        }).catch((_) => {
-          this.$message({
-            type: 'success',
-            message: '删除失败!'
-          })
-        })
-      })
-    },
-    getExportList() {
-      const listQuery = {
-        page: 1,
-        limit: 500,
-        status: '1',
-        devMode: '1'
-      }
-      fetchList(listQuery).then(response => {
-        this.handleDownload(response.data)
-      })
     },
     handleDownload(list) {
       this.downloadLoading = true
@@ -311,6 +261,9 @@ export default {
     },
     formatPercent(val) {
       return `${parseInt(val * 100)}%`
+    },
+    formatDate(value) {
+      return value === '' ? '' : moment(value).format('YYYY-MM-DD')
     },
     formatJson(filterVal, jsonData) {
       let ID = 0
