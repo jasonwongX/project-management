@@ -4,52 +4,77 @@
       <el-col :span="5"><div class="title">项目月度数据汇总</div></el-col>
       <el-col :span="5">
         <el-date-picker
-          v-model="curMonth"
+          v-model="month"
           type="month"
           placeholder="选择月份"
+          @change="updateMonth"
         />
       </el-col>
     </el-row>
     <el-row class="content-title" align="middle" :gutter="24" type="flex" justify="space-between">
       <el-col :span="12"><div class="title">项目数据概览</div></el-col>
     </el-row>
-    <el-row class="data-content" :gutter="24">
-      <el-col :xs="24" :sm="16" :lg="16">
-        <bar-chart />
+    <el-row :gutter="32" class="data-row">
+      <el-col :span="4">
+        <div class="data-group">
+          <div class="title">传统项目：</div>
+          <div class="count">{{ totalCount.projectCount }}</div>
+          <div class="last">上个月：{{ totalCount.projectLastMonthCount }}</div>
+        </div>
       </el-col>
-      <el-col :xs="24" :sm="8" :lg="8" height="360px">
-        <el-row :gutter="24" class="data-row">
-          <el-col :span="12">
-            <div class="data-group">
-              <div class="title">新增项目数：</div>
-              <div class="count">3</div>
-              <div class="last">上个月：2</div>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="data-group">
-              <div class="title">变更项目数：</div>
-              <div class="count">1</div>
-              <div class="last">上个月：2</div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24" class="data-row">
-          <el-col :span="12">
-            <div class="data-group">
-              <div class="title">投产项目数：</div>
-              <div class="count">4</div>
-              <div class="last">上个月：1</div>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="data-group">
-              <div class="title">风险项目数：</div>
-              <div class="count">6</div>
-              <div class="last">上个月：8</div>
-            </div>
-          </el-col>
-        </el-row>
+      <el-col :span="4">
+        <div class="data-group">
+          <div class="title">敏捷项目:</div>
+          <div class="count">{{ totalCount.agileProjectCount }}</div>
+          <div class="last">上个月：{{ totalCount.agileProjectLastMonthCount }}</div>
+        </div>
+      </el-col>
+      <el-col :span="4">
+        <div class="data-group">
+          <div class="title">新增项目数：</div>
+          <div class="count">{{ totalCount.addProjectTotalCount }}</div>
+          <div class="last">上个月：{{ totalCount.addProjectTotalCountLastMonth }}</div>
+        </div>
+      </el-col>
+      <el-col :span="4">
+        <div class="data-group">
+          <div class="title">变更项目数：</div>
+          <div class="count">{{ totalCount.projectChangeCount }}</div>
+          <div class="last">上个月：{{ totalCount.projectChangeCountLastMonth }}</div>
+        </div>
+      </el-col>
+      <el-col :span="4">
+        <div class="data-group">
+          <div class="title">投产项目数：</div>
+          <div class="count">{{ totalCount.projectCompleteCount }}</div>
+          <div class="last">上个月：{{ totalCount.projectCompleteCountLastMonth }}</div>
+        </div>
+      </el-col>
+      <el-col :span="4">
+        <div class="data-group">
+          <div class="title">风险项目数：</div>
+          <div class="count">{{ totalCount.riskCount }}</div>
+          <div class="last">上个月：{{ totalCount.riskCountLastMonth }}</div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row class="data-content" :gutter="24">
+      <el-col :xs="24" :sm="18" :lg="18">
+        <project-stage-bar-chart :month="month" />
+      </el-col>
+      <el-col :xs="24" :sm="6" :lg="6">
+        <risk-report-raddar-chart />
+      </el-col>
+    </el-row>
+    <el-row :gutter="24" class="data-content">
+      <el-col :span="8">
+        <classify-report-pie-chart />
+      </el-col>
+      <el-col :span="8">
+        <controlemode-report-pie-chart />
+      </el-col>
+      <el-col :span="8">
+        <scale-report-pie-chart />
       </el-col>
     </el-row>
     <el-row class="content-title" align="middle" :gutter="24" type="flex" justify="space-between">
@@ -86,10 +111,12 @@
 }
 .data-row {
     padding: 20px 0px;
+    background-color: #fff;
+
 }
 .data-group {
-    min-height: 120px;
-    padding: 20px 10px;
+    min-height: 80px;
+    padding: 10px 10px;
     background-color: #f5f5f5;
     .count {
         font-weight: bolder;
@@ -97,26 +124,65 @@
         padding:10px 5px;
     }
     .last {
-        margin-top: 20px;
         color: #969799;
     }
 }
 </style>
 <script>
-import BarChart from '../dashboard/admin/components/BarChart'
+import ProjectStageBarChart from './components/ProjectStageBarChart'
 import RiskTable from './RiskTable'
 import ProjectRiskCountTable from './ProjectRiskCountTable'
+import ClassifyReportPieChart from './components/ClassifyReportPieChart'
+import ControlemodeReportPieChart from './components/ControlemodeReportPieChart'
+import RiskReportRaddarChart from './components/RiskReportRaddarChart'
+import ScaleReportPieChart from './components/ScaleReportPieChart'
+import { projectMonthTotalCount } from '@/api/monthOverview'
+const moment = require('moment')
 
 export default {
   name: 'ProjectMonthReport',
   components: {
-    BarChart,
+    ProjectStageBarChart,
     RiskTable,
-    ProjectRiskCountTable
+    ProjectRiskCountTable,
+    ClassifyReportPieChart,
+    ControlemodeReportPieChart,
+    RiskReportRaddarChart,
+    ScaleReportPieChart
   },
   data() {
     return {
-      curMonth: '2021-02'
+      month: moment().format('YYYY-MM'),
+      totalCount: {
+        'projectCount': 0,
+        'projectLastMonthCount': 0,
+        'agileProjectCount': 0,
+        'agileProjectLastMonthCount': 0,
+        'addProjectTotalCount': 0,
+        'addProjectTotalCountLastMonth': 0,
+        'projectChangeCount': 0,
+        'projectChangeCountLastMonth': 0,
+        'projectCompleteCount': 0,
+        'projectCompleteCountLastMonth': 0,
+        'riskCount': 0,
+        'riskCountLastMonth': 0
+      }
+    }
+  },
+  created() {
+    this.getTotalCount()
+  },
+  methods: {
+    fetchData() {
+      this.getTotalCount()
+    },
+    getTotalCount() {
+      projectMonthTotalCount(this.month).then(reponse => {
+        this.totalCount = reponse.data
+      })
+    },
+    updateMonth() {
+      this.getTotalCount(0)
     }
   }
 }

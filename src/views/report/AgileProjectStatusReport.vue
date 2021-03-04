@@ -80,7 +80,7 @@
       </el-table-column>
       <el-table-column label="SM" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.sm }}</span>
+          <span>{{ scope.row.r_agile.sm }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" min-width="80px" align="center">
@@ -129,7 +129,7 @@
 }
 </style>
 <script>
-import { agileProjectReportList, createAgileProjectMonthReport, exportProject } from '@/api/report'
+import { agileProjectReportList, createProjectMonthReport, exportProject } from '@/api/report'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 const moment = require('moment')
@@ -300,7 +300,7 @@ export default {
       return `${parseInt(val * 100)}%`
     },
     createReport() {
-      createAgileProjectMonthReport({ month: this.listQuery.month }).then(response => {
+      createProjectMonthReport({ month: this.listQuery.month }).then(response => {
         this.$message.success('创建报表成功')
         this.getList()
       })
@@ -311,7 +311,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        createAgileProjectMonthReport({ month: this.listQuery.month }).then(response => {
+        createProjectMonthReport({ month: this.listQuery.month }).then(response => {
           this.$message.success('更新报表成功')
           this.getList()
         }).catch((_) => {

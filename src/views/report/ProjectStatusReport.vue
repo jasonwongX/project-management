@@ -7,9 +7,9 @@
         placeholder="选择月"
         @change="handleFilter"
       />
-      <el-button class="filter-item" type="primary" style="width:120px;float:right" @click="updateReport">更新报表</el-button>
+      <el-button v-if="!noReportData" class="filter-item" type="primary" style="width:120px;float:right" @click="updateReport">更新报表</el-button>
     </div>
-    <div v-if="list && list.length" class="filter-container">
+    <div v-if="!noReportData" class="filter-container">
       <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-if="!isMyProject" v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -30,7 +30,7 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;" @click="handleFilter">查询</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="exportProject">导出</el-button>
     </div>
-    <div v-if="!listLoading && !list.length" class="empty-container">
+    <div v-if="noReportData" class="empty-container">
       <img src="@/assets/images/empty-box.png">
       <span>本月还未创建报表，<a @click="createReport">立即生成</a></span>
     </div>
@@ -234,6 +234,9 @@ export default {
     }
   },
   computed: {
+    noReportData() {
+      return !this.listLoading && !this.list.length
+    }
   },
   async created() {
     await this.$store.dispatch('project/initStageList')
