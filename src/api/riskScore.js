@@ -51,10 +51,10 @@ export function getProjectScoreByMonth(query) {
   })
 }
 
-export function getRiskScoreStatistics() {
+export function getRiskScoreStatistics(month = '') {
   return request({
     url: '/riskScore/averageScoreStatistics',
     method: 'get',
-    params: { }
+    params: { month }
   })
 }
