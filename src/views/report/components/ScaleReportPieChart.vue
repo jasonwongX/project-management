@@ -7,7 +7,7 @@ import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
 
-import { getProjectScaleStatistics } from '@/api/project'
+import { projectMonthScale } from '@/api/monthOverview'
 export default {
   name: 'ScaleReportPieChart',
   props: {
@@ -22,12 +22,29 @@ export default {
     height: {
       type: String,
       default: '360px'
+    },
+    month: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       chart: null,
       list: []
+    }
+  },
+  watch: {
+    month: {
+      handler() {
+        this.fetchData()
+        this.__resizeHandler = debounce(() => {
+          if (this.chart) {
+            this.chart.resize()
+          }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHandler)
+      }
     }
   },
   mounted() {
@@ -49,7 +66,7 @@ export default {
   },
   methods: {
     fetchData() {
-      getProjectScaleStatistics().then(response => {
+      projectMonthScale(this.month).then(response => {
         this.list = response.data
         this.label = this.list.map(function(value, index) {
           return value['name']

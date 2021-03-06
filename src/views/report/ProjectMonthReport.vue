@@ -5,6 +5,7 @@
       <el-col :span="5">
         <el-date-picker
           v-model="month"
+          value-format="yyyy-MM"
           type="month"
           placeholder="选择月份"
           @change="updateMonth"
@@ -63,18 +64,18 @@
         <project-stage-bar-chart :month="month" />
       </el-col>
       <el-col :xs="24" :sm="6" :lg="6">
-        <risk-report-raddar-chart />
+        <risk-report-raddar-chart :month="month" />
       </el-col>
     </el-row>
     <el-row :gutter="24" class="data-content">
       <el-col :span="8">
-        <classify-report-pie-chart />
+        <classify-report-pie-chart :month="month" />
       </el-col>
       <el-col :span="8">
-        <controlemode-report-pie-chart />
+        <controlemode-report-pie-chart :month="month" />
       </el-col>
       <el-col :span="8">
-        <scale-report-pie-chart />
+        <scale-report-pie-chart :month="month" />
       </el-col>
     </el-row>
     <el-row class="content-title" align="middle" :gutter="24" type="flex" justify="space-between">
@@ -83,11 +84,11 @@
     <el-row class="data-content" :gutter="24">
       <el-col :span="10">
         <span>Top5 风险类型</span>
-        <risk-table />
+        <risk-table :month="month" />
       </el-col>
       <el-col :span="14">
         <span>Top5 风险项目</span>
-        <project-risk-count-table />
+        <project-risk-count-table :month="month" />
       </el-col>
     </el-row>
   </div>

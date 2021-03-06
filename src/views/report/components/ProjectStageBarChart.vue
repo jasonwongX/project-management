@@ -35,6 +35,19 @@ export default {
       list: []
     }
   },
+  watch: {
+    month: {
+      handler() {
+        this.fetchData()
+        this.__resizeHandler = debounce(() => {
+          if (this.chart) {
+            this.chart.resize()
+          }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHandler)
+      }
+    }
+  },
   mounted() {
     this.fetchData()
     this.__resizeHandler = debounce(() => {
