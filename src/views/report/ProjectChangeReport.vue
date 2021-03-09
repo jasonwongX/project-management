@@ -17,7 +17,7 @@
         <el-option v-for="(item, index) in levelList" :key="index" :label="item" :value="index" />
       </el-select>
 
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="exportReport">导出</el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;float:right" @click="handleFilter">查询</el-button>
     </div>
     <el-table
@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column label="项目经理" min-width="60px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.project.contact.pm }}</span>
+          <span>{{ scope.row.project.pm }}</span>
         </template>
       </el-table-column>
       <el-table-column label="变更类型" width="80px" align="center">
@@ -210,24 +210,9 @@ export default {
     formatPercent(val) {
       return formatPercent(val)
     },
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['序号', '项目名称', '规模', '项目经理', '主办业务部门', '研发模式',
-          '变更提出阶段', '变更提交时间', '变更类型', '是否外部强制变更', '是否增加预算',
-          '工作量变化(人/月)', '工作量变更率', '工期偏差(天)', '风险及应对', '备注（如：具体变更原因）', '变更审批层级']
-        const filterVal = ['ID', 'projectName', 'scale', 'pm', 'competent_authority', 'control_mode',
-          'change_stage', 'change_date', 'type', 'is_external_forced_change', 'is_add_budget',
-          'workload_changes', 'workload_change_rate', 'schedule_deviation', 'riskDesc', 'remark', 'level']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          autoWidth: false,
-          filename: '项目变更信息'
-        })
-        this.downloadLoading = false
-      })
+    exportReport() {
+      const url = `${process.env.VUE_APP_BASE_API}/report/export/projectChange?month=${moment(this.listQuery.month).format('YYYY-MM')}`
+      window.open(url)
     },
     formatRiskDesc(riskArr) {
       if (!riskArr || riskArr.length === 0) {
@@ -238,40 +223,6 @@ export default {
         result = `${result}${element['description']}`
       })
       return result
-    },
-    formatJson(filterVal, jsonData) {
-      let Id = 0
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'ID') {
-          return ++Id
-        } else if (j === 'projectName') {
-          return v['project']['name']
-        } else if (j === 'scale') {
-          return this.scaleFilter(v['project']['scale'])
-        } else if (j === 'pm') {
-          return v['project']['contact']['pm']
-        } else if (j === 'competent_authority') {
-          return v['project']['competent_authority']
-        } else if (j === 'control_mode') {
-          return this.controlModeFilter(v['project']['control_mode'])
-        } else if (j === 'type') {
-          return this.typeFilter(v['type'])
-        } else if (j === 'level') {
-          return this.levelFilter(v['level'])
-        } else if (j === 'is_external_forced_change') {
-          return v['is_external_forced_change'] ? '是' : '否'
-        } else if (j === 'is_add_budget') {
-          return v['is_add_budget'] ? '是' : '否'
-        } else if (j === 'workload_change_rate') {
-          return this.formatPercent(v['workload_change_rate'])
-        } else if (j === 'change_stage') {
-          return this.stageFilter(v['change_stage'])
-        } else if (j === 'riskDesc') {
-          return this.formatRiskDesc(v['project']['risk'])
-        } else {
-          return v[j]
-        }
-      }))
     }
   }
 }

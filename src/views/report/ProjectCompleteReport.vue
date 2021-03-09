@@ -11,7 +11,7 @@
       <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-if="!isMyProject" v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="exportReport">导出</el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;float:right" @click="handleFilter">查询</el-button>
     </div>
 
@@ -244,50 +244,15 @@ export default {
     handleCreate() {
       this.$router.push({ path: '/project/add' })
     },
-    handleDownload(list) {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['序号', '项目名称', '规模', '所处阶段', '项目经理', '完成百分比', '进展描述', '主要风险和问题', '严重程度', '续存期']
-        const filterVal = ['ID', 'name', 'scale', 'stage', 'pm', 'complete_percent', 'description', 'risk_desc', 'risk_level', 'risk_exist_time']
-        const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          autoWidth: false,
-          filename: '在建项目状态跟踪表'
-        })
-        this.downloadLoading = false
-      })
+    exportReport() {
+      const url = `${process.env.VUE_APP_BASE_API}/report/export/projectComplete?month=${moment(this.listQuery.month).format('YYYY-MM')}`
+      window.open(url)
     },
     formatPercent(val) {
       return `${parseInt(val * 100)}%`
     },
     formatDate(value) {
       return value === '' ? '' : moment(value).format('YYYY-MM-DD')
-    },
-    formatJson(filterVal, jsonData) {
-      let ID = 0
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'ID') {
-          return ++ID
-        } else if (j === 'scale') {
-          return this.scaleFilter(v[j])
-        } else if (j === 'stage') {
-          return this.stageFilter(v[j])
-        } else if (j === 'pm') {
-          return v['contact']['pm']
-        } else if (j === 'complete_percent') {
-          return `${parseInt(v[j] * 100)}%`
-        } else if (j === 'risk_desc') {
-          return v['risk'] && v['risk'].length ? v['risk'][0]['description'] : ''
-        } else if (j === 'risk_level') {
-          return v['risk'] && v['risk'].length ? this.levelFilter(v['risk'][0]['level']) : ''
-        } else if (j === 'risk_exist_time') {
-          return v['risk'] && v['risk'].length ? v['risk'][0]['exist_time'] : ''
-        } else {
-          return v[j]
-        }
-      }))
     }
   }
 }
