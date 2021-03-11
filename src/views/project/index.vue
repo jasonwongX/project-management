@@ -69,12 +69,12 @@
       <el-table-column label="项目风险" class-name="status-col" min-width="80px">
         <template slot-scope="scope" align="center">
           <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
-          <a v-else style="color:red" @click="gotoRisk(scope.row.name)">{{ riskCount(scope.row.risk) }}个风险</a>
+          <a v-else style="color:red">{{ riskCount(scope.row.risk) }}个风险</a>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" min-width="180px" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="info" @click="handleDetail(scope.row)">详情
+          <el-button v-show="false" size="mini" type="info" @click="handleDetail(scope.row)">详情
           </el-button>
           <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑
           </el-button>

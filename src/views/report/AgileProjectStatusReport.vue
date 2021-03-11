@@ -91,8 +91,8 @@
 
       <el-table-column label="项目风险" class-name="status-col" min-width="80px">
         <template slot-scope="scope" align="center">
-          <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
-          <a v-else style="color:red" @click="gotoRisk(scope.row.name)">{{ riskCount(scope.row.risk) }}个风险</a>
+          <el-tag v-if="riskCount(scope.row.r_risk) === 0" type="success" size="mini">无风险</el-tag>
+          <a v-else style="color:red">{{ riskCount(scope.row.r_risk) }}个风险</a>
         </template>
       </el-table-column>
     </el-table>
@@ -129,7 +129,7 @@
 }
 </style>
 <script>
-import { agileProjectReportList, createProjectMonthReport, exportProject } from '@/api/report'
+import { agileProjectReportList, createProjectMonthReport } from '@/api/report'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 const moment = require('moment')
@@ -290,11 +290,8 @@ export default {
       this.getList()
     },
     exportProject() {
-      exportProject().then(response => {
-        console.log(response)
-      }).catch(err => {
-        console.err(err)
-      })
+      const url = `${process.env.VUE_APP_BASE_API}/report/export/projectAgile?month=${moment(this.listQuery.month).format('YYYY-MM')}`
+      window.open(url)
     },
     formatPercent(val) {
       return `${parseInt(val * 100)}%`

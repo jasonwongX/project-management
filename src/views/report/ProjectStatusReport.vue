@@ -75,18 +75,18 @@
       </el-table-column>
       <el-table-column label="项目经理" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.pm ? scope.row.contact.pm : '' }}</span>
+          <span>{{ scope.row.pm }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.qa ? scope.row.contact.qa : '' }}</span>
+          <span>{{ scope.row.qa }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目风险" class-name="status-col" min-width="80px">
         <template slot-scope="scope" align="center">
-          <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
-          <a v-else style="color:red" @click="gotoRisk(scope.row.name)">{{ riskCount(scope.row.risk) }}个风险</a>
+          <el-tag v-if="riskCount(scope.row.r_risk) === 0" type="success" size="mini">无风险</el-tag>
+          <a v-else style="color:red">{{ riskCount(scope.row.r_risk) }}个风险</a>
         </template>
       </el-table-column>
     </el-table>
@@ -224,12 +224,6 @@ export default {
         create: 'Create'
       },
       dialogPvVisible: false,
-      pvData: [],
-      rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-      },
       downloadLoading: false
     }
   },

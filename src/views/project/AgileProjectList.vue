@@ -57,23 +57,23 @@
       </el-table-column>
       <el-table-column label="项目经理" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.pm ? scope.row.contact.pm : '' }}</span>
+          <span>{{ scope.row.pm }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contact && scope.row.contact.qa ? scope.row.contact.qa : '' }}</span>
+          <span>{{ scope.row.qa }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目风险" align="center" class-name="status-col" min-width="80px">
         <template slot-scope="scope">
           <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
-          <a v-else style="color:red" @click="gotoRisk(scope.row.name)">{{ riskCount(scope.row.risk) }}个风险</a>
+          <a v-else style="color:red">{{ riskCount(scope.row.risk) }}个风险</a>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" min-width="180px" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="info" @click="handleDetail(scope.row)">详情
+          <el-button v-show="false" size="mini" type="info" @click="handleDetail(scope.row)">详情
           </el-button>
           <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑
           </el-button>
