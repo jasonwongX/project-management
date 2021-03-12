@@ -46,6 +46,19 @@ export function deleteProject(id) {
     params: { id }
   })
 }
+/**
+ * 修改项目过程信息
+ * @param {*} projectId
+ * @param {*} stage
+ * @returns
+ */
+export function modifyCommonProcess(projectId, stage) {
+  return request({
+    url: '/project/add',
+    method: 'post',
+    params: { projectId, stage }
+  })
+}
 
 /**
  * 项目投产

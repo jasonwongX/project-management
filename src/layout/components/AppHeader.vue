@@ -5,8 +5,8 @@
         class="logo-img"
         src="@/assets/images/logo.png"
       >
-      <span class="title">QMS</span>
-      <span class="title-desc">让质量管理工作如此与众不同</span>
+      <span class="title">项目质量管理系统</span>
+      <!-- <span class="title-desc">让质量管理工作如此与众不同</span> -->
     </div>
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">

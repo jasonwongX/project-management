@@ -1,7 +1,7 @@
 <template>
   <div class="stage-container">
     <div
-      v-for="(item,index) in stage.activities"
+      v-for="(item,index) in stage.stage_items"
       :key="index"
       class="activity"
     >
@@ -9,7 +9,7 @@
         <div slot="header" class="clearfix">
           <span>{{ item.name }}</span>
         </div>
-        <div v-for="(checkItem, checkIndex) in item.checkItems" :key="checkIndex" class="text item">
+        <div v-for="(checkItem, checkIndex) in item.check_items" :key="checkIndex" class="text item">
           <el-row :gutter="32" class="item-row">
             <el-col :span="8">
               <span class="item-row-title">{{ checkItem.name }}</span>
@@ -37,12 +37,30 @@
           <span>阶段统计</span>
         </div>
         <el-form>
-          <el-form-item label="达成率">
-            <el-input-number v-model="stage.percent" :min="0" :max="100" label="达成率" />
-          </el-form-item>
-          <el-form-item label="过程跟踪">
-            <el-input v-model="stage.description" type="textarea" />
-          </el-form-item>
+          <el-row :gutter="24">
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="达成率">
+                <el-input-number v-model="stage.complete_percent" :min="0" :max="100" label="达成率" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="计划开始时间">
+                <el-date-picker v-model="stage.plan_start_date" value-format="YYYY-MM" label="计划开始时间" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="实际开始时间">
+                <el-date-picker v-model="stage.actual_start_date" value-format="YYYY-MM" label="实际开始时间" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="24">
+              <el-form-item label="过程跟踪">
+                <el-input v-model="stage.description" type="textarea" />
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
       </el-card>
     </div>
@@ -68,12 +86,17 @@
 }
 </style>
 <script>
+import { modifyCommonProcess } from '@/api/project'
 export default {
   name: 'Stage',
   props: {
     stage: {
       type: Object,
       default: () => {}
+    },
+    projectId: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -85,7 +108,7 @@ export default {
         value: 2,
         label: '未通过'
       }, {
-        value: 3,
+        value: 0,
         label: '不涉及'
       }]
     }
@@ -95,7 +118,9 @@ export default {
 
     },
     submit() {
-
+      modifyCommonProcess(this.projectId, this.stage).then(response => {
+        this.$message.success('成功更新项目过程信息')
+      })
     }
   }
 
