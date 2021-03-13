@@ -6,8 +6,12 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
+import { getTimeLine } from '@/api/commonProcess'
+const moment = require('moment')
+const _ = require('lodash')
 
 export default {
+  name: 'TimeLineLineChart',
   props: {
     className: {
       type: String,
@@ -25,13 +29,16 @@ export default {
       type: Boolean,
       default: true
     },
-    chartData: {
-      type: Object,
-      required: true
+    projectId: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
+      minTime: '',
+      maxTime: '',
+      chartData: {},
       chart: null
     }
   },
@@ -44,7 +51,7 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
+    this.fetchData()
     if (this.autoResize) {
       this.__resizeHandler = debounce(() => {
         if (this.chart) {
@@ -73,15 +80,33 @@ export default {
     this.chart = null
   },
   methods: {
+    fetchData() {
+      getTimeLine(this.projectId).then(response => {
+        this.chartData = response.data
+        this.chartData.actualData = _.map(this.chartData.actualData, (value) => {
+          return moment(value).valueOf()
+        })
+        this.chartData.expectedData = _.map(this.chartData.expectedData, (value) => {
+          return moment(value).valueOf()
+        })
+        const sortedActualData = _.sortedUniq(this.chartData.actualData)
+        const sortedExpectedData = _.sortedUniq(this.chartData.expectedData)
+        const actualLength = sortedActualData.length - 1
+        const expectedLength = sortedExpectedData.length - 1
+        this.minTime = sortedActualData[0] >= sortedExpectedData[0] ? sortedExpectedData[0] : sortedActualData[0]
+        this.maxTime = sortedActualData[actualLength] <= sortedExpectedData[expectedLength] ? sortedExpectedData[expectedLength] : sortedActualData[actualLength]
+        this.initChart()
+      })
+    },
     sidebarResizeHandler(e) {
       if (e.propertyName === 'width') {
         this.__resizeHandler()
       }
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ expectedData, actualData, stageData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['软需', '启动', '概要设计', '编码', '测试', '上线'],
+          data: stageData,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -104,7 +129,14 @@ export default {
         yAxis: {
           axisTick: {
             show: false
-          }
+          },
+          axisLabel: {
+            formatter: (value, index) => {
+              return moment(value).format('YYYY-MM-DD')
+            }
+          },
+          min: this.minTime,
+          max: this.maxTime
         },
         legend: {
           data: ['计划时间', '实际时间']
@@ -118,12 +150,14 @@ export default {
                 width: 2
               }
             }
+
           },
           smooth: true,
           type: 'line',
           data: expectedData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
+
         },
         {
           name: '实际时间',
@@ -138,6 +172,11 @@ export default {
               },
               areaStyle: {
                 color: '#f3f8ff'
+              },
+              label: {
+                formatter: function(value) {
+                  return moment(value).format('YYYY-MM-DD')
+                }
               }
             }
           },

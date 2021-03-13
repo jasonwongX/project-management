@@ -37,3 +37,16 @@ export function deleteAgileProcess(id) {
     params: { id }
   })
 }
+
+/**
+ * 获取迭代工作点数分布
+ * @param {*} projectId
+ * @returns
+ */
+export function getSprintWorkPoints(projectId) {
+  return request({
+    url: '/project/agileProcess/getSprintWorkPoints',
+    method: 'get',
+    params: { project_id: projectId }
+  })
+}

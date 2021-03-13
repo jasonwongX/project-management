@@ -1,12 +1,12 @@
 <template>
   <div v-if="stageList.length === 0" class="app-container">
     <div class="box-header">
-      <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="initProcess()">初始化过程配置</el-button>
+      <el-button class="filter-item" type="primary" size="medium" @click="initProcess()">初始化过程配置</el-button>
     </div>
   </div>
   <el-tabs v-else tab-position="left" style="min-height: 500px;">
     <el-tab-pane v-for="(item,index) in stageLabel" :key="index" :label="item">
-      <stage :stage="stageItem(item)" project_id="projectId" />
+      <stage :stage="stageItem(item)" :project-id="projectId" />
     </el-tab-pane>
   </el-tabs>
 </template>

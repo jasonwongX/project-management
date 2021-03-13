@@ -1,5 +1,38 @@
 <template>
   <div class="stage-container">
+    <div class="stage-total">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>阶段统计</span>
+        </div>
+        <el-form>
+          <el-row :gutter="24">
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="达成率">
+                <el-input-number v-model="stage.complete_percent" :min="0" :max="100" label="达成率" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="计划开始时间">
+                <el-date-picker v-model="stage.plan_start_date" value-format="yyyy-MM-dd" label="计划开始时间" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="实际开始时间">
+                <el-date-picker v-model="stage.actual_start_date" value-format="yyyy-MM-dd" label="实际开始时间" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="24">
+              <el-form-item label="过程跟踪">
+                <el-input v-model="stage.description" type="textarea" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </el-card>
+    </div>
     <div
       v-for="(item,index) in stage.stage_items"
       :key="index"
@@ -31,39 +64,7 @@
         </div>
       </el-card>
     </div>
-    <div class="stage-total">
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <span>阶段统计</span>
-        </div>
-        <el-form>
-          <el-row :gutter="24">
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="达成率">
-                <el-input-number v-model="stage.complete_percent" :min="0" :max="100" label="达成率" />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="计划开始时间">
-                <el-date-picker v-model="stage.plan_start_date" value-format="YYYY-MM" label="计划开始时间" />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="实际开始时间">
-                <el-date-picker v-model="stage.actual_start_date" value-format="YYYY-MM" label="实际开始时间" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col :span="24">
-              <el-form-item label="过程跟踪">
-                <el-input v-model="stage.description" type="textarea" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-      </el-card>
-    </div>
+
     <el-row type="flex" justify="center">
       <el-col :span="3">
         <el-button type="info" style="width:80%" @click="cancel()">取消</el-button>
@@ -86,7 +87,7 @@
 }
 </style>
 <script>
-import { modifyCommonProcess } from '@/api/project'
+import { modifyCommonProcess } from '@/api/commonProcess'
 export default {
   name: 'Stage',
   props: {

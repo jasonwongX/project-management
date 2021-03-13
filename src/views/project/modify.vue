@@ -18,7 +18,8 @@
     </el-row>
     <el-row :gutter="32" type="flex" align="middle">
       <el-col :xs="24" :sm="14" :lg="14">
-        <line-chart :chart-data="lineChartData" />
+        <line-chart v-if="project.dev_mode==1" :project-id="projectId" />
+        <sprint-bar-chart v-else :project-id="projectId" />
       </el-col>
       <el-col :xs="24" :sm="6" :lg="6">
         <raddar-chart :list="projectCollectDetail.scores.actual_value" :max="projectCollectDetail.scores.total" />
@@ -159,7 +160,9 @@
 }
 </style>
 <script>
-import LineChart from './components/LineChart'
+import LineChart from './components/TimeLineLineChart'
+import SprintBarChart from './components/SprintBarChart'
+
 import RaddarChart from './components/RaddarChart'
 import AddProject from './add'
 import AddAgileProject from './AddAgile'
@@ -175,14 +178,11 @@ import ProjectCompleteDialog from './components/ProjectCompleteDialog'
 import Tinymce from '@/components/Tinymce'
 
 const _ = require('lodash')
-const lineChartData = {
-  expectedData: [1, 3, 5, 8, 10, 12],
-  actualData: [1, 2, 6, 7, 11, 12]
-}
 export default {
   name: 'ModifyProject',
   components: {
     LineChart,
+    SprintBarChart,
     RaddarChart,
     AddProject,
     AddAgileProject,
@@ -208,7 +208,6 @@ export default {
     return {
       project: {},
       projectContent: '',
-      lineChartData: lineChartData,
       ProjectCompleteDialogVisible: false,
       ProjectStopDialogVisible: false,
       projectCollectDetail: {} // 项目汇总信息
