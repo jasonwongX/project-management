@@ -41,7 +41,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" style="width:100%;margin-bottom:30px;border-radius: 10px;" @click.native.prevent="handleLogin">立即开始</el-button>
+      <el-button :loading="loading" style="width:100%;margin-bottom:30px;border-radius: 10px;" @click="handleLogin">立即开始</el-button>
 
       <div v-show="false" class="tips">
         <span style="margin-right:20px;">username: admin</span>

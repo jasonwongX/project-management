@@ -11,7 +11,7 @@
 import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
-
+const tinymce = require('tinymce')
 export default {
   name: 'Tinymce',
   components: { editorImage },
@@ -87,7 +87,7 @@ export default {
   methods: {
     initTinymce() {
       const _this = this
-      window.tinymce.init({
+      tinymce.init({
         language: 'en',
         selector: `#${this.tinymceId}`,
         height: this.height,

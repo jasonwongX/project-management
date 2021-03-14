@@ -75,7 +75,7 @@
           <span slot="label"><svg-icon icon-class="change-outline" /> 项目变更</span>
           <project-change-board :project-id="projectId" />
         </el-tab-pane>
-        <el-tab-pane>
+        <el-tab-pane v-if="false">
           <span slot="label"><svg-icon icon-class="other-outline" /> 其他信息</span>
           <div class="editor-container">
             <Tinymce ref="editor" v-model="projectContent" :height="400" />
