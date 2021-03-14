@@ -57,7 +57,7 @@
       </el-table-column>
       <el-table-column label="QA" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.project.contact.qa }}</span>
+          <span>{{ scope.row.project.qa }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属项目" width="160px" align="center">

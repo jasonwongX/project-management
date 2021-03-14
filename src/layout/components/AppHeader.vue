@@ -73,7 +73,7 @@ export default {
     }
     .title {
       font-weight: 800;
-      font-size:24px;
+      font-size:20px;
       margin:0 10px;
     }
     .title-desc {
