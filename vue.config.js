@@ -46,6 +46,12 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    performance: {
+      // 入口起点的最大体积 整数类型（以字节为单位）
+      maxEntrypointSize: 50000000,
+      // 生成文件的最大体积 整数类型（以字节为单位 1000k）
+      maxAssetSize: 100000000
     }
   },
   chainWebpack(config) {
