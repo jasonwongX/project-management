@@ -166,7 +166,10 @@ export default {
       dialogVisible: false,
       isEdit: false,
       changeInfo: {},
-      changes: []
+      changes: [],
+      stageList: {},
+      levelList: {},
+      typeList: {}
     }
   },
   computed: {
@@ -181,6 +184,7 @@ export default {
     this.stageList = this.$store.state.project.stageList
     this.levelList = this.$store.state.projectChange.levelList
     this.typeList = this.$store.state.projectChange.typeList
+    console.log(this.stageList)
     this.getList()
   },
   methods: {

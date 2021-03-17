@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="isEdit ? '编辑风险评分' : '新增风险评分'" :visible.sync="dialogRiskScoreVisible">
+  <el-dialog :title="isEdit ? '编辑风险评分' : '新增风险评分'" :visible="dialogRiskScoreVisible" @close="cancel">
     <el-form ref="form" :model="postForm" :rules="rules" label-width="120px">
       <el-row :gutter="24">
         <el-col :span="24">
@@ -46,12 +46,12 @@ export default {
       default: () => {}
     },
     projectId: {
-      type: Number,
+      type: [Number, String],
       default: 0
     },
     typeList: {
-      type: Array,
-      default: () => []
+      type: [Object, Array],
+      default: () => {}
     }
   },
   data() {

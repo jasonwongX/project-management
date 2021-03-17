@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="isEdit ? '编辑风险项' : '新增风险项'" :visible.sync="dialogRiskVisible">
+  <el-dialog :title="isEdit ? '编辑风险项' : '新增风险项'" :visible="dialogRiskVisible" @close="cancel">
     <el-form ref="form" :model="postForm" :rules="rules">
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -115,16 +115,16 @@ export default {
       default: () => {}
     },
     statusList: {
-      type: Array,
-      default: () => []
+      type: [Object, Array],
+      default: () => {}
     },
     levelList: {
-      type: Array,
-      default: () => []
+      type: [Object, Array],
+      default: () => {}
     },
     typeList: {
-      type: Array,
-      default: () => []
+      type: [Object, Array],
+      default: () => {}
     }
   },
   data() {

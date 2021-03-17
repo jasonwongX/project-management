@@ -52,18 +52,6 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目状态" prop="status">
-            <el-select v-model="postForm.status" placeholder="项目状态">
-              <el-option
-                v-for="(item, index) in statusList"
-                :key="index"
-                :label="item"
-                :value="index"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="产品经理" prop="po">
             <el-input v-model="postForm.agile.po" placeholder="产品经理" />
           </el-form-item>
@@ -75,7 +63,25 @@
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="质量控制人员" prop="qa">
-            <el-input v-model="postForm.qa" placeholder="质量控制人员" />
+            <el-select
+              v-model="postForm.user_id"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入QA名称"
+              :remote-method="searchQaList"
+              :loading="loadingQa"
+              clearable
+              style="width: 130px"
+              class="filter-item"
+            >
+              <el-option
+                v-for="item in qaList"
+                :key="item.id"
+                :label="item.real_name"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -243,6 +249,7 @@
 </style>
 <script>
 import { addProject, editProject } from '@/api/project'
+import { getQaList } from '@/api/user'
 const _ = require('lodash')
 export default {
   name: 'AddAgileProject',
@@ -258,6 +265,8 @@ export default {
   },
   data() {
     return {
+      qaList: [],
+      loadingQa: false,
       postForm: {
         name: '',
         sequence: '',
@@ -297,11 +306,6 @@ export default {
           tool_application: ''
         }
       },
-      statusList: {
-        1: '在建',
-        2: '暂停',
-        3: '投产'
-      },
       sysTypeList: {
         1: '项目',
         2: '迭代开发'
@@ -338,6 +342,14 @@ export default {
     }
   },
   methods: {
+    // 查询QA列表
+    searchQaList(label) {
+      this.loadingQa = true
+      getQaList(label).then(response => {
+        this.qaList = response.data
+        this.loadingQa = false
+      })
+    },
     cancel() {
       if (!this.isEdit) {
         this.$router.go(-1)

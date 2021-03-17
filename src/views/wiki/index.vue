@@ -111,7 +111,6 @@ export default {
     handleDownload(url) {
       const rootDir = process.env.NODE_ENV === 'development' ? '' : 'static/'
       const templateFileUrl = `${__dirname}${rootDir}${url}`
-      debugger
       this.downloadFile(templateFileUrl, url)
     }
   }

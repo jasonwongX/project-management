@@ -14,6 +14,14 @@ export function getList(query) {
     params: query
   })
 }
+export function getQaList(realName) {
+  return request({
+    url: '/user/getQaList',
+    method: 'get',
+    params: { realName }
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/user/info',

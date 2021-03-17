@@ -216,7 +216,7 @@ export default {
   async mounted() {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
-    this.projectId = this.$route.query && this.$route.query.id
+    this.projectId = this.$route.query && this.$route.query.id ? parseInt(this.$route.query.id) : 0
     await this.getInfo(this.projectId)
     await this.getCollectDetail(this.projectId)
   },
@@ -234,6 +234,11 @@ export default {
       const that = this
       fetchProject(id).then(response => {
         that.project = _.cloneDeep(response.data)
+        that.project.scale = that.project.scale.toString()
+        that.project.dev_mode = that.project.dev_mode.toString()
+        that.project.stage = that.project.stage.toString()
+        that.project.control_mode = that.project.control_mode.toString()
+        that.project.sys_type = that.project.sys_type.toString()
         that.projectContent = that.project.content ? that.project.content.content : ''
       }).catch(err => {
         console.log(err)

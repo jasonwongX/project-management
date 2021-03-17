@@ -13,7 +13,7 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目阶段" prop="type">
+          <el-form-item label="项目阶段" prop="stage">
             <el-select v-model="postForm.stage" placeholder="项目阶段">
               <el-option
                 v-for="(item, index) in stageList"
@@ -80,8 +80,26 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="质量控制人员" prop="qa">
-            <el-input v-model="postForm.qa" placeholder="质量控制人员" />
+          <el-form-item label="质量控制人员" prop="user_id">
+            <el-select
+              v-model="postForm.user_id"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入QA名称"
+              :remote-method="searchQaList"
+              :loading="loadingQa"
+              clearable
+              style="width: 130px"
+              class="filter-item"
+            >
+              <el-option
+                v-for="item in qaList"
+                :key="item.id"
+                :label="item.real_name"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -159,6 +177,7 @@
 </style>
 <script>
 import { addProject, editProject } from '@/api/project'
+import { getQaList } from '@/api/user'
 const _ = require('lodash')
 export default {
   name: 'AddProject',
@@ -175,6 +194,8 @@ export default {
 
   data() {
     return {
+      qaList: [],
+      loadingQa: false,
       postForm: {
         name: '',
         sequence: '',
@@ -196,7 +217,7 @@ export default {
         pm: '',
         po: '',
         ptm: '',
-        qa: '',
+        user_id: '',
         application_date: '',
         charter_release_date: ''
       },
@@ -239,11 +260,25 @@ export default {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
+    this.initQaList()
     if (this.isEdit) {
       this.postForm = _.cloneDeep(this.projectInfo)
     }
   },
   methods: {
+    initQaList() {
+      getQaList().then(response => {
+        this.qaList = response.data
+      })
+    },
+    // 查询QA列表
+    searchQaList(label) {
+      this.loadingQa = true
+      getQaList(label).then(response => {
+        this.qaList = response.data
+        this.loadingQa = false
+      })
+    },
     cancel() {
       if (!this.isEdit) {
         this.$router.go(-1)

@@ -108,7 +108,7 @@ export const constantRoutes = [
   {
     path: '/report',
     component: Layout,
-    redirect: '/report/project/status',
+    redirect: '/report/project/follow',
     meta: { title: '数据报表', icon: 'data-report' },
     children: [
       {

@@ -3,8 +3,26 @@
     <div class="filter-container">
       <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-plus" @click="handleCreate">新建项目</el-button>
       <el-input v-model="listQuery.name" placeholder="项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-if="!isMyProject" v-model="listQuery.qa" placeholder="请输入QA名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.pm" placeholder="项目经理" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select
+        v-model="listQuery.user_id"
+        filterable
+        remote
+        reserve-keyword
+        placeholder="请输入QA名称"
+        :remote-method="searchQaList"
+        :loading="loadingQa"
+        clearable
+        style="width: 130px"
+        class="filter-item"
+      >
+        <el-option
+          v-for="item in qaList"
+          :key="item.id"
+          :label="item.real_name"
+          :value="item.id"
+        />
+      </el-select>
       <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
@@ -69,7 +87,7 @@
       <el-table-column label="项目风险" class-name="status-col" min-width="80px">
         <template slot-scope="scope" align="center">
           <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
-          <a v-else style="color:red">{{ riskCount(scope.row.risk) }}个风险</a>
+          <a v-else style="color:red" @click="gotoRisk(scope.row.name)">{{ riskCount(scope.row.risk) }}个风险</a>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" min-width="180px" class-name="small-padding fixed-width">
@@ -102,6 +120,7 @@
 </style>
 <script>
 import { fetchList, fetchMyProjectList, deleteProject } from '@/api/project'
+import { getQaList } from '@/api/user'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -130,7 +149,8 @@ export default {
       const map = {
         1: '在建',
         2: '暂停',
-        3: '投产'
+        3: '投产',
+        4: '取消'
       }
       return map[value]
     },
@@ -164,6 +184,8 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      loadingQa: false,
+      qaList: [],
       listQuery: {
         page: 1,
         limit: 20,
@@ -171,7 +193,8 @@ export default {
         title: undefined,
         type: undefined,
         sort: '+id',
-        devMode: '1'
+        devMode: '1',
+        user_id: ''
       },
       riskOptions: [0, 1, 2, 3],
       scaleList: [],
@@ -235,6 +258,14 @@ export default {
     controlModeFilter(val) {
       const valMap = this.controlModeList
       return valMap[val] ? valMap[val] : '未知'
+    },
+    // 查询项目列表
+    searchQaList(label) {
+      this.loadingQa = true
+      getQaList(label).then(response => {
+        this.qaList = response.data
+        this.loadingQa = false
+      })
     },
     levelFilter(item) {
       const levelList = {
@@ -314,47 +345,8 @@ export default {
         this.handleDownload(response.data)
       })
     },
-    handleDownload(list) {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['序号', '项目名称', '规模', '所处阶段', '项目经理', '完成百分比', '进展描述', '主要风险和问题', '严重程度', '续存期']
-        const filterVal = ['ID', 'name', 'scale', 'stage', 'pm', 'complete_percent', 'description', 'risk_desc', 'risk_level', 'risk_exist_time']
-        const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          autoWidth: false,
-          filename: '在建项目状态跟踪表'
-        })
-        this.downloadLoading = false
-      })
-    },
     formatPercent(val) {
       return `${parseInt(val * 100)}%`
-    },
-    formatJson(filterVal, jsonData) {
-      let ID = 0
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'ID') {
-          return ++ID
-        } else if (j === 'scale') {
-          return this.scaleFilter(v[j])
-        } else if (j === 'stage') {
-          return this.stageFilter(v[j])
-        } else if (j === 'pm') {
-          return v['contact']['pm']
-        } else if (j === 'complete_percent') {
-          return `${parseInt(v[j] * 100)}%`
-        } else if (j === 'risk_desc') {
-          return v['risk'] && v['risk'].length ? v['risk'][0]['description'] : ''
-        } else if (j === 'risk_level') {
-          return v['risk'] && v['risk'].length ? this.levelFilter(v['risk'][0]['level']) : ''
-        } else if (j === 'risk_exist_time') {
-          return v['risk'] && v['risk'].length ? v['risk'][0]['exist_time'] : ''
-        } else {
-          return v[j]
-        }
-      }))
     }
   }
 }

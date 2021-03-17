@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="isEdit ? '编辑项目变更' : '新增项目变更'" :visible.sync="dialogVisible">
+  <el-dialog :title="isEdit ? '编辑项目变更' : '新增项目变更'" :visible="dialogVisible" @close="cancel">
     <el-form ref="form" :model="postForm" :rules="rules" label-width="120px">
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -119,16 +119,16 @@ export default {
       default: () => {}
     },
     stageList: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     levelList: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     typeList: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     }
   },
   data() {
