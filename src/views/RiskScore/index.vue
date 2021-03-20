@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div v-show="false" class="filter-container">
       <el-button class="filter-item" type="primary" style="width:140px;" icon="el-icon-plus" @click="handleCreate">新增风险评分</el-button>
-      <el-button v-show="false" v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" style="width:120px;float:right" icon="el-icon-download" @click="handleDownload">导出</el-button>
     </div>
     <div class="filter-container">
       <el-input v-model="listQuery.project_name" placeholder="所属项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
@@ -40,14 +40,6 @@
       <el-table-column label="月份" min-width="80">
         <template slot-scope="scope">
           <span>{{ formatDate(scope.row.update_date) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column>
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑
-          </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -95,6 +87,7 @@ export default {
   },
   async created() {
     await this.$store.dispatch('risk/initTypeList')
+    this.listQuery.project_name = this.$route.query.project_name ? this.$route.query.project_name : ''
     this.typeList = this.$store.state.risk.typeList
     this.getList()
   },

@@ -35,6 +35,11 @@
           <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="所属项目" width="160px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.project.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="风险分类" width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ typeFilter(scope.row.type) }}</span>
@@ -60,13 +65,8 @@
           <span>{{ scope.row.project.qa }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属项目" width="160px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.project.name }}</span>
-        </template>
-      </el-table-column>
 
-      <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-show="false" size="mini" type="info" @click="handleDetail(scope.row)">详情
           </el-button>
@@ -75,7 +75,7 @@
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除
           </el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />

@@ -280,9 +280,7 @@ export default {
       })
     },
     cancel() {
-      if (!this.isEdit) {
-        this.$router.go(-1)
-      }
+      this.$router.go(-1)
     },
     submit() {
       if (this.isEdit) {

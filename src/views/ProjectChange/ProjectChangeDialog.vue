@@ -19,7 +19,6 @@
             <el-date-picker
               v-model="postForm.change_date"
               type="date"
-              size="small"
               placeholder="选择日期"
             />
           </el-form-item>
@@ -97,6 +96,10 @@
   </el-dialog>
 </template>
 <style lang="less" scoped>
+.el-date-editor.el-input, .el-date-editor.el-input__inner {
+    min-width: 140px;
+    width: 0;
+}
 .edit-container {
   padding: 10px 20px;
 }

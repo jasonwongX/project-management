@@ -16,41 +16,6 @@
         </el-radio-group>
       </el-col>
     </el-row>
-    <el-row :gutter="32" type="flex" align="middle">
-      <el-col :xs="24" :sm="14" :lg="14">
-        <line-chart v-if="project.dev_mode==1" :project-id="projectId" />
-        <sprint-bar-chart v-else :project-id="projectId" />
-      </el-col>
-      <el-col :xs="24" :sm="6" :lg="6">
-        <raddar-chart :list="projectCollectDetail.scores.actual_value" :max="projectCollectDetail.scores.total" />
-      </el-col>
-      <el-col :xs="24" :sm="4" :lg="4">
-        <el-row :gutter="24" class="data-row">
-          <el-col :span="24">
-            <div class="data-group group-red">
-              <div class="title">项目变更</div>
-              <div class="count">{{ projectCollectDetail.changeCount }}</div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24" class="data-row">
-          <el-col :span="24">
-            <div class="data-group group-red">
-              <div class="title">项目风险点</div>
-              <div class="count">{{ projectCollectDetail.riskCount }}</div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="24">
-            <div class="data-group group-blue">
-              <div class="title">健康评分</div>
-              <div class="count">{{ projectCollectDetail.averageScore }}</div>
-            </div>
-          </el-col>
-        </el-row>
-      </el-col>
-    </el-row>
     <el-row class="project-menu-item">
       <el-tabs type="border-card">
         <el-tab-pane>
@@ -58,10 +23,13 @@
           <add-project v-if="project.dev_mode == 1" :is-edit="true" :project-info="project" />
           <add-agile-project v-else :is-edit="true" :project-info="project" />
         </el-tab-pane>
-        <el-tab-pane>
+        <el-tab-pane v-if="project.dev_mode == 1">
           <span slot="label"><svg-icon icon-class="process-outline" /> 过程跟踪</span>
-          <process-common v-if="project.dev_mode == 1" :project-id="projectId" />
-          <process-agile v-else :project-id="projectId" />
+          <process-common :project-id="projectId" />
+        </el-tab-pane>
+        <el-tab-pane v-else>
+          <span slot="label"><svg-icon icon-class="sprint" /> 迭代管理</span>
+          <process-agile :project-id="projectId" />
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label"><svg-icon icon-class="risk-outline" /> 项目风险</span>
@@ -160,16 +128,12 @@
 }
 </style>
 <script>
-import LineChart from './components/TimeLineLineChart'
-import SprintBarChart from './components/SprintBarChart'
-
-import RaddarChart from './components/RaddarChart'
 import AddProject from './add'
 import AddAgileProject from './AddAgile'
 
 import RiskScoreBoard from '../RiskScore/RiskScoreBoard'
 import ProjectChangeBoard from '../ProjectChange/ProjectChangeBoard'
-import { fetchProject, updateProjectStatus, projectCollectDetail, saveProjectContent } from '@/api/project'
+import { fetchProject, updateProjectStatus, saveProjectContent } from '@/api/project'
 import ProcessCommon from './components/ProcessCommon'
 import ProcessAgile from './components/ProcessAgile'
 import RiskBoard from '../risk/RiskBoard'
@@ -181,9 +145,6 @@ const _ = require('lodash')
 export default {
   name: 'ModifyProject',
   components: {
-    LineChart,
-    SprintBarChart,
-    RaddarChart,
     AddProject,
     AddAgileProject,
     RiskScoreBoard,
@@ -208,9 +169,11 @@ export default {
     return {
       project: {},
       projectContent: '',
+      scaleList: [],
+      stageList: [],
+      projectId: 0,
       ProjectCompleteDialogVisible: false,
-      ProjectStopDialogVisible: false,
-      projectCollectDetail: {} // 项目汇总信息
+      ProjectStopDialogVisible: false
     }
   },
   async mounted() {
@@ -218,7 +181,6 @@ export default {
     this.stageList = this.$store.state.project.stageList
     this.projectId = this.$route.query && this.$route.query.id ? parseInt(this.$route.query.id) : 0
     await this.getInfo(this.projectId)
-    await this.getCollectDetail(this.projectId)
   },
   methods: {
     scaleFilter(val) {
@@ -240,14 +202,6 @@ export default {
         that.project.control_mode = that.project.control_mode.toString()
         that.project.sys_type = that.project.sys_type.toString()
         that.projectContent = that.project.content ? that.project.content.content : ''
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    getCollectDetail(id) {
-      const that = this
-      projectCollectDetail(id).then(response => {
-        that.projectCollectDetail = response.data
       }).catch(err => {
         console.log(err)
       })

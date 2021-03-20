@@ -1,15 +1,16 @@
 <template>
   <div class="app-container">
     <div class="box-header">
-      <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="addItem()">新增迭代</el-button>
+      <el-button v-if="isModify" class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="addItem()">新增迭代</el-button>
     </div>
     <el-row v-for="(sprintRows,index) in sprintArr" :key="index" :gutter="24">
       <el-col v-for="(item,colIndex) in sprintRows" :key="colIndex" :span="12">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>迭代{{ item.sequence }}</span>
-            <el-button style="float: right; padding: 0px 10px" type="text" @click="modifyItem(item)">编辑</el-button>
-            <el-button style="float: right; padding: 0px 10px;color:#f56c6c" type="text" @click="remove(item)">移除</el-button>
+            <el-button v-if="isModify" style="float: right; padding: 0px 10px" type="text" @click="modifyItem(item)">编辑</el-button>
+            <el-button v-if="isModify" style="float: right; padding: 0px 10px;color:#f56c6c" type="text" @click="remove(item)">移除</el-button>
+            <span v-if="!isModify" class="item-content" style="float: right; padding: 0px 10px">{{ formatDate(item.sprint_start_date) }} -- {{ formatDate(item.sprint_end_date) }}</span>
           </div>
           <div>
             <el-row :gutter="32" class="item-row">
@@ -26,10 +27,10 @@
                 <span class="item-content">{{ item.complete_percent }}</span>
               </el-col>
             </el-row>
-            <el-row :gutter="24">
+            <el-row v-if="isModify" :gutter="24">
               <el-col :span="24" class="item-col">
                 <span class="item-title">迭代时间:</span>
-                <span class="item-content">{{ item.sprint_start_date }} ~ {{ item.sprint_end_date }}</span>
+                <span class="item-content">{{ formatDate(item.sprint_start_date) }} -- {{ formatDate(item.sprint_end_date) }}</span>
               </el-col>
             </el-row>
             <el-row :gutter="24">
@@ -102,6 +103,7 @@
 import { fetchList, deleteAgileProcess, fetchAgileProcess } from '@/api/agileProcess'
 import ProcessAgileDialog from './ProcessAgileDialog'
 const _ = require('lodash')
+const moment = require('moment')
 export default {
   components: {
     ProcessAgileDialog
@@ -110,6 +112,10 @@ export default {
     projectId: {
       type: Number,
       default: 0
+    },
+    isModify: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -180,6 +186,9 @@ export default {
           this.getList()
         })
       })
+    },
+    formatDate(value) {
+      return value === '' ? '' : moment(value).format('YYYY/MM/DD')
     }
   }
 }

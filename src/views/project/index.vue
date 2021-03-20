@@ -92,7 +92,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" min-width="180px" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-show="false" size="mini" type="info" @click="handleDetail(scope.row)">详情
+          <el-button size="mini" type="info" @click="handleDetail(scope.row)">详情
           </el-button>
           <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑
           </el-button>
@@ -306,7 +306,7 @@ export default {
       this.getList()
     },
     handleDetail(row) {
-      this.$router.push({ path: '/project/info', query: { id: row.id }})
+      this.$router.push({ path: '/project/detail', query: { id: row.id }})
     },
     handleModify(row) {
       this.$router.push({ path: '/project/edit', query: { id: row.id }})

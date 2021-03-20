@@ -79,6 +79,11 @@ export const constantRoutes = [
         name: 'projectEdit'
       },
       {
+        path: 'detail',
+        component: () => import('@/views/project/detail'),
+        name: 'projectDetail'
+      },
+      {
         path: 'add',
         component: () => import('@/views/project/add'),
         name: 'projectAdd'
@@ -102,6 +107,11 @@ export const constantRoutes = [
         path: 'my',
         component: () => import('@/views/project/MyProject'),
         name: 'myProjectList'
+      },
+      {
+        path: 'riskScore',
+        component: () => import('@/views/RiskScore/index'),
+        name: 'riskScore'
       }
     ]
   },

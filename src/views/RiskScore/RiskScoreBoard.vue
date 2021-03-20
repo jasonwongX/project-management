@@ -109,6 +109,7 @@ export default {
   async created() {
     await this.$store.dispatch('risk/initTypeList')
     this.typeList = this.$store.state.risk.typeList
+    this.initRiskInfo()
     this.getList()
   },
   methods: {
@@ -125,12 +126,18 @@ export default {
       this.dialogRiskScoreVisible = false
       this.getList()
     },
-    add() {
+    initRiskInfo() {
+      const items = []
+      for (let i = 1; i < 11; i++) {
+        items[i] = 0
+      }
       this.riskScoreInfo = {
         time: '',
-        items: [
-        ]
+        items
       }
+    },
+    add() {
+      this.initRiskInfo()
       this.isEdit = false
       this.dialogRiskScoreVisible = true
     },
