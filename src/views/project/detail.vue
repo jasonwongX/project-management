@@ -18,41 +18,39 @@
       <basic-info v-if="project.dev_mode == 1" :project-info="project" />
       <basic-agile-info v-else :project-info="project" />
     </div>
-    <el-row :gutter="32" type="flex" align="middle">
-      <el-col :xs="24" :sm="14" :lg="14">
+    <el-row :gutter="64" class="pannel-group">
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="data-group">
+        <img src="@/assets/images/change_green.png" @click="gotoChange(project.name)">
+        <div>
+          <div class="title">项目变更</div>
+          <div class="count">{{ projectCollectDetail.changeCount }}</div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="data-group">
+        <img src="@/assets/images/risk_red.png" @click="gotoRisk(project.name)">
+        <div>
+          <div class="title">项目风险点</div>
+          <div class="count">{{ projectCollectDetail.riskCount }}</div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="data-group">
+        <img src="@/assets/images/score_blue.png" @click="gotoRiskScore(project.name)">
+        <div>
+          <div class="title">健康评分</div>
+          <div class="count">{{ projectCollectDetail.averageScore }}</div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="24" type="flex" align="middle">
+      <el-col :xs="24" :sm="16" :md="16" :lg="16" :xl="16">
         <line-chart v-if="project.dev_mode==1" :project-id="projectId" />
         <sprint-bar-chart v-else :project-id="projectId" />
       </el-col>
-      <el-col :xs="24" :sm="6" :lg="6">
+      <el-col :xs="24" :sm="8" :md="8" :lg="8" :xl="8">
         <raddar-chart :list="projectCollectDetail.scores.actual_value" :max="projectCollectDetail.scores.total" />
       </el-col>
-      <el-col :xs="24" :sm="4" :lg="4">
-        <el-row :gutter="24" class="data-row">
-          <el-col :span="24">
-            <div class="data-group group-red" @click="gotoChange(project.name)">
-              <div class="title">项目变更</div>
-              <div class="count">{{ projectCollectDetail.changeCount }}</div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24" class="data-row">
-          <el-col :span="24">
-            <div class="data-group group-red" @click="gotoRisk(project.name)">
-              <div class="title">项目风险点</div>
-              <div class="count">{{ projectCollectDetail.riskCount }}</div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="24">
-            <div class="data-group group-blue" @click="gotoRiskScore(project.name)">
-              <div class="title">健康评分</div>
-              <div class="count">{{ projectCollectDetail.averageScore }}</div>
-            </div>
-          </el-col>
-        </el-row>
-      </el-col>
     </el-row>
+
     <el-row class="project-menu-item">
       <process-agile v-if="project.dev_mode == 2" :is-modify="false" :project-id="projectId" />
       <process-common-detail v-if="project.dev_mode == 1" :project-id="projectId" />
@@ -83,8 +81,7 @@ export default {
     ProcessCommonDetail
   },
   filters: {
-
-    ProcessAgiledevModeFilter(val) {
+    devModeFilter(val) {
       const map = {
         1: '传统项目',
         2: '敏捷项目'
@@ -219,24 +216,38 @@ export default {
 .data-row {
     margin-bottom: 10px;
 }
-.group-red {
-    color: rgba(242, 83, 110, .85);
-
-}
 .group-blue {
-    color: rgba(61, 190, 99, .85);
+  color:#36a3f7;
 }
-.data-group {
-    min-height: 60px;
-    padding: 5px 20px;
-    background-color: #f7f8fa;
-    color: #666666;
-    size:14px;
-    .count {
-        font-weight: 500;
-        font-size: 20px;
-        padding-top:10px;
-    }
+.group-red {
+    color:#f4516c;
 }
+.group-green {
+    color:#36bfa3
+}
+.pannel-group {
+  padding: 10px 20px;
+  .data-group {
+      min-height: 80px;
+      background-color: #fff;
+      color: #666666;
+      box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
+      border-color: rgba(0, 0, 0, .05);
+      size:14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      img {
+        width:48px;
+        height:48px;
+      }
+      .count {
+          font-weight: 500;
+          font-size: 20px;
+          padding-top:5px;
+      }
+  }
+}
+
 </style>
 
