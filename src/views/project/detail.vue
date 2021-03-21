@@ -18,26 +18,33 @@
       <basic-info v-if="project.dev_mode == 1" :project-info="project" />
       <basic-agile-info v-else :project-info="project" />
     </div>
-    <el-row :gutter="64" class="pannel-group">
-      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="data-group">
-        <img src="@/assets/images/change_green.png" @click="gotoChange(project.name)">
-        <div>
-          <div class="title">项目变更</div>
-          <div class="count">{{ projectCollectDetail.changeCount }}</div>
+    <el-row :gutter="24" class="pannel-group">
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+        <div class="data-group">
+          <img src="@/assets/images/change_green.png" @click="gotoChange(project.name)">
+          <div>
+            <div class="title">项目变更</div>
+            <div class="count">{{ projectCollectDetail.changeCount }}</div>
+          </div>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="data-group">
-        <img src="@/assets/images/risk_red.png" @click="gotoRisk(project.name)">
-        <div>
-          <div class="title">项目风险点</div>
-          <div class="count">{{ projectCollectDetail.riskCount }}</div>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+        <div class="data-group">
+
+          <img src="@/assets/images/risk_red.png" @click="gotoRisk(project.name)">
+          <div>
+            <div class="title">项目风险点</div>
+            <div class="count">{{ projectCollectDetail.riskCount }}</div>
+          </div>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="data-group">
-        <img src="@/assets/images/score_blue.png" @click="gotoRiskScore(project.name)">
-        <div>
-          <div class="title">健康评分</div>
-          <div class="count">{{ projectCollectDetail.averageScore }}</div>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+        <div class="data-group">
+          <img src="@/assets/images/score_blue.png" @click="gotoRiskScore(project.name)">
+          <div>
+            <div class="title">健康评分</div>
+            <div class="count">{{ projectCollectDetail.averageScore }}</div>
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -226,7 +233,7 @@ export default {
     color:#36bfa3
 }
 .pannel-group {
-  padding: 10px 20px;
+  padding: 10px 0px;
   .data-group {
       min-height: 80px;
       background-color: #fff;
@@ -237,6 +244,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0px 10px;
       img {
         width:48px;
         height:48px;
