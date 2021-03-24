@@ -19,6 +19,22 @@
       </el-col>
       <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
         <span class="item-title">
+          是否分阶段
+        </span>
+        <span class="item-content">
+          {{ projectInfo.is_phased === 1 ? '是' : '否' }}
+        </span>
+      </el-col>
+      <el-col v-if="projectInfo.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
+          当前阶段
+        </span>
+        <span class="item-content">
+          {{ projectInfo.phased_num }}
+        </span>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
           研发单位
         </span>
         <span class="item-content">

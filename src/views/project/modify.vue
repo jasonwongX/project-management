@@ -176,7 +176,7 @@ export default {
       ProjectStopDialogVisible: false
     }
   },
-  async mounted() {
+  async created() {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.projectId = this.$route.query && this.$route.query.id ? parseInt(this.$route.query.id) : 0

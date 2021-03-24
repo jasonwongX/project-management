@@ -48,7 +48,22 @@
             </el-select>
           </el-form-item>
         </el-col>
-
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="完成百分比">
+            <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="是否分阶段:" prop="is_phased">
+            <el-radio v-model="postForm.is_phased" :label="0">否</el-radio>
+            <el-radio v-model="postForm.is_phased" :label="1">是</el-radio>
+          </el-form-item>
+        </el-col>
+        <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="阶段:" prop="phased_num">
+            <el-input-number v-model="postForm.phased_num" :min="0" :max="10" label="请输入阶段" />
+          </el-form-item>
+        </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="研发单位" prop="dev_unit">
             <el-input v-model="postForm.dev_unit" placeholder="研发" />
@@ -196,9 +211,10 @@ export default {
     return {
       qaList: [],
       loadingQa: false,
+      percentVal: 0, // 整数
       postForm: {
         name: '',
-        sequence: '',
+        sequence: 0,
         status: 1, // 在建
         stage: null,
         type: null,
@@ -211,6 +227,7 @@ export default {
         target: '',
         description: '',
         is_phased: 0,
+        phased_num: 0,
         complete_percent: 0,
         business_contact: '',
         sys_type: null,
@@ -263,6 +280,7 @@ export default {
     this.initQaList()
     if (this.isEdit) {
       this.postForm = _.cloneDeep(this.projectInfo)
+      this.percentVal = this.postForm.complete_percent * 100
     }
   },
   methods: {
@@ -283,6 +301,7 @@ export default {
       this.$router.go(-1)
     },
     submit() {
+      this.postForm.complete_percent = this.percentVal / 100
       if (this.isEdit) {
         editProject(this.postForm).then(response => {
           this.$message.success('成功更新项目信息')

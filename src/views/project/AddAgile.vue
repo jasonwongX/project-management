@@ -52,6 +52,11 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="完成百分比">
+            <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="产品经理" prop="po">
             <el-input v-model="postForm.agile.po" placeholder="产品经理" />
           </el-form-item>
@@ -82,11 +87,6 @@
                 :value="item.id"
               />
             </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="研发成员" prop="devMembers">
-            <el-input v-model="postForm.agile.devMembers" placeholder="研发成员" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -266,6 +266,7 @@ export default {
   data() {
     return {
       qaList: [],
+      percentVal: 0, // 百分比整数
       loadingQa: false,
       postForm: {
         name: '',
@@ -330,18 +331,33 @@ export default {
       }
     }
   },
+  watch: {
+    projectInfo: {
+      deep: true,
+      handler(val) {
+        if (this.isEdit) {
+          this.postForm = _.cloneDeep(val)
+        }
+        this.percentVal = this.postForm.complete_percent * 100
+      }
+    }
+  },
   created() {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
     this.postForm.stage = 1
+    this.initQaList()
   },
   mounted() {
-    if (this.isEdit) {
-      this.postForm = _.cloneDeep(this.projectInfo)
-    }
+
   },
   methods: {
+    initQaList() {
+      getQaList().then(response => {
+        this.qaList = response.data
+      })
+    },
     // 查询QA列表
     searchQaList(label) {
       this.loadingQa = true
@@ -354,6 +370,7 @@ export default {
       this.$router.go(-1)
     },
     submit() {
+      this.postForm.complete_percent = this.percentVal / 100
       if (this.isEdit) {
         editProject(this.postForm).then(response => {
           this.$message.success('成功更新项目信息')
