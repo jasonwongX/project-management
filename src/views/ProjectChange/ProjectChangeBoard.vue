@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="box-header">
+    <div v-if="changesArr.length" class="box-header">
       <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="add">新增变更</el-button>
     </div>
     <el-row
@@ -122,6 +122,10 @@
       </el-col>
     </el-row>
     <project-change-dialog :stage-list="stageList" :level-list="levelList" :type-list="typeList" :post-form="changeInfo" :dialog-visible="dialogVisible" :is-edit="isEdit" @closeDialog="closeDialog" />
+    <div v-if="!changesArr.length" class="empty-container">
+      <img src="@/assets/images/empty-box.png">
+      <span>暂无项目变更，<a @click="add">新增变更</a></span>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -143,6 +147,22 @@
     .item-content {
         font-weight: 500;
     }
+}
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    width:200px;
+    height:200px;
+  }
+  span {
+    color: #606266;
+  }
+  a{
+    color:#4092ef;
+  }
 }
 </style>
 <script>

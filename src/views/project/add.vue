@@ -149,6 +149,59 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="进度偏差情况" prop="schedule_deviation">
+            <el-input-number v-model="postForm.schedule_deviation" :min="0" :max="10" label="请输入进度偏差" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="预算申请时间" prop="budget_application_date">
+            <el-date-picker
+              v-model="postForm.purchase.budget_application_date"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="中标通知时间" prop="bid_notice_date">
+            <el-date-picker
+              v-model="postForm.purchase.bid_notice_date"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="厂家入场日期" prop="vendor_admission_date">
+            <el-date-picker
+              v-model="postForm.purchase.vendor_admission_date"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="预算采购时长" prop="budget_produce_time">
+            <el-input v-model="postForm.purchase.budget_produce_time" placeholder="预算采购时长（周）" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="24">
+        <el-col>
+          <el-form-item label="需求概述">
+            <el-input
+              v-model="postForm.description"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入需求概述"
+              type="textarea"
+            />
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row :gutter="24">
         <el-col>
@@ -157,18 +210,6 @@
               v-model="postForm.target"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="请输入项目目标"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col>
-          <el-form-item label="需求概述">
-            <el-input
-              v-model="postForm.description"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入需求概述"
               type="textarea"
             />
           </el-form-item>
@@ -236,7 +277,14 @@ export default {
         ptm: '',
         user_id: '',
         application_date: '',
-        charter_release_date: ''
+        charter_release_date: '',
+        schedule_deviation: 0,
+        purchase: {
+          budget_application_date: null,
+          bid_notice_date: null,
+          vendor_admission_date: null,
+          budget_produce_time: 0
+        }
       },
       statusList: {
         1: '在建',

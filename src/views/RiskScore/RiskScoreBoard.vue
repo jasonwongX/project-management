@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="box-header">
+    <div v-if="scoreArr.length" class="box-header">
       <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="add()">新增评分</el-button>
     </div>
     <el-row
@@ -32,7 +32,10 @@
       </el-col>
     </el-row>
     <risk-score-modify-dialog :project-id="projectId" :type-list="typeList" :post-form="riskScoreInfo" :dialog-risk-score-visible="dialogRiskScoreVisible" :is-edit="isEdit" @closeRiskScoreDialog="closeRiskScoreDialog" />
-
+    <div v-if="!scoreArr.length" class="empty-container">
+      <img src="@/assets/images/empty-box.png">
+      <span>项目无风险评分，<a @click="add()">新增风险评分</a></span>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -73,7 +76,22 @@
   padding: 3px 3px;
   color:#f56c6c;
 }
-
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    width:200px;
+    height:200px;
+  }
+  span {
+    color: #606266;
+  }
+  a{
+    color:#4092ef;
+  }
+}
 </style>
 <script>
 import { getProjectScoreList, deleteRiskScore } from '@/api/riskScore'

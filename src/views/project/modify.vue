@@ -43,6 +43,10 @@
           <span slot="label"><svg-icon icon-class="change-outline" /> 项目变更</span>
           <project-change-board :project-id="projectId" />
         </el-tab-pane>
+        <el-tab-pane>
+          <span slot="label"><svg-icon icon-class="complete-outline" /> 投产信息</span>
+          <project-complete-board :project-id="projectId" />
+        </el-tab-pane>
         <el-tab-pane v-if="false">
           <span slot="label"><svg-icon icon-class="other-outline" /> 其他信息</span>
           <div class="editor-container">
@@ -59,7 +63,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-row>
-    <project-complete-dialog :project-id="projectId" :dialog-complete-visible="ProjectCompleteDialogVisible" @closeCompleteDialog="closeCompleteDialog" />
+    <project-complete-dialog :project-id="projectId" :post-form="completeInfo" :dialog-complete-visible="ProjectCompleteDialogVisible" @closeCompleteDialog="closeCompleteDialog" />
     <project-stop-dialog :project-id="projectId" :dialog-stop-visible="ProjectStopDialogVisible" @closeStopDialog="closeStopDialog" />
 
   </div>
@@ -139,6 +143,8 @@ import ProcessAgile from './components/ProcessAgile'
 import RiskBoard from '../risk/RiskBoard'
 import ProjectStopDialog from './components/ProjectStopDialog'
 import ProjectCompleteDialog from './components/ProjectCompleteDialog'
+import ProjectCompleteBoard from './components/ProjectCompleteBoard'
+
 import Tinymce from '@/components/Tinymce'
 
 const _ = require('lodash')
@@ -154,7 +160,8 @@ export default {
     RiskBoard,
     ProjectStopDialog,
     ProjectCompleteDialog,
-    Tinymce
+    Tinymce,
+    ProjectCompleteBoard
   },
   filters: {
     devModeFilter(val) {
@@ -173,7 +180,14 @@ export default {
       stageList: [],
       projectId: 0,
       ProjectCompleteDialogVisible: false,
-      ProjectStopDialogVisible: false
+      ProjectStopDialogVisible: false,
+      completeInfo: {
+        project_id: this.projectId,
+        is_phased: 0,
+        sequence: null,
+        complete_date: null,
+        remark: ''
+      }
     }
   },
   async created() {
@@ -208,9 +222,11 @@ export default {
     },
     closeCompleteDialog() {
       this.ProjectCompleteDialogVisible = false
+      this.getInfo(this.projectId)
     },
     closeStopDialog() {
       this.ProjectStopDialogVisible = false
+      this.getInfo(this.projectId)
     },
     cancel() {
       this.projectContent = this.project.content ? this.project.content.content : ''
@@ -249,6 +265,8 @@ export default {
             })
           })
         }
+      }).catch(() => {
+        this.getInfo(this.projectId)
       })
     }
   }

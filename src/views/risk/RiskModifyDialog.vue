@@ -51,6 +51,18 @@
       </el-row>
       <el-row :gutter="24">
         <el-col>
+          <el-form-item label="风险描述">
+            <el-input
+              v-model="postForm.description"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入描述"
+              type="textarea"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col>
           <el-form-item label="原因分析">
             <el-input
               v-model="postForm.reason"
@@ -68,18 +80,6 @@
               v-model="postForm.measure"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="请输入措施"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col>
-          <el-form-item label="风险描述">
-            <el-input
-              v-model="postForm.description"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入描述"
               type="textarea"
             />
           </el-form-item>

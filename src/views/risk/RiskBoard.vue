@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="box-header">
+    <div v-if="riskArr.length" class="box-header">
       <el-button class="filter-item" type="primary" size="medium" icon="el-icon-plus" @click="addRisk">新增风险</el-button>
     </div>
     <el-row
@@ -89,6 +89,10 @@
       </el-col>
     </el-row>
     <risk-modify-dialog :status-list="statusList" :type-list="typeList" :level-list="levelList" :post-form="riskInfo" :dialog-risk-visible="dialogRiskVisible" :is-edit="isEdit" @closeRiskDialog="closeRiskDialog" />
+    <div v-if="!riskArr.length" class="empty-container">
+      <img src="@/assets/images/empty-box.png">
+      <span>项目无项目风险，<a @click="addRisk">新增风险</a></span>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -110,6 +114,22 @@
     .item-content {
         font-weight: 500;
     }
+}
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    width:200px;
+    height:200px;
+  }
+  span {
+    color: #606266;
+  }
+  a{
+    color:#4092ef;
+  }
 }
 </style>
 <script>
@@ -167,6 +187,7 @@ export default {
       })
     },
     addRisk() {
+      debugger
       this.riskInfo = {
         description: '', // 风险描述
         project_id: this.projectId, // 所属项目ID

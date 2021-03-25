@@ -137,6 +137,54 @@
           {{ sysTypeFilter(projectInfo.sys_type) }}
         </span>
       </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
+          系统类型
+        </span>
+        <span class="item-content">
+          {{ sysTypeFilter(projectInfo.sys_type) }}
+        </span>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
+          进度偏差情况
+        </span>
+        <span class="item-content">
+          {{ sysTypeFilter(projectInfo.schedule_deviation) }}
+        </span>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
+          预算申请时间
+        </span>
+        <span class="item-content">
+          {{ sysTypeFilter(projectInfo.budget_application_date) }}
+        </span>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
+          中标通知时间
+        </span>
+        <span class="item-content">
+          {{ sysTypeFilter(projectInfo.bid_notice_date) }}
+        </span>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
+          厂家入场日期
+        </span>
+        <span class="item-content">
+          {{ sysTypeFilter(projectInfo.vendor_admission_date) }}
+        </span>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" class="item-col">
+        <span class="item-title">
+          预算采购时长
+        </span>
+        <span class="item-content">
+          {{ sysTypeFilter(projectInfo.budget_produce_time) }}
+        </span>
+      </el-col>
     </el-row>
     <el-row :gutter="24">
       <el-col :span="24" class="item-col">

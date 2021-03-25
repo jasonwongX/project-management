@@ -1,8 +1,12 @@
 <template>
-  <div v-if="stageList.length === 0" class="app-container">
+  <!-- <div v-if="stageList.length === 0" class="app-container">
     <div class="box-header">
       <el-button class="filter-item" type="primary" size="medium" @click="initProcess()">初始化过程配置</el-button>
     </div>
+  </div> -->
+  <div v-if="!stageList.length" class="empty-container">
+    <img src="@/assets/images/empty-box.png">
+    <span><a @click="initProcess">初始化过程配置</a></span>
   </div>
   <el-tabs v-else tab-position="left" style="min-height: 500px;">
     <el-tab-pane v-for="(item,index) in stageLabel" :key="index" :label="item">
@@ -16,6 +20,22 @@
 }
 .box-header {
     margin-bottom: 10px;
+}
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    width:200px;
+    height:200px;
+  }
+  span {
+    color: #606266;
+  }
+  a{
+    color:#4092ef;
+  }
 }
 </style>
 <script>

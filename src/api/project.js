@@ -72,6 +72,14 @@ export function completeProject(data) {
   })
 }
 
+export function deleteCompleteProject(id) {
+  return request({
+    url: '/project/complete/delete',
+    method: 'post',
+    params: { id }
+  })
+}
+
 /**
  * 已投产项目列表
  * @param {*} query

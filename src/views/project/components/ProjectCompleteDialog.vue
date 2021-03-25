@@ -4,12 +4,12 @@
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
           <el-form-item label="投产方式:" prop="is_phased">
-            <el-radio v-model="postForm.is_phased" label="0">完全投产</el-radio>
-            <el-radio v-model="postForm.is_phased" label="1">分阶段</el-radio>
+            <el-radio v-model="postForm.is_phased" :label="0">完全投产</el-radio>
+            <el-radio v-model="postForm.is_phased" :label="1">分阶段</el-radio>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="postForm.is_phased === '1'" :gutter="24">
+      <el-row v-if="postForm.is_phased === 1" :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
           <el-form-item label="投产阶段:" prop="sequence">
             <el-input
@@ -55,6 +55,7 @@
 <script>
 
 import { completeProject } from '@/api/project'
+
 export default {
   name: 'ProjectCompleteDialog',
   props: {
@@ -65,17 +66,18 @@ export default {
     projectId: {
       type: Number,
       default: 0
+    },
+    isEdit: {
+      type: Boolean,
+      default: false
+    },
+    postForm: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
     return {
-      postForm: {
-        project_id: this.projectId,
-        is_phased: '0',
-        sequence: null,
-        complete_date: null,
-        remark: ''
-      }
     }
   },
   methods: {
@@ -83,6 +85,7 @@ export default {
       this.$emit('closeCompleteDialog')
     },
     submitForm() {
+      this.postForm.project_id = this.projectId
       completeProject(this.postForm).then(response => {
         this.$message({
           type: 'success',

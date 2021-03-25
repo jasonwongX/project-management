@@ -169,7 +169,7 @@ export default {
       this.dialogAgileProcessVisible = true
     },
     modifyItem(sprint) {
-      fetchAgileProcess(this.id).then(response => {
+      fetchAgileProcess(sprint.id).then(response => {
         this.processInfo = response.data
         this.isEdit = true
         this.dialogAgileProcessVisible = true
