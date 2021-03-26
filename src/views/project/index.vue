@@ -177,6 +177,10 @@ export default {
     isMyProject: {
       type: Boolean,
       default: false
+    },
+    devMode: {
+      type: Number,
+      default: 1
     }
   },
   data() {
@@ -193,7 +197,7 @@ export default {
         title: undefined,
         type: undefined,
         sort: '+id',
-        devMode: '1',
+        devMode: this.devMode,
         user_id: ''
       },
       riskOptions: [0, 1, 2, 3],
