@@ -37,6 +37,14 @@
                 </el-col>
                 <el-col :span="8" class="item-col">
                   <span class="item-title">
+                    投产登记时间
+                  </span>
+                  <span class="item-content">
+                    {{ change.complete_record_date }}
+                  </span>
+                </el-col>
+                <el-col :span="8" class="item-col">
+                  <span class="item-title">
                     是否完全投产
                   </span>
                   <span class="item-content">

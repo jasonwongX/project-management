@@ -18,21 +18,21 @@
     <el-row :gutter="32" class="data-row">
       <el-col :span="4">
         <div class="data-group">
-          <div class="title">传统项目：</div>
+          <div class="title">在建传统项目：</div>
           <div class="count">{{ totalCount.projectCount }}</div>
           <div class="last">上个月：{{ totalCount.projectLastMonthCount }}</div>
         </div>
       </el-col>
       <el-col :span="4">
         <div class="data-group">
-          <div class="title">敏捷项目:</div>
+          <div class="title">在建敏捷项目:</div>
           <div class="count">{{ totalCount.agileProjectCount }}</div>
           <div class="last">上个月：{{ totalCount.agileProjectLastMonthCount }}</div>
         </div>
       </el-col>
       <el-col :span="4">
         <div class="data-group">
-          <div class="title">新增项目数：</div>
+          <div class="title">本月新增项目数</div>
           <div class="count">{{ totalCount.addProjectTotalCount }}</div>
           <div class="last">上个月：{{ totalCount.addProjectTotalCountLastMonth }}</div>
         </div>
@@ -46,7 +46,7 @@
       </el-col>
       <el-col :span="4">
         <div class="data-group">
-          <div class="title">投产项目数：</div>
+          <div class="title">完全投产项目数</div>
           <div class="count">{{ totalCount.projectCompleteCount }}</div>
           <div class="last">上个月：{{ totalCount.projectCompleteCountLastMonth }}</div>
         </div>

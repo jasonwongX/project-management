@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ProjectList from './index'
+import ProjectList from './ProjectList'
 
 export default {
   name: 'MyProjectList',

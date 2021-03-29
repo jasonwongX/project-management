@@ -189,7 +189,7 @@
     <el-row :gutter="24">
       <el-col :span="24" class="item-col">
         <span class="item-title">
-          需求概述
+          进展简述
         </span>
         <span class="item-content">
           {{ projectInfo.description }}

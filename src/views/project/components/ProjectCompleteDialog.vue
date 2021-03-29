@@ -23,9 +23,21 @@
       </el-row>
       <el-row :gutter="24">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-          <el-form-item label="投产时间:" prop="change_date">
+          <el-form-item label="投产时间:" prop="complete_date">
             <el-date-picker
               v-model="postForm.complete_date"
+              type="date"
+              size="small"
+              placeholder="选择日期"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-form-item label="投产登记时间:" prop="complete_record_date">
+            <el-date-picker
+              v-model="postForm.complete_record_date"
               type="date"
               size="small"
               placeholder="选择日期"
@@ -37,7 +49,7 @@
         <el-col>
           <el-form-item label="投产意义:">
             <el-input
-              v-model="postForm.remark"
+              v-model="postForm.significance"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="请输入投产意义"
               type="textarea"

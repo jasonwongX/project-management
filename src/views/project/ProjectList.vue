@@ -1,9 +1,22 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-plus" @click="handleCreate">新建项目</el-button>
-      <el-input v-model="listQuery.name" placeholder="请输入项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-dropdown @command="handleCreate">
+        <el-button type="primary">
+          新建项目<i class="el-icon-arrow-down el-icon--right" />
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="common">新建传统项目</el-dropdown-item>
+          <el-dropdown-item command="agile">新建敏捷项目</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-select v-model="listQuery.devMode" placeholder="项目类型" clearable style="width: 130px;float:right" class="filter-item" @change="handleFilter">
+        <el-option v-for="(item, index) in devModeList" :key="index" :label="item" :value="index" />
+      </el-select>
+    </div>
+    <div class="filter-container">
+      <el-input v-model="listQuery.name" placeholder="项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.pm" placeholder="项目经理" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select
         v-model="listQuery.user_id"
         filterable
@@ -26,10 +39,10 @@
       <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-select v-model="listQuery.scale" placeholder="请选择规模类型" clearable style="width: 130px" class="filter-item">
+      <el-select v-model="listQuery.scale" placeholder="规模类型" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in scaleList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-select v-model="listQuery.control_mode" placeholder="请选择研发模式" clearable class="filter-item" style="width: 130px">
+      <el-select v-model="listQuery.control_mode" placeholder="研发模式" clearable class="filter-item" style="width: 130px">
         <el-option v-for="(item, index) in controlModeList" :key="index" :label="item" :value="index" />
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;" @click="handleFilter">查询</el-button>
@@ -83,8 +96,9 @@
           <span>{{ scope.row.qa }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="项目风险" align="center" class-name="status-col" min-width="80px">
-        <template slot-scope="scope">
+
+      <el-table-column label="项目风险" class-name="status-col" min-width="80px">
+        <template slot-scope="scope" align="center">
           <el-tag v-if="riskCount(scope.row.risk) === 0" type="success" size="mini">无风险</el-tag>
           <a v-else style="color:red" @click="gotoRisk(scope.row.name)">{{ riskCount(scope.row.risk) }}个风险</a>
         </template>
@@ -148,7 +162,8 @@ export default {
       const map = {
         1: '在建',
         2: '暂停',
-        3: '投产'
+        3: '投产',
+        4: '取消'
       }
       return map[value]
     },
@@ -175,15 +190,19 @@ export default {
     isMyProject: {
       type: Boolean,
       default: false
+    },
+    devMode: {
+      type: String,
+      default: '0'
     }
   },
   data() {
     return {
       list: null,
       total: 0,
-      qaList: [],
-      loadingQa: false,
       listLoading: true,
+      loadingQa: false,
+      qaList: [],
       listQuery: {
         page: 1,
         limit: 20,
@@ -191,7 +210,7 @@ export default {
         title: undefined,
         type: undefined,
         sort: '+id',
-        devMode: '2',
+        devMode: this.devMode,
         user_id: ''
       },
       riskOptions: [0, 1, 2, 3],
@@ -199,6 +218,7 @@ export default {
       stageList: [],
       controlModeList: [],
       devModeList: {
+        '0': '全部',
         '1': '传统项目',
         '2': '敏捷项目'
       },
@@ -245,14 +265,6 @@ export default {
     this.getList()
   },
   methods: {
-    // 查询QA列表
-    searchQaList(label) {
-      this.loadingQa = true
-      getQaList(label).then(response => {
-        this.qaList = response.data
-        this.loadingQa = false
-      })
-    },
     scaleFilter(val) {
       const valMap = this.scaleList
       return valMap[val] ? valMap[val] : '未知'
@@ -264,6 +276,14 @@ export default {
     controlModeFilter(val) {
       const valMap = this.controlModeList
       return valMap[val] ? valMap[val] : '未知'
+    },
+    // 查询项目列表
+    searchQaList(label) {
+      this.loadingQa = true
+      getQaList(label).then(response => {
+        this.qaList = response.data
+        this.loadingQa = false
+      })
     },
     levelFilter(item) {
       const levelList = {
@@ -309,8 +329,12 @@ export default {
     handleModify(row) {
       this.$router.push({ path: '/project/edit', query: { id: row.id }})
     },
-    handleCreate() {
-      this.$router.push({ path: '/project/addAgile' })
+    handleCreate(type) {
+      if (type === 'common') {
+        this.$router.push({ path: '/project/add' })
+      } else {
+        this.$router.push({ path: '/project/addAgile' })
+      }
     },
     handleDelete(row) {
       this.$confirm('是否确认删除?', '提示', {

@@ -193,11 +193,11 @@
 
       <el-row :gutter="24">
         <el-col>
-          <el-form-item label="需求概述">
+          <el-form-item label="进展简述">
             <el-input
               v-model="postForm.description"
               :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入需求概述"
+              placeholder="请输入进展简述"
               type="textarea"
             />
           </el-form-item>

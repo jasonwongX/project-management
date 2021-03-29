@@ -63,15 +63,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/project/index'),
+        component: () => import('@/views/project/ProjectList'),
         name: 'projectIndex',
-        meta: { title: '传统项目', icon: 'common-project' }
-      },
-      {
-        path: 'agile',
-        component: () => import('@/views/project/AgileProjectList'),
-        name: 'AgileProjectList',
-        meta: { title: '敏捷项目', icon: 'agile' }
+        meta: { title: '项目列表', icon: 'common-project' }
       },
       {
         path: 'edit',
@@ -149,7 +143,7 @@ export const constantRoutes = [
         path: '/report/project/month',
         component: () => import('@/views/report/ProjectMonthReport'),
         name: 'ProjectMonthReport',
-        meta: { title: '项目月度报告', icon: 'report-month' }
+        meta: { title: '在建项目月度统计', icon: 'report-month' }
       },
       {
         path: '/risk/index',

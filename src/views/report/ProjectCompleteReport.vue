@@ -53,6 +53,11 @@
           <span>{{ formatDate(scope.row.complete_date) }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="投产登记时间" min-width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ formatDate(scope.row.complete_record_date) }}</span>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />

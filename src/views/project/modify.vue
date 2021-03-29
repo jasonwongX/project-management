@@ -186,6 +186,7 @@ export default {
         is_phased: 0,
         sequence: null,
         complete_date: null,
+        complete_record_date: null,
         remark: ''
       }
     }
