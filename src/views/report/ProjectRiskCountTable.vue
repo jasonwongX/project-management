@@ -7,7 +7,7 @@
     </el-table-column>
     <el-table-column label="项目名称" min-width="195" align="center">
       <template slot-scope="scope">
-        {{ scope.row.name }}
+        {{ scope.row.project_name }}
       </template>
     </el-table-column>
     <el-table-column label="风险数" min-width="100" align="center">

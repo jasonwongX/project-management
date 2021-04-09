@@ -36,14 +36,17 @@
           :value="item.id"
         />
       </el-select>
-      <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
-        <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
+      <el-select v-model="listQuery.stage" placeholder="项目阶段" clearable style="width: 130px" class="filter-item">
+        <el-option v-for="(item, index) in stageList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-select v-model="listQuery.scale" placeholder="规模类型" clearable style="width: 130px" class="filter-item">
+      <el-select v-model="listQuery.scale" placeholder="项目规模" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in scaleList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-select v-model="listQuery.control_mode" placeholder="研发模式" clearable class="filter-item" style="width: 130px">
+      <el-select v-model="listQuery.control_mode" placeholder="掌控模式" clearable class="filter-item" style="width: 130px">
         <el-option v-for="(item, index) in controlModeList" :key="index" :label="item" :value="index" />
+      </el-select>
+      <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
+        <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;" @click="handleFilter">查询</el-button>
     </div>
@@ -66,7 +69,7 @@
           <span>{{ stageFilter(scope.row.stage) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="60px" align="center">
+      <el-table-column label="状态" min-width="60px" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusTagTypeFilter">{{ scope.row.status | statusFilter }}</el-tag>
         </template>

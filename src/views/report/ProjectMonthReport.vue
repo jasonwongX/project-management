@@ -15,43 +15,50 @@
     <el-row class="content-title" align="middle" :gutter="24" type="flex" justify="space-between">
       <el-col :span="12"><div class="title">项目数据概览</div></el-col>
     </el-row>
-    <el-row :gutter="32" class="data-row">
-      <el-col :span="4">
+    <el-row :gutter="24" class="data-row" type="flex" justify="space-between">
+      <el-col :span="3">
         <div class="data-group">
           <div class="title">在建传统项目：</div>
           <div class="count">{{ totalCount.projectCount }}</div>
           <div class="last">上个月：{{ totalCount.projectLastMonthCount }}</div>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <div class="data-group">
           <div class="title">在建敏捷项目:</div>
           <div class="count">{{ totalCount.agileProjectCount }}</div>
           <div class="last">上个月：{{ totalCount.agileProjectLastMonthCount }}</div>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <div class="data-group">
-          <div class="title">本月新增项目数</div>
+          <div class="title">新增项目数:</div>
           <div class="count">{{ totalCount.addProjectTotalCount }}</div>
           <div class="last">上个月：{{ totalCount.addProjectTotalCountLastMonth }}</div>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <div class="data-group">
-          <div class="title">变更项目数：</div>
+          <div class="title">变更项目数:</div>
           <div class="count">{{ totalCount.projectChangeCount }}</div>
           <div class="last">上个月：{{ totalCount.projectChangeCountLastMonth }}</div>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <div class="data-group">
-          <div class="title">完全投产项目数</div>
+          <div class="title">完全投产项目数:</div>
           <div class="count">{{ totalCount.projectCompleteCount }}</div>
           <div class="last">上个月：{{ totalCount.projectCompleteCountLastMonth }}</div>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
+        <div class="data-group">
+          <div class="title">取消项目数:</div>
+          <div class="count">{{ totalCount.projectCancelCount }}</div>
+          <div class="last">上个月：{{ totalCount.projectCancelCountLastMonth }}</div>
+        </div>
+      </el-col>
+      <el-col :span="3">
         <div class="data-group">
           <div class="title">风险项目数：</div>
           <div class="count">{{ totalCount.riskCount }}</div>
