@@ -187,7 +187,6 @@ export default {
       })
     },
     addRisk() {
-      debugger
       this.riskInfo = {
         description: '', // 风险描述
         project_id: this.projectId, // 所属项目ID

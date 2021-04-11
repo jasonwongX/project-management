@@ -1,4 +1,5 @@
 <template>
+
   <div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
     <textarea :id="tinymceId" class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
@@ -11,7 +12,7 @@
 import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
-const tinymce = require('tinymce')
+// const tinymce = require('tinymce')
 export default {
   name: 'Tinymce',
   components: { editorImage },
@@ -87,8 +88,8 @@ export default {
   methods: {
     initTinymce() {
       const _this = this
-      tinymce.init({
-        language: 'en',
+      window.tinymce.init({
+        language: 'zh',
         selector: `#${this.tinymceId}`,
         height: this.height,
         body_class: 'panel-body ',

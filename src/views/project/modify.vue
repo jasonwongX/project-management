@@ -47,7 +47,7 @@
           <span slot="label"><svg-icon icon-class="complete-outline" /> 投产信息</span>
           <project-complete-board :project-id="projectId" />
         </el-tab-pane>
-        <el-tab-pane v-if="false">
+        <el-tab-pane>
           <span slot="label"><svg-icon icon-class="other-outline" /> 其他信息</span>
           <div class="editor-container">
             <Tinymce ref="editor" v-model="projectContent" :height="400" />
