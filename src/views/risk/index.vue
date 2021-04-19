@@ -65,17 +65,6 @@
           <span>{{ scope.row.project.qa }}</span>
         </template>
       </el-table-column>
-
-      <!-- <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button v-show="false" size="mini" type="info" @click="handleDetail(scope.row)">详情
-          </el-button>
-          <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑
-          </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column> -->
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
@@ -114,6 +103,7 @@ export default {
       statusList: [],
       typeList: [],
       listQuery: {
+        project_name: '',
         page: 1,
         limit: 20
       },
@@ -122,7 +112,6 @@ export default {
   },
   async created() {
     this.listQuery.project_name = this.$route.query.project_name ? this.$route.query.project_name : ''
-
     await this.$store.dispatch('risk/initStatusList')
     await this.$store.dispatch('risk/initLevelList')
     await this.$store.dispatch('risk/initTypeList')
@@ -155,7 +144,7 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total ? response.total : 0
-        this.listQuery.limit = parseInt(response.per_page)
+        this.listQuery.limit = response.per_page ? parseInt(response.per_page) : this.listQuery.limit
         this.listLoading = false
       })
     },
