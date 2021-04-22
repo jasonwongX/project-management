@@ -153,80 +153,21 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/wiki',
+    path: '/wikiManage',
     component: Layout,
-    redirect: '/wiki/system',
-    meta: { title: '知识库', icon: 'wiki' },
+    redirect: '/wikiManage/index',
+    meta: { title: '知识库管理', icon: 'wiki' },
     children: [
       {
-        path: '/wiki/system',
-        component: () => import('@/views/wiki/index'),
-        redirect: '/wiki/system/workfollow',
-        meta: { title: '制度类', icon: 'regulation' },
-        children: [
-          {
-            path: '/wiki/system/workfollow',
-            component: () => import('@/views/wiki/index'),
-            name: 'workfollow',
-            meta: { title: '项目流程', icon: 'list' }
-          },
-          {
-            path: '/wiki/system/security',
-            component: () => import('@/views/wiki/index'),
-            name: 'security',
-            meta: { title: '安全合规', icon: 'list' }
-          },
-          {
-            path: '/wiki/system/notification',
-            component: () => import('@/views/wiki/index'),
-            name: 'notification',
-            meta: { title: '重要通知', icon: 'list' }
-          }
-        ]
+        path: 'index',
+        component: () => import('@/views/WikiManage/index'),
+        name: 'wikiMangeIndex',
+        meta: { title: '知识库列表', icon: 'list' }
       },
       {
-        path: '/wiki/tool',
-        component: () => import('@/views/wiki/index'),
-        meta: { title: '工具类', icon: 'tool' },
-        children: [
-          {
-            path: '/wiki/tool/devlop',
-            component: () => import('@/views/wiki/index'),
-            name: 'WikiToolDevlop',
-            meta: { title: '研发工具', icon: 'list' }
-          },
-          {
-            path: '/wiki/tool/follow',
-            component: () => import('@/views/wiki/index'),
-            name: 'WikiToolFollow',
-            meta: { title: '流程工具', icon: 'list' }
-          },
-          {
-            path: '/wiki/tool/test',
-            component: () => import('@/views/wiki/index'),
-            name: 'WikiToolTest',
-            meta: { title: '测试工具', icon: 'list' }
-          }
-        ]
-      },
-      {
-        path: '/wiki/experience',
-        component: () => import('@/views/wiki/index'),
-        meta: { title: '经验分享类', icon: 'share' },
-        children: [
-          {
-            path: '/wiki/experience/management',
-            component: () => import('@/views/wiki/index'),
-            name: 'WikiExperienceManagement',
-            meta: { title: '管理经验分享', icon: 'list' }
-          },
-          {
-            path: '/wiki/experience/tech',
-            component: () => import('@/views/wiki/index'),
-            name: 'WikiExperienceTech',
-            meta: { title: '技术经验分享', icon: 'list' }
-          }
-        ]
+        path: 'add',
+        component: () => import('@/views/WikiManage/create'),
+        name: 'wikiManageCreate'
       }
     ]
   },

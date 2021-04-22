@@ -34,11 +34,8 @@
           <a @click="handleDownload(scope.row.file_url)"><el-link type="primary">{{ scope.row.file_name }}</el-link></a>
         </template>
       </el-table-column>
-
     </el-table>
-
     <!-- <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" /> -->
-
   </div>
 </template>
 <style lang="less" scoped>

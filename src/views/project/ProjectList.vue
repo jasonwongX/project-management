@@ -280,7 +280,7 @@ export default {
       const valMap = this.controlModeList
       return valMap[val] ? valMap[val] : '未知'
     },
-    // 查询项目列表
+    // 查询用户列表
     searchQaList(label) {
       this.loadingQa = true
       getQaList(label).then(response => {
