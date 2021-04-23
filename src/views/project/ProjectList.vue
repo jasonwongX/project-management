@@ -6,8 +6,8 @@
           新建项目<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="common">新建传统项目</el-dropdown-item>
-          <el-dropdown-item command="agile">新建敏捷项目</el-dropdown-item>
+          <el-dropdown-item command="common">传统项目</el-dropdown-item>
+          <el-dropdown-item command="agile">敏捷项目</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <el-select v-model="listQuery.devMode" placeholder="项目类型" clearable style="width: 130px;float:right" class="filter-item" @change="handleFilter">
@@ -48,7 +48,17 @@
       <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;" @click="handleFilter">查询</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="width:80px;" @click="handleFilter">查询</el-button>
+      <el-button v-if="isMyProject" v-waves class="filter-item" type="primary" icon="el-icon-download" style="float:right" @click="exportMyProject">模板下载</el-button>
+      <el-upload
+        v-if="isMyProject"
+        style="float:right"
+        :action="uploadUrl"
+        :show-file-list="false"
+        :on-success="handleUploadSuccess"
+      >
+        <el-button v-waves class="filter-item" icon="el-icon-upload" type="primary">批量导入</el-button>
+      </el-upload>
     </div>
 
     <el-table
@@ -139,6 +149,7 @@ import { fetchList, fetchMyProjectList, deleteProject } from '@/api/project'
 import { getQaList } from '@/api/user'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'ProjectList',
@@ -253,7 +264,8 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      uploadUrl: `${process.env.VUE_APP_BASE_API}/import/myProject`
     }
   },
   computed: {
@@ -268,6 +280,10 @@ export default {
     this.getList()
   },
   methods: {
+    handleUploadSuccess(res) {
+      this.getList()
+      this.$message.success('批量更新项目成功')
+    },
     scaleFilter(val) {
       const valMap = this.scaleList
       return valMap[val] ? valMap[val] : '未知'
@@ -321,6 +337,10 @@ export default {
     },
     gotoRisk(projectName) {
       this.$router.push({ path: '/risk/index', query: { project_name: projectName }})
+    },
+    exportMyProject() {
+      const url = `${process.env.VUE_APP_BASE_API}/report/export/myProject?token=${getToken()}`
+      window.open(url)
     },
     handleFilter() {
       this.listQuery.page = 1
