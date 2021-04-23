@@ -282,12 +282,6 @@ export default {
     exportProject() {
       const url = `${process.env.VUE_APP_BASE_API}/report/export/project?month=${moment(this.listQuery.month).format('YYYY-MM')}`
       window.open(url)
-      // exportProject().then(response => {
-      //   var blob = new Blob(response, { type: 'text/plain;charset=utf-8' })
-      //   fileSaver.saveAs(blob, 'hello world.xls')
-      // }).catch(err => {
-      //   console.log(err)
-      // })
     },
     formatPercent(val) {
       return `${parseInt(val * 100)}%`
