@@ -1,16 +1,13 @@
 <template>
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
-
-      <sticky :class-name="'sub-navbar '+postForm.status">
+      <sticky class="sub-navbar">
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">发布
         </el-button>
         <el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>
       </sticky>
-
       <div class="createPost-main-container">
         <el-row>
-
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
               <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
@@ -48,6 +45,7 @@
                   <el-cascader
                     v-model="postForm.classify_id"
                     :options="options"
+                    :props="{ label: 'name', value: 'id' }"
                     placeholder="分类"
                   />
                 </el-col>
@@ -80,6 +78,7 @@ import Upload from '@/components/Upload/singleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { getQaList } from '@/api/user'
+import { getCategoryList } from '@/api/wiki'
 
 const defaultForm = {
   status: 'draft',
@@ -128,96 +127,7 @@ export default {
         content: [{ validator: validateRequire }]
       },
       tempRoute: {},
-      options: [{
-        value: 1,
-        label: '流程制度',
-        children: [{
-          value: 2,
-          label: '制度通知',
-          children: [{
-            value: 8,
-            label: '纲要类'
-          }, {
-            value: 9,
-            label: '调研阶段'
-          }, {
-            value: 10,
-            label: '启动阶段'
-          }, {
-            value: 11,
-            label: '需求阶段'
-          }, {
-            value: 12,
-            label: '设计阶段'
-          }, {
-            value: 13,
-            label: '编码阶段'
-          }, {
-            value: 14,
-            label: '测试阶段'
-          }, {
-            value: 15,
-            label: '上线阶段'
-          }, {
-            value: 16,
-            label: '投产与验收'
-          }, {
-            value: 17,
-            label: '下线'
-          }, {
-            value: 18,
-            label: '项目管理'
-          }]
-        }, {
-          value: 3,
-          label: '流程表单'
-        }, {
-          value: 4,
-          label: '模板',
-          children: [{
-            value: 19,
-            label: '项目计划'
-          }, {
-            value: 20,
-            label: '需求'
-          }, {
-            value: 21,
-            label: '概设'
-          }, {
-            value: 22,
-            label: '测试'
-          }, {
-            value: 23,
-            label: '项目过程实施'
-          }]
-        }, {
-          value: 5,
-          label: '其他'
-        }]
-      }, {
-        value: 6,
-        label: '工具',
-        children: [{
-          value: 24,
-          label: '研发工具'
-        }, {
-          value: 25,
-          label: '流程工具'
-        }, {
-          value: 26,
-          label: '测试工具'
-        }]
-      }, {
-        value: 7,
-        label: '案例分享',
-        children: [{
-          value: 27,
-          label: '管理经验分享'
-        }, {
-          value: 28,
-          label: '技术经验分享'
-        }]
-      }]
+      options: []
     }
   },
   computed: {
@@ -235,14 +145,16 @@ export default {
     } else {
       this.postForm = Object.assign({}, defaultForm)
     }
-
-    // Why need to make a copy of this.$route here?
-    // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
-    // https://github.com/PanJiaChen/vue-element-admin/issues/1221
     this.tempRoute = Object.assign({}, this.$route)
+    this.initCatogeryList()
   },
   methods: {
     fetchData(id) {
+    },
+    initCatogeryList() {
+      getCategoryList().then(response => {
+        this.options = response.data
+      })
     },
     // 查询用户列表
     searchQaList(label) {
@@ -301,6 +213,26 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+.sub-navbar {
+  height: 50px;
+  line-height: 50px;
+  position: relative;
+  width: 100%;
+  text-align: right;
+  padding-right: 20px;
+  transition: 600ms ease position;
+  background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
+  .subtitle {
+    font-size: 20px;
+    color: #fff;
+  }
+  &.draft {
+    background: #d0d0d0;
+  }
+  &.deleted {
+    background: #d0d0d0;
+  }
+}
 .createPost-container {
   position: relative;
   .createPost-main-container {
