@@ -52,6 +52,18 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="项目阶段" prop="stage">
+            <el-select v-model="postForm.stage" placeholder="项目阶段">
+              <el-option
+                v-for="(item, index) in stageList"
+                :key="index"
+                :label="item"
+                :value="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="完成百分比">
             <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
           </el-form-item>
