@@ -2,6 +2,8 @@
   <div class="edit-container">
     <el-row class="title-row" :gutter="24" type="flex" justify="space-between">
       <el-col class="left-title-row" :span="16">
+        <div class="title-col"><el-button type="primary" plain size="small" @click="goBack()"> 返回 </el-button></div>
+
         <div class="title-name">{{ project.name }}</div>
         <div class="title-col"><el-tag type="info">{{ project.dev_mode | devModeFilter }}</el-tag></div>
         <div class="title-col"><el-tag type="info">{{ scaleFilter(project.scale) }}</el-tag></div>
@@ -205,6 +207,9 @@ export default {
     stageFilter(val) {
       const valMap = this.stageList
       return valMap[val] ? valMap[val] : '未知'
+    },
+    goBack() {
+      this.$router.go(-1)
     },
     // 项目详情
     getInfo(id) {

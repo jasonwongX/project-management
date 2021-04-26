@@ -150,6 +150,7 @@ import { getQaList } from '@/api/user'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { getToken } from '@/utils/auth'
+const _ = require('lodash')
 
 export default {
   name: 'ProjectList',
@@ -218,14 +219,6 @@ export default {
       loadingQa: false,
       qaList: [],
       listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id',
-        devMode: this.devMode,
-        user_id: ''
       },
       riskOptions: [0, 1, 2, 3],
       scaleList: [],
@@ -242,15 +235,6 @@ export default {
         '3': '投产'
       },
       showReviewer: false,
-      temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
-      },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -277,7 +261,15 @@ export default {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
-    this.getList()
+    // 获取数据
+    const schema = this.$store.state.params.projectListParams
+    if (_.isEmpty(schema)) {
+      this.getList()
+    } else {
+      // Object.assign(this.formData, schema)
+      this.listQuery = schema
+      this.getList()
+    }
   },
   methods: {
     handleUploadSuccess(res) {
@@ -316,6 +308,13 @@ export default {
     riskCount(risk) {
       return risk && risk.length ? risk.length : 0
     },
+    saveFormData() {
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.$store.dispatch('params/updateProjectListParams', this.listQuery)
+        })
+      }, 200)
+    },
     getList() {
       this.listLoading = true
       if (this.isMyProject) {
@@ -347,10 +346,12 @@ export default {
       this.getList()
     },
     handleDetail(row) {
+      this.saveFormData()
       this.$router.push({ path: '/project/detail', query: { id: row.id }})
     },
     handleModify(row) {
       this.$router.push({ path: '/project/edit', query: { id: row.id }})
+      this.saveFormData()
     },
     handleCreate(type) {
       if (type === 'common') {
@@ -358,6 +359,7 @@ export default {
       } else {
         this.$router.push({ path: '/project/addAgile' })
       }
+      this.saveFormData()
     },
     handleDelete(row) {
       this.$confirm('是否确认删除?', '提示', {
