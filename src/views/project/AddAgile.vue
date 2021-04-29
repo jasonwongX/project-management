@@ -64,6 +64,11 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="当前迭代">
+            <el-input-number v-model="postForm.agile.sprint_stage" :min="0" :max="100" label="当前迭代" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="完成百分比">
             <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
           </el-form-item>
@@ -378,6 +383,7 @@ export default {
         agile: {
           sprint_time: '',
           sprint_start_date: '',
+          sprint_stage: null,
           po: '',
           sm: '',
           first_publish_date: '',

@@ -76,7 +76,9 @@
       </el-table-column>
       <el-table-column label="阶段" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ stageFilter(scope.row.stage) }}</span>
+          <span v-if="scope.row.dev_mode===1">{{ stageFilter(scope.row.stage) }}</span>
+          <span v-else-if="scope.row.dev_mode===2 && scope.row.agile.sprint_stage">{{ `S${scope.row.agile.sprint_stage}` }}</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" min-width="60px" align="center">
@@ -288,6 +290,7 @@ export default {
       const valMap = this.controlModeList
       return valMap[val] ? valMap[val] : '未知'
     },
+
     // 查询项目列表
     searchQaList(label) {
       this.loadingQa = true
