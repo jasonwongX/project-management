@@ -8,17 +8,20 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目编号" prop="sequence">
-            <el-input v-model="postForm.sequence" placeholder="请输入项目编号" />
+          <el-form-item label="系统类型" prop="sys_type">
+            <el-select v-model="postForm.sys_type" placeholder="系统类型">
+              <el-option
+                v-for="(item, index) in sysTypeList"
+                :key="index"
+                :label="item"
+                :value="index"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
+
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="迭代周期(周)" prop="sprint_time">
-            <el-input v-model="postForm.agile.sprint_time" placeholder="请输入迭代周期" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="试点启动" prop="sprint_start_date">
+          <el-form-item label="试点启动日期" prop="sprint_start_date">
             <el-date-picker
               v-model="postForm.agile.sprint_start_date"
               type="date"
@@ -64,27 +67,17 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="当前迭代">
+          <el-form-item label="当前迭代" prop="sprint_stage">
             <el-input-number v-model="postForm.agile.sprint_stage" :min="0" :max="100" label="当前迭代" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="完成百分比">
-            <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
+          <el-form-item label="迭代周期(周)" prop="agile.sprint_time">
+            <el-input-number v-model="postForm.agile.sprint_time" :min="0" :max="100" label="请输入迭代周期" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="产品经理" prop="po">
-            <el-input v-model="postForm.agile.po" placeholder="产品经理" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="SM" prop="sm">
-            <el-input v-model="postForm.agile.sm" placeholder="SM" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="质量控制人员" prop="qa">
+          <el-form-item label="质量控制人员" prop="user_id">
             <el-select
               v-model="postForm.user_id"
               filterable
@@ -107,6 +100,17 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="产品经理" prop="po">
+            <el-input v-model="postForm.agile.po" placeholder="产品经理" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="SM" prop="sm">
+            <el-input v-model="postForm.agile.sm" placeholder="SM" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="业务主管部门" prop="competent_authority">
             <el-input v-model="postForm.competent_authority" placeholder="业务主管部门" />
           </el-form-item>
@@ -119,6 +123,11 @@
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="研发团队" prop="dev_team">
             <el-input v-model="postForm.dev_team" placeholder="研发团队" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="项目编号" prop="sequence">
+            <el-input v-model="postForm.sequence" placeholder="请输入项目编号" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -152,15 +161,8 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="系统类型" prop="sys_type">
-            <el-select v-model="postForm.sys_type" placeholder="系统类型">
-              <el-option
-                v-for="(item, index) in sysTypeList"
-                :key="index"
-                :label="item"
-                :value="index"
-              />
-            </el-select>
+          <el-form-item label="完成百分比">
+            <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
           </el-form-item>
         </el-col>
         <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -357,6 +359,7 @@ export default {
         type: null,
         control_mode: null,
         scale: null,
+        stage: '8',
         dev_mode: 2,
         dev_unit: '',
         dev_team: '',
@@ -406,6 +409,12 @@ export default {
         name: [
           { required: true, message: '项目名称不能为空' }
         ],
+        sys_type: [
+          { required: true, message: '请选择系统类型' }
+        ],
+        control_mode: [
+          { required: true, message: '请选择掌控模式' }
+        ],
         type: [
           { required: true, message: '请选择项目类型' }
         ],
@@ -417,6 +426,12 @@ export default {
         ],
         scale: [
           { required: true, message: '请选择规模' }
+        ],
+        user_id: [
+          { required: true, message: '请选择质量控制人员' }
+        ],
+        sprint_time: [
+          { required: true, message: '请选择迭代周期' }
         ]
       }
     }
@@ -436,7 +451,6 @@ export default {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
-    this.postForm.stage = 1
     this.initQaList()
   },
   mounted() {
@@ -461,16 +475,23 @@ export default {
     },
     submit() {
       this.postForm.complete_percent = this.percentVal / 100
-      if (this.isEdit) {
-        editProject(this.postForm).then(response => {
-          this.$message.success('成功更新项目信息')
-        })
-      } else {
-        addProject(this.postForm).then(response => {
-          this.$message.success('成功添加项目')
-          this.$router.push('/project/index')
-        })
-      }
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isEdit) {
+            editProject(this.postForm).then(response => {
+              this.$message.success('成功更新项目信息')
+            })
+          } else {
+            addProject(this.postForm).then(response => {
+              this.$message.success('成功添加项目')
+              this.$router.push('/project/index')
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

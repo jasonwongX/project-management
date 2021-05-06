@@ -8,20 +8,25 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目编号" prop="sequence">
-            <el-input v-model="postForm.sequence" placeholder="请输入项目编号" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目阶段" prop="stage">
-            <el-select v-model="postForm.stage" placeholder="项目阶段">
+          <el-form-item label="系统类型" prop="dev_mode">
+            <el-select v-model="postForm.sys_type" placeholder="系统类型">
               <el-option
-                v-for="(item, index) in stageList"
+                v-for="(item, index) in sysTypeList"
                 :key="index"
                 :label="item"
                 :value="index"
               />
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="章程发布日期" prop="charter_release_date">
+            <el-date-picker
+              v-model="postForm.charter_release_date"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+            />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -49,49 +54,20 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="项目阶段" prop="stage">
+            <el-select v-model="postForm.stage" placeholder="项目阶段">
+              <el-option
+                v-for="(item, index) in stageList"
+                :key="index"
+                :label="item"
+                :value="index"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="完成百分比">
             <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="是否分阶段:" prop="is_phased">
-            <el-radio v-model="postForm.is_phased" :label="0">否</el-radio>
-            <el-radio v-model="postForm.is_phased" :label="1">是</el-radio>
-          </el-form-item>
-        </el-col>
-        <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="阶段:" prop="phased_num">
-            <el-input-number v-model="postForm.phased_num" :min="0" :max="10" label="请输入阶段" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="研发单位" prop="dev_unit">
-            <el-input v-model="postForm.dev_unit" placeholder="研发" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="研发团队" prop="dev_team">
-            <el-input v-model="postForm.dev_team" placeholder="研发团队" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目经理" prop="pm">
-            <el-input v-model="postForm.pm" placeholder="项目经理" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="业务联系人" prop="business_contact">
-            <el-input v-model="postForm.business_contact" placeholder="业务联系人" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="产品经理" prop="po">
-            <el-input v-model="postForm.po" placeholder="产品经理" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="测试经理" prop="ptm">
-            <el-input v-model="postForm.ptm" placeholder="˜测试经理" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -118,6 +94,54 @@
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="项目经理" prop="pm">
+            <el-input v-model="postForm.pm" placeholder="项目经理" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="是否分阶段:" prop="is_phased">
+            <el-radio v-model="postForm.is_phased" :label="0">否</el-radio>
+            <el-radio v-model="postForm.is_phased" :label="1">是</el-radio>
+          </el-form-item>
+        </el-col>
+        <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="阶段:" prop="phased_num">
+            <el-input-number v-model="postForm.phased_num" :min="0" :max="10" label="请输入阶段" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="研发单位" prop="dev_unit">
+            <el-input v-model="postForm.dev_unit" placeholder="研发" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="研发团队" prop="dev_team">
+            <el-input v-model="postForm.dev_team" placeholder="研发团队" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="业务联系人" prop="business_contact">
+            <el-input v-model="postForm.business_contact" placeholder="业务联系人" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="产品经理" prop="po">
+            <el-input v-model="postForm.po" placeholder="产品经理" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="测试经理" prop="ptm">
+            <el-input v-model="postForm.ptm" placeholder="˜测试经理" />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+          <el-form-item label="项目编号" prop="sequence">
+            <el-input v-model="postForm.sequence" placeholder="请输入项目编号" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="申请日期" prop="application_date">
             <el-date-picker
               v-model="postForm.application_date"
@@ -127,28 +151,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="章程发布日期" prop="charter_release_date">
-            <el-date-picker
-              v-model="postForm.charter_release_date"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="系统类型" prop="dev_mode">
-            <el-select v-model="postForm.sys_type" placeholder="系统类型">
-              <el-option
-                v-for="(item, index) in sysTypeList"
-                :key="index"
-                :label="item"
-                :value="index"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
+
         <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
           <el-form-item label="进度偏差情况" prop="schedule_deviation">
             <el-input-number v-model="postForm.schedule_deviation" :min="0" :max="10" label="请输入进度偏差" />
@@ -306,6 +309,12 @@ export default {
         name: [
           { required: true, message: '项目名称不能为空' }
         ],
+        sys_type: [
+          { required: true, message: '请选择系统类型' }
+        ],
+        control_mode: [
+          { required: true, message: '请选择掌控模式' }
+        ],
         type: [
           { required: true, message: '请选择项目类型' }
         ],
@@ -317,6 +326,12 @@ export default {
         ],
         scale: [
           { required: true, message: '请选择规模' }
+        ],
+        user_id: [
+          { required: true, message: '请选择质量控制人员' }
+        ],
+        charter_release_date: [
+          { required: true, message: '项目章程发布日期' }
         ]
       }
     }
@@ -350,16 +365,23 @@ export default {
     },
     submit() {
       this.postForm.complete_percent = this.percentVal / 100
-      if (this.isEdit) {
-        editProject(this.postForm).then(response => {
-          this.$message.success('成功更新项目信息')
-        })
-      } else {
-        addProject(this.postForm).then(response => {
-          this.$message.success('成功添加项目')
-          this.$router.push('/project/index')
-        })
-      }
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isEdit) {
+            editProject(this.postForm).then(response => {
+              this.$message.success('成功更新项目信息')
+            })
+          } else {
+            addProject(this.postForm).then(response => {
+              this.$message.success('成功添加项目')
+              this.$router.push('/project/index')
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

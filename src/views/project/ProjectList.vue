@@ -48,6 +48,9 @@
       <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
+      <el-select v-model="listQuery.sys_type" placeholder="系统类型" clearable style="width: 130px" class="filter-item">
+        <el-option v-for="(item, index) in sysTypeList" :key="index" :label="item" :value="index" />
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="width:80px;" @click="handleFilter">查询</el-button>
       <el-button v-if="isMyProject" v-waves class="filter-item" type="primary" icon="el-icon-download" style="float:right" @click="exportMyProject">模板下载</el-button>
       <el-upload
@@ -79,6 +82,11 @@
           <span v-if="scope.row.dev_mode===1">{{ stageFilter(scope.row.stage) }}</span>
           <span v-else-if="scope.row.dev_mode===2 && scope.row.agile.sprint_stage">{{ `S${scope.row.agile.sprint_stage}` }}</span>
           <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="系统类型" min-width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.sys_type | sysTypeFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" min-width="60px" align="center">
@@ -184,6 +192,13 @@ export default {
       }
       return map[value]
     },
+    sysTypeFilter(value) {
+      const map = {
+        1: '项目',
+        2: '迭代开发'
+      }
+      return map[value]
+    },
     statusTagTypeFilter(value) {
       const map = {
         1: '',
@@ -235,6 +250,10 @@ export default {
         '1': '在建',
         '2': '暂停',
         '3': '投产'
+      },
+      sysTypeList: {
+        '1': '项目',
+        '2': '迭代开发'
       },
       showReviewer: false,
       dialogFormVisible: false,
