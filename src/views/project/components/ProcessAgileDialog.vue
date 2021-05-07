@@ -46,7 +46,7 @@
         </el-col>
 
       </el-row>
-      <el-row :gutter="24">
+      <el-row v-show="false" :gutter="24">
         <el-col>
           <el-form-item label="内容描述">
             <el-input
@@ -70,7 +70,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row v-show="false" :gutter="24">
         <el-col>
           <el-form-item label="敏捷团队建设">
             <el-input
@@ -82,7 +82,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row v-show="false" :gutter="24">
         <el-col>
           <el-form-item label="敏捷需求管理">
             <el-input

@@ -48,6 +48,9 @@
       <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
+      <el-select v-model="listQuery.sys_type" placeholder="系统类型" clearable style="width: 130px" class="filter-item">
+        <el-option v-for="(item, index) in sysTypeList" :key="index" :label="item" :value="index" />
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="width:80px;" @click="handleFilter">查询</el-button>
       <el-button v-if="isMyProject" v-waves class="filter-item" type="primary" icon="el-icon-download" style="float:right" @click="exportMyProject">模板下载</el-button>
       <el-upload
@@ -76,7 +79,14 @@
       </el-table-column>
       <el-table-column label="阶段" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ stageFilter(scope.row.stage) }}</span>
+          <span v-if="scope.row.dev_mode===1">{{ stageFilter(scope.row.stage) }}</span>
+          <span v-else-if="scope.row.dev_mode===2 && scope.row.agile.sprint_stage">{{ `S${scope.row.agile.sprint_stage}` }}</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="系统类型" min-width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.sys_type | sysTypeFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" min-width="60px" align="center">
@@ -150,6 +160,7 @@ import { getQaList } from '@/api/user'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { getToken } from '@/utils/auth'
+const _ = require('lodash')
 
 export default {
   name: 'ProjectList',
@@ -178,6 +189,13 @@ export default {
         2: '暂停',
         3: '投产',
         4: '取消'
+      }
+      return map[value]
+    },
+    sysTypeFilter(value) {
+      const map = {
+        1: '项目',
+        2: '迭代开发'
       }
       return map[value]
     },
@@ -218,14 +236,6 @@ export default {
       loadingQa: false,
       qaList: [],
       listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id',
-        devMode: this.devMode,
-        user_id: ''
       },
       riskOptions: [0, 1, 2, 3],
       scaleList: [],
@@ -241,16 +251,11 @@ export default {
         '2': '暂停',
         '3': '投产'
       },
-      showReviewer: false,
-      temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
+      sysTypeList: {
+        '1': '项目',
+        '2': '迭代开发'
       },
+      showReviewer: false,
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -277,7 +282,15 @@ export default {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
-    this.getList()
+    // 获取数据
+    const schema = this.$store.state.params.projectListParams
+    if (_.isEmpty(schema)) {
+      this.getList()
+    } else {
+      // Object.assign(this.formData, schema)
+      this.listQuery = schema
+      this.getList()
+    }
   },
   methods: {
     handleUploadSuccess(res) {
@@ -296,7 +309,8 @@ export default {
       const valMap = this.controlModeList
       return valMap[val] ? valMap[val] : '未知'
     },
-    // 查询用户列表
+
+    // 查询项目列表
     searchQaList(label) {
       this.loadingQa = true
       getQaList(label).then(response => {
@@ -315,6 +329,13 @@ export default {
     },
     riskCount(risk) {
       return risk && risk.length ? risk.length : 0
+    },
+    saveFormData() {
+      setTimeout(() => {
+        this.$nextTick(() => {
+          this.$store.dispatch('params/updateProjectListParams', this.listQuery)
+        })
+      }, 200)
     },
     getList() {
       this.listLoading = true
@@ -347,10 +368,12 @@ export default {
       this.getList()
     },
     handleDetail(row) {
+      this.saveFormData()
       this.$router.push({ path: '/project/detail', query: { id: row.id }})
     },
     handleModify(row) {
       this.$router.push({ path: '/project/edit', query: { id: row.id }})
+      this.saveFormData()
     },
     handleCreate(type) {
       if (type === 'common') {
@@ -358,6 +381,7 @@ export default {
       } else {
         this.$router.push({ path: '/project/addAgile' })
       }
+      this.saveFormData()
     },
     handleDelete(row) {
       this.$confirm('是否确认删除?', '提示', {

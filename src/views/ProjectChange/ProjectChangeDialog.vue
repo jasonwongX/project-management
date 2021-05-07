@@ -137,11 +137,23 @@ export default {
   data() {
     return {
       rules: {
+        change_stage: [
+          { required: true, message: '请选择阶段' }
+        ],
+        change_date: [
+          { required: true, message: '请选择变更时间' }
+        ],
         level: [
           { required: true, message: '请选择风险等级' }
         ],
         type: [
           { required: true, message: '请选择风险分类' }
+        ],
+        is_external_forced_change: [
+          { required: true, message: '请选择是否外部强制变更' }
+        ],
+        is_add_budget: [
+          { required: true, message: '请选择是否追加预算' }
         ]
       }
     }
@@ -151,27 +163,30 @@ export default {
       this.$emit('closeDialog')
     },
     submitForm() {
-      const valid = this.$refs['form'].validate()
-      if (!valid) {
-        return false
-      }
-      if (this.isEdit) {
-        editProjectChange(this.postForm).then(response => {
-          this.$message({
-            type: 'success',
-            message: '更新成功!'
-          })
-          this.$emit('closeDialog')
-        })
-      } else {
-        addProjectChange(this.postForm).then(response => {
-          this.$message({
-            type: 'success',
-            message: '增加成功!'
-          })
-          this.$emit('closeDialog')
-        })
-      }
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isEdit) {
+            editProjectChange(this.postForm).then(response => {
+              this.$message({
+                type: 'success',
+                message: '更新成功!'
+              })
+              this.$emit('closeDialog')
+            })
+          } else {
+            addProjectChange(this.postForm).then(response => {
+              this.$message({
+                type: 'success',
+                message: '增加成功!'
+              })
+              this.$emit('closeDialog')
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

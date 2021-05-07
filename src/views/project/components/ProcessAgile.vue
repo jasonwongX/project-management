@@ -33,7 +33,7 @@
                 <span class="item-content">{{ formatDate(item.sprint_start_date) }} -- {{ formatDate(item.sprint_end_date) }}</span>
               </el-col>
             </el-row>
-            <el-row :gutter="24">
+            <el-row v-show="false" :gutter="24">
               <el-col :span="24" class="item-col">
                 <span class="item-title">内容描述:</span>
                 <span class="item-content">{{ item.description }}</span>
@@ -45,13 +45,13 @@
                 <span class="item-content">{{ item.activity_summary }}</span>
               </el-col>
             </el-row>
-            <el-row :gutter="24">
+            <el-row v-show="false" :gutter="24">
               <el-col :span="24" class="item-col">
                 <span class="item-title">敏捷团队建设:</span>
                 <span class="item-content">{{ item.team_summary }}</span>
               </el-col>
             </el-row>
-            <el-row :gutter="24">
+            <el-row v-show="false" :gutter="24">
               <el-col :span="24" class="item-col">
                 <span class="item-title">敏捷需求管理:</span>
                 <span class="item-content">{{ item.requirement_summary }}</span>

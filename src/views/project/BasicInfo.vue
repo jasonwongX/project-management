@@ -154,7 +154,7 @@
         </span>
       </el-col>
     </el-row>
-    <el-row :gutter="24">
+    <el-row v-show="false" :gutter="24">
       <el-col :span="24" class="item-col">
         <span class="item-title">
           项目目标

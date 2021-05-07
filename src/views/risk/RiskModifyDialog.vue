@@ -51,7 +51,7 @@
       </el-row>
       <el-row :gutter="24">
         <el-col>
-          <el-form-item label="风险描述">
+          <el-form-item label="风险描述" prop="description">
             <el-input
               v-model="postForm.description"
               :autosize="{ minRows: 2, maxRows: 4}"
@@ -134,6 +134,9 @@ export default {
         description: [
           { required: true, message: '描述不能为空' }
         ],
+        score: [
+          { required: true, message: '评分不能为空' }
+        ],
         level: [
           { required: true, message: '请选择风险等级' }
         ],
@@ -142,6 +145,9 @@ export default {
         ],
         status: [
           { required: true, message: '请选择风险状态' }
+        ],
+        exist_time: [
+          { required: true, message: '续存期不能为空' }
         ]
       }
     }
@@ -152,21 +158,24 @@ export default {
       this.$emit('closeRiskDialog')
     },
     submitForm() {
-      const valid = this.$refs['form'].validate()
-      if (!valid) {
-        return false
-      }
-      if (this.isEdit) {
-        editRisk(this.postForm).then(response => {
-          this.$message.success('成功更新风险信息')
-          this.$emit('closeRiskDialog')
-        })
-      } else {
-        addRisk(this.postForm).then(response => {
-          this.$message.success('成功添加风险')
-          this.$emit('closeRiskDialog')
-        })
-      }
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isEdit) {
+            editRisk(this.postForm).then(response => {
+              this.$message.success('成功更新风险信息')
+              this.$emit('closeRiskDialog')
+            })
+          } else {
+            addRisk(this.postForm).then(response => {
+              this.$message.success('成功添加风险')
+              this.$emit('closeRiskDialog')
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

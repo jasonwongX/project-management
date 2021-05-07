@@ -1,303 +1,367 @@
 <template>
   <div class="edit-container">
     <el-form ref="form" :model="postForm" :rules="rules" label-width="120px">
-      <el-row :gutter="24">
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目名称" prop="name">
-            <el-input v-model="postForm.name" placeholder="请输入项目名称" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目编号" prop="sequence">
-            <el-input v-model="postForm.sequence" placeholder="请输入项目编号" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="迭代周期(周)" prop="sprint_time">
-            <el-input v-model="postForm.agile.sprint_time" placeholder="请输入迭代周期" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="试点启动" prop="sprint_start_date">
-            <el-date-picker
-              v-model="postForm.agile.sprint_start_date"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="掌控方式" prop="control_mode">
-            <el-select v-model="postForm.control_mode" placeholder="掌控方式">
-              <el-option
-                v-for="(item, index) in controlModeList"
-                :key="index"
-                :label="item"
-                :value="index"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="项目规模" prop="scale">
-            <el-select v-model="postForm.scale" placeholder="项目规模">
-              <el-option
-                v-for="(item, index) in scaleList"
-                :key="index"
-                :label="item"
-                :value="index"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="完成百分比">
-            <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="产品经理" prop="po">
-            <el-input v-model="postForm.agile.po" placeholder="产品经理" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="SM" prop="sm">
-            <el-input v-model="postForm.agile.sm" placeholder="SM" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="质量控制人员" prop="qa">
-            <el-select
-              v-model="postForm.user_id"
-              filterable
-              remote
-              reserve-keyword
-              placeholder="请输入QA名称"
-              :remote-method="searchQaList"
-              :loading="loadingQa"
-              clearable
-              style="width: 130px"
-              class="filter-item"
-            >
-              <el-option
-                v-for="item in qaList"
-                :key="item.id"
-                :label="item.real_name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="业务主管部门" prop="competent_authority">
-            <el-input v-model="postForm.competent_authority" placeholder="业务主管部门" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="研发单位" prop="dev_unit">
-            <el-input v-model="postForm.dev_unit" placeholder="研发" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="研发团队" prop="dev_team">
-            <el-input v-model="postForm.dev_team" placeholder="研发团队" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="章程发布日期" prop="charter_release_date">
-            <el-date-picker
-              v-model="postForm.charter_release_date"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="首次上线日期" prop="first_publish_date">
-            <el-date-picker
-              v-model="postForm.agile.first_publish_date"
-              type="date"
-              placeholder="首次上线日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="最终投产日期" prop="last_publish_date">
-            <el-date-picker
-              v-model="postForm.agile.last_publish_date"
-              type="date"
-              placeholder="最终投产日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="系统类型" prop="sys_type">
-            <el-select v-model="postForm.sys_type" placeholder="系统类型">
-              <el-option
-                v-for="(item, index) in sysTypeList"
-                :key="index"
-                :label="item"
-                :value="index"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="进度偏差情况" prop="schedule_deviation">
-            <el-input-number v-model="postForm.schedule_deviation" :min="0" :max="10" label="请输入进度偏差" />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="预算申请时间" prop="budget_application_date">
-            <el-date-picker
-              v-model="postForm.purchase.budget_application_date"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="中标通知时间" prop="bid_notice_date">
-            <el-date-picker
-              v-model="postForm.purchase.bid_notice_date"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="厂家入场日期" prop="vendor_admission_date">
-            <el-date-picker
-              v-model="postForm.purchase.vendor_admission_date"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-          <el-form-item label="预算采购时长" prop="budget_produce_time">
-            <el-input v-model="postForm.purchase.budget_produce_time" placeholder="预算采购时长（周）" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col>
-          <el-form-item label="进展简述">
-            <el-input
-              v-model="postForm.description"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入进展简述"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col>
-          <el-form-item label="项目目标">
-            <el-input
-              v-model="postForm.target"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入项目目标"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col>
-          <el-form-item label="实践情况">
-            <el-input
-              v-model="postForm.agile.practice"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入实践情况"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-show="false" :gutter="24">
-        <el-col>
-          <el-form-item label="度量数据">
-            <el-input
-              v-model="postForm.agile.metric_data"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入度量数据"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-collapse v-model="activeNames">
+        <el-collapse-item title="基础信息" name="1">
+          <el-row :gutter="24">
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="项目名称" prop="name">
+                <el-input v-model="postForm.name" placeholder="请输入项目名称" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="系统类型" prop="sys_type">
+                <el-select v-model="postForm.sys_type" placeholder="系统类型">
+                  <el-option
+                    v-for="(item, index) in sysTypeList"
+                    :key="index"
+                    :label="item"
+                    :value="index"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
 
-      <el-row v-show="false" :gutter="24">
-        <el-col>
-          <el-form-item label="近况概述">
-            <el-input
-              v-model="postForm.agile.overview"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入近况概述"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-show="false" :gutter="24">
-        <el-col>
-          <el-form-item label="发布汇总">
-            <el-input
-              v-model="postForm.agile.release_summary"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入发布汇总"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-show="false" :gutter="24">
-        <el-col>
-          <el-form-item label="拟培养角色">
-            <el-input
-              v-model="postForm.agile.intended_role"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入培养角色"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-show="false" :gutter="24">
-        <el-col>
-          <el-form-item label="角色培养情况">
-            <el-input
-              v-model="postForm.agile.role_development"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入角色培养情况"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-show="false" :gutter="24">
-        <el-col>
-          <el-form-item label="工具应用情况">
-            <el-input
-              v-model="postForm.agile.tool_application"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入工具应用情况"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="试点启动日期" prop="sprint_start_date">
+                <el-date-picker
+                  v-model="postForm.agile.sprint_start_date"
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="掌控方式" prop="control_mode">
+                <el-select v-model="postForm.control_mode" placeholder="掌控方式">
+                  <el-option
+                    v-for="(item, index) in controlModeList"
+                    :key="index"
+                    :label="item"
+                    :value="index"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="项目规模" prop="scale">
+                <el-select v-model="postForm.scale" placeholder="项目规模">
+                  <el-option
+                    v-for="(item, index) in scaleList"
+                    :key="index"
+                    :label="item"
+                    :value="index"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="项目阶段" prop="stage">
+                <el-select v-model="postForm.stage" placeholder="项目阶段">
+                  <el-option
+                    v-for="(item, index) in stageList"
+                    :key="index"
+                    :label="item"
+                    :value="index"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="当前迭代" prop="sprint_stage">
+                <el-input-number v-model="postForm.agile.sprint_stage" :min="0" :max="100" label="当前迭代" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="迭代周期(周)" prop="agile.sprint_time">
+                <el-input-number v-model="postForm.agile.sprint_time" :min="0" :max="100" label="请输入迭代周期" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="质量控制人员" prop="user_id">
+                <el-select
+                  v-model="postForm.user_id"
+                  filterable
+                  remote
+                  reserve-keyword
+                  placeholder="请输入QA名称"
+                  :remote-method="searchQaList"
+                  :loading="loadingQa"
+                  clearable
+                  style="width: 130px"
+                  class="filter-item"
+                >
+                  <el-option
+                    v-for="item in qaList"
+                    :key="item.id"
+                    :label="item.real_name"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col>
+              <el-form-item label="进展简述">
+                <el-input
+                  v-model="postForm.description"
+                  :autosize="{ minRows: 4, maxRows: 6}"
+                  placeholder="请输入进展简述"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col>
+              <el-form-item label="实践情况">
+                <el-input
+                  v-model="postForm.agile.practice"
+                  :autosize="{ minRows: 4, maxRows: 6}"
+                  placeholder="请输入实践情况"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-collapse-item>
+        <el-collapse-item title="度量数据" name="2">
+          <el-row :gutter="24">
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="迭代完成率(%)" prop="metrics.sprint_complete_percent">
+                <el-input-number v-model="postForm.metrics.sprint_complete_percent" :min="0" :max="100" placeholder="平均迭代完成率" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="故事点数" prop="metrics.story_points">
+                <el-input-number v-model="postForm.metrics.story_points" :min="0" :max="500" placeholder="故事工作点数或故事数" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="构建频率" prop="metrics.build_frequency">
+                <el-select v-model="postForm.metrics.build_frequency" placeholder="构建频率">
+                  <el-option
+                    v-for="(item, index) in buildFrequencyList"
+                    :key="index"
+                    :label="item"
+                    :value="index"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="单元测试覆盖率" prop="metrics.unit_test_coverage">
+                <el-input-number v-model="postForm.metrics.unit_test_coverage" :min="0" :max="100" placeholder="单元测试覆盖率" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="自动化测试覆盖率" prop="metrics.auto_test_coverage">
+                <el-input-number v-model="postForm.metrics.auto_test_coverage" :min="0" :max="100" placeholder="自动化测试覆盖率" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-collapse-item>
+        <el-collapse-item title="其他信息" name="3">
+          <el-row :gutter="24">
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="产品经理" prop="po">
+                <el-input v-model="postForm.agile.po" placeholder="产品经理" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="SM" prop="sm">
+                <el-input v-model="postForm.agile.sm" placeholder="SM" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="业务主管部门" prop="competent_authority">
+                <el-input v-model="postForm.competent_authority" placeholder="业务主管部门" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="研发单位" prop="dev_unit">
+                <el-input v-model="postForm.dev_unit" placeholder="研发" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="研发团队" prop="dev_team">
+                <el-input v-model="postForm.dev_team" placeholder="研发团队" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="项目编号" prop="sequence">
+                <el-input v-model="postForm.sequence" placeholder="请输入项目编号" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="章程发布日期" prop="charter_release_date">
+                <el-date-picker
+                  v-model="postForm.charter_release_date"
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="首次上线日期" prop="first_publish_date">
+                <el-date-picker
+                  v-model="postForm.agile.first_publish_date"
+                  type="date"
+                  placeholder="首次上线日期"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="最终投产日期" prop="last_publish_date">
+                <el-date-picker
+                  v-model="postForm.agile.last_publish_date"
+                  type="date"
+                  placeholder="最终投产日期"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="完成百分比">
+                <el-input-number v-model="percentVal" :min="0" :max="100" label="完成百分比" />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="进度偏差情况" prop="schedule_deviation">
+                <el-input-number v-model="postForm.schedule_deviation" :min="0" :max="10" label="请输入进度偏差" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="预算申请时间" prop="budget_application_date">
+                <el-date-picker
+                  v-model="postForm.purchase.budget_application_date"
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="中标通知时间" prop="bid_notice_date">
+                <el-date-picker
+                  v-model="postForm.purchase.bid_notice_date"
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="厂家入场日期" prop="vendor_admission_date">
+                <el-date-picker
+                  v-model="postForm.purchase.vendor_admission_date"
+                  type="date"
+                  placeholder="选择日期"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="预算采购时长" prop="budget_produce_time">
+                <el-input v-model="postForm.purchase.budget_produce_time" placeholder="预算采购时长（周）" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row v-show="false" :gutter="24">
+            <el-col>
+              <el-form-item label="项目目标">
+                <el-input
+                  v-model="postForm.target"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入项目目标"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row v-show="false" :gutter="24">
+            <el-col>
+              <el-form-item label="度量数据">
+                <el-input
+                  v-model="postForm.agile.metric_data"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入度量数据"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row v-show="false" :gutter="24">
+            <el-col>
+              <el-form-item label="近况概述">
+                <el-input
+                  v-model="postForm.agile.overview"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入近况概述"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="false" :gutter="24">
+            <el-col>
+              <el-form-item label="发布汇总">
+                <el-input
+                  v-model="postForm.agile.release_summary"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入发布汇总"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="false" :gutter="24">
+            <el-col>
+              <el-form-item label="拟培养角色">
+                <el-input
+                  v-model="postForm.agile.intended_role"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入培养角色"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="false" :gutter="24">
+            <el-col>
+              <el-form-item label="角色培养情况">
+                <el-input
+                  v-model="postForm.agile.role_development"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入角色培养情况"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-show="false" :gutter="24">
+            <el-col>
+              <el-form-item label="工具应用情况">
+                <el-input
+                  v-model="postForm.agile.tool_application"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入工具应用情况"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-collapse-item>
+      </el-collapse>
     </el-form>
-    <el-row type="flex" justify="center">
+    <el-row type="flex" justify="center" style="margin-top:10px;">
       <el-col :span="3">
         <el-button type="info" style="width:80%" @click="cancel()">取消</el-button>
       </el-col>
@@ -333,6 +397,7 @@ export default {
       qaList: [],
       percentVal: 0, // 百分比整数
       loadingQa: false,
+      activeNames: ['1', '2'],
       postForm: {
         name: '',
         sequence: '',
@@ -340,6 +405,7 @@ export default {
         type: null,
         control_mode: null,
         scale: null,
+        stage: '8',
         dev_mode: 2,
         dev_unit: '',
         dev_team: '',
@@ -366,6 +432,7 @@ export default {
         agile: {
           sprint_time: '',
           sprint_start_date: '',
+          sprint_stage: null,
           po: '',
           sm: '',
           first_publish_date: '',
@@ -377,16 +444,35 @@ export default {
           intended_role: '',
           role_development: '',
           tool_application: ''
+        },
+        metrics: {
+          sprint_complete_percent: null,
+          story_points: null,
+          build_frequency: null,
+          unit_test_coverage: null,
+          auto_test_coverage: null
         }
       },
       sysTypeList: {
         1: '项目',
         2: '迭代开发'
       },
+      buildFrequencyList: {
+        1: '按需构建',
+        2: '每日一次',
+        3: '每日一次以上',
+        4: '实时构建'
+      },
       loadingProject: false, // 项目查询加载
       rules: {
         name: [
           { required: true, message: '项目名称不能为空' }
+        ],
+        sys_type: [
+          { required: true, message: '请选择系统类型' }
+        ],
+        control_mode: [
+          { required: true, message: '请选择掌控模式' }
         ],
         type: [
           { required: true, message: '请选择项目类型' }
@@ -399,6 +485,12 @@ export default {
         ],
         scale: [
           { required: true, message: '请选择规模' }
+        ],
+        user_id: [
+          { required: true, message: '请选择质量控制人员' }
+        ],
+        sprint_time: [
+          { required: true, message: '请选择迭代周期' }
         ]
       }
     }
@@ -418,7 +510,6 @@ export default {
     this.scaleList = this.$store.state.project.scaleList
     this.stageList = this.$store.state.project.stageList
     this.controlModeList = this.$store.state.project.controlModeList
-    this.postForm.stage = 1
     this.initQaList()
   },
   mounted() {
@@ -443,16 +534,23 @@ export default {
     },
     submit() {
       this.postForm.complete_percent = this.percentVal / 100
-      if (this.isEdit) {
-        editProject(this.postForm).then(response => {
-          this.$message.success('成功更新项目信息')
-        })
-      } else {
-        addProject(this.postForm).then(response => {
-          this.$message.success('成功添加项目')
-          this.$router.push('/project/index')
-        })
-      }
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isEdit) {
+            editProject(this.postForm).then(response => {
+              this.$message.success('成功更新项目信息')
+            })
+          } else {
+            addProject(this.postForm).then(response => {
+              this.$message.success('成功添加项目')
+              this.$router.push('/project/index')
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

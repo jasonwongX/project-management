@@ -2,8 +2,11 @@
   <div class="edit-container">
     <el-row class="title-row" :gutter="24" type="flex" justify="space-between">
       <el-col class="left-title-row" :span="16">
+        <div class="title-col"><el-button type="primary" plain size="small" @click="goBack()"> 返回 </el-button></div>
+
         <div class="title-name">{{ project.name }}</div>
         <div class="title-col"><el-tag type="info">{{ project.dev_mode | devModeFilter }}</el-tag></div>
+        <div class="title-col"><el-tag type="info">{{ project.sys_type | sysTypeFilter }}</el-tag></div>
         <div class="title-col"><el-tag type="info">{{ scaleFilter(project.scale) }}</el-tag></div>
         <div class="title-col"><el-tag type="info">{{ stageFilter(project.stage) }}</el-tag></div>
       </el-col>
@@ -170,6 +173,13 @@ export default {
         2: '敏捷项目'
       }
       return map[val]
+    },
+    sysTypeFilter(val) {
+      const map = {
+        1: '项目',
+        2: '迭代开发'
+      }
+      return map[val]
     }
   },
   data() {
@@ -206,6 +216,9 @@ export default {
       const valMap = this.stageList
       return valMap[val] ? valMap[val] : '未知'
     },
+    goBack() {
+      this.$router.go(-1)
+    },
     // 项目详情
     getInfo(id) {
       const that = this
@@ -216,6 +229,9 @@ export default {
         that.project.stage = that.project.stage.toString()
         that.project.control_mode = that.project.control_mode.toString()
         that.project.sys_type = that.project.sys_type.toString()
+        if (that.project.metrics && that.project.metrics.build_frequency) {
+          that.project.metrics.build_frequency = that.project.metrics.build_frequency.toString()
+        }
         that.projectContent = that.project.content ? that.project.content.content : ''
       }).catch(err => {
         console.log(err)
