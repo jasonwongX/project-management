@@ -168,6 +168,11 @@ export const constantRoutes = [
         path: 'add',
         component: () => import('@/views/WikiManage/create'),
         name: 'wikiManageCreate'
+      },
+      {
+        path: 'edit',
+        component: () => import('@/views/WikiManage/modify'),
+        name: 'wikiManageEdit'
       }
     ]
   },

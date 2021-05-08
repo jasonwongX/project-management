@@ -25,3 +25,41 @@ export function getCategoryNameList(data) {
   })
 }
 
+export function getArticleList(query) {
+  return request({
+    url: '/wiki/article/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getArticleInfo(id) {
+  return request({
+    url: '/wiki/article/info',
+    method: 'get',
+    params: { id }
+  })
+}
+export function addArticle(data) {
+  return request({
+    url: '/wiki/article/add',
+    method: 'post',
+    params: data
+  })
+}
+
+export function editArticle(data) {
+  return request({
+    url: '/wiki/article/modify',
+    method: 'post',
+    params: data
+  })
+}
+export function deleteArticle(id) {
+  return request({
+    url: '/wiki/article/delete',
+    method: 'post',
+    params: { id }
+  })
+}
+

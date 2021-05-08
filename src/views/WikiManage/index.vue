@@ -4,11 +4,11 @@
       <el-button class="filter-item" type="primary" style="width:120px;" icon="el-icon-plus" @click="handleCreate">新增文章</el-button>
       <el-input v-model="listQuery.title" placeholder="标题" style="width: 140px;" class="filter-item" />
       <el-cascader
-        v-model="listQuery.classify_id"
+        v-model="listQuery.category_id"
         :options="options"
         placeholder="分类"
       />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;margin-left:10px">查询</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="wdith:80px;margin-left:10px" @click="getList()">查询</el-button>
     </div>
     <el-table
       :key="tableKey"
@@ -26,22 +26,27 @@
       </el-table-column>
       <el-table-column :show-overflow-tooltip="true" label="摘要" min-width="280px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.summary }}</span>
+          <span>{{ scope.row.short_content }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="分类" width="120px" align="center">
+      <el-table-column label="分类" min-width="120px" align="center">
         <template slot-scope="scope">
-          <span>{{ getCategoryName(scope.row.classify_id) }}</span>
+          <span>{{ getCategoryName(scope.row.category_id) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" width="120px" align="center">
+      <el-table-column label="更新时间" min-width="120px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.update_time }}</span>
+          <span>{{ scope.row.updated_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="作者" width="110px" align="center">
+      <el-table-column label="作者" min-width="110px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" min-width="110px" align="center">
+        <template slot-scope="scope">
+          <el-tag effect="plain" :type="scope.row.status == 1 ? 'warning' : 'success'">{{ scope.row.status | statusFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" min-width="100px" class-name="small-padding fixed-width">
@@ -53,7 +58,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" /> -->
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
   </div>
 </template>
 <style lang="less" scoped>
@@ -70,50 +75,37 @@
 </style>
 <script>
 import waves from '@/directive/waves' // Waves directive
-// import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
-import { getCategoryList, getCategoryNameList } from '@/api/wiki'
+import { getCategoryList, getCategoryNameList, getArticleList, deleteArticle } from '@/api/wiki'
 
 const _ = require('lodash')
 export default {
   name: 'WikiList',
-  // components: { Pagination },
+  components: { Pagination },
   directives: { waves },
+  filters: {
+    statusFilter(value) {
+      const map = {
+        1: '草稿',
+        2: '发布'
+      }
+      return map[value]
+    }
+  },
   data() {
     return {
       tableKey: 0,
       options: [],
       categoryNameList: [],
-      list: [
-        {
-          title: 'IT综合管理平台项目发布计划步骤',
-          summary: 'IT综合管理平台项目发布计划步骤',
-          author: '毛佩',
-          classify_id: 23,
-          update_time: '2021-02-03',
-          file_name: 'IT综合管理平台项目计划发布步骤',
-          file_url: 'IT综合管理平台项目计划发布步骤.docx'
-        }, {
-          title: '项目计划模板',
-          summary: '项目计划使用',
-          author: '毛佩',
-          classify_id: 24,
-          update_time: '2021-02-04',
-          file_name: 'CMMI-PM-T-01-项目计划模板',
-          file_url: 'CMMI-PM-T-01-项目计划模板.xls'
-        }, {
-          title: '测试总结报告模板',
-          summary: '测试总结报告模板',
-          classify_id: 26,
-          author: '毛佩',
-          update_time: '2021-02-04 ',
-          file_name: 'CMMI-TES-T-11-测试总结报告模板',
-          file_url: 'CMMI-TES-T-11-测试总结报告模板.doc'
-        }
-      ],
+      list: [],
       total: 0,
       listLoading: false,
       listQuery: {
+        title: '',
+        author: '',
+        content: '',
+        category_id: '',
         page: 1,
         limit: 20
       },
@@ -122,10 +114,17 @@ export default {
   },
   async created() {
     this.initCategoryList()
+    this.getList()
   },
   methods: {
     getList() {
-      return this.list
+      this.listLoading = true
+      getArticleList(this.listQuery).then(response => {
+        this.list = response.data
+        this.total = response.total ? response.total : 0
+        this.listQuery.limit = response.per_page ? parseInt(response.per_page) : this.listQuery.limit
+        this.listLoading = false
+      })
     },
     initCategoryList() {
       getCategoryList().then(response => {
@@ -153,6 +152,18 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        deleteArticle(row.id).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getList()
+        }).catch((_) => {
+          this.$message({
+            type: 'success',
+            message: '删除失败!'
+          })
+        })
       })
     },
     downloadFile(url, name) {
