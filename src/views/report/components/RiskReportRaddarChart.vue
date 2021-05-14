@@ -80,7 +80,6 @@ export default {
             'max': that.max
           }
         })
-        console.log(this.label)
         this.listValue = this.list.map(function(value, index) {
           return value['value']
         })

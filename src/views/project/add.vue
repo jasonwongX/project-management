@@ -100,6 +100,29 @@
                 <el-input v-model="postForm.pm" placeholder="项目经理" />
               </el-form-item>
             </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="上线日期" prop="pm">
+                <el-input v-model="postForm.online_time" placeholder="上线时间（如一阶段：2021/1/8；二阶段：2021/3/25）" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="实施区域" prop="address">
+                <el-select v-model="postForm.address" placeholder="实施区域" clearable>
+                  <el-option v-for="(item, index) in addressList" :key="index" :label="item" :value="item" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="是否分阶段:" prop="is_phased">
+                <el-radio v-model="postForm.is_phased" :label="0">否</el-radio>
+                <el-radio v-model="postForm.is_phased" :label="1">是</el-radio>
+              </el-form-item>
+            </el-col>
+            <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="当前阶段:" prop="phased_num">
+                <el-input-number v-model="postForm.phased_num" :min="0" :max="10" label="请输入阶段" />
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row :gutter="24">
             <el-col>
@@ -114,19 +137,37 @@
             </el-col>
           </el-row>
         </el-collapse-item>
-        <el-collapse-item title="其他信息" name="2">
+        <el-collapse-item title="采购信息" name="2">
           <el-row :gutter="24">
             <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="是否分阶段:" prop="is_phased">
-                <el-radio v-model="postForm.is_phased" :label="0">否</el-radio>
-                <el-radio v-model="postForm.is_phased" :label="1">是</el-radio>
+              <el-form-item label="进度偏差情况" prop="schedule_deviation">
+                <el-input v-model="postForm.schedule_deviation" placeholder="进度偏差情况" />
               </el-form-item>
             </el-col>
-            <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="阶段:" prop="phased_num">
-                <el-input-number v-model="postForm.phased_num" :min="0" :max="10" label="请输入阶段" />
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="预算申请时间" prop="purchase.budget_application_date">
+                <el-input v-model="postForm.purchase.budget_application_date" placeholder="预算申请时间" />
               </el-form-item>
             </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="中标通知时间" prop="purchase.bid_notice_date">
+                <el-input v-model="postForm.purchase.bid_notice_date" placeholder="中标通知时间" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="厂家入场日期" prop="purchase.vendor_admission_date">
+                <el-input v-model="postForm.purchase.vendor_admission_date" placeholder="厂家入场日期" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="预算采购时长" prop="budget_produce_time">
+                <el-input v-model="postForm.purchase.budget_produce_time" placeholder="预算采购时长（周）" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-collapse-item>
+        <el-collapse-item title="其他信息" name="3">
+          <el-row :gutter="24">
             <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
               <el-form-item label="研发单位" prop="dev_unit">
                 <el-input v-model="postForm.dev_unit" placeholder="研发" />
@@ -169,47 +210,6 @@
                 />
               </el-form-item>
             </el-col>
-
-            <el-col v-if="postForm.is_phased === 1" :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="进度偏差情况" prop="schedule_deviation">
-                <el-input-number v-model="postForm.schedule_deviation" :min="0" :max="10" label="请输入进度偏差" />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="预算申请时间" prop="budget_application_date">
-                <el-date-picker
-                  v-model="postForm.purchase.budget_application_date"
-                  type="date"
-                  placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="中标通知时间" prop="bid_notice_date">
-                <el-date-picker
-                  v-model="postForm.purchase.bid_notice_date"
-                  type="date"
-                  placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="厂家入场日期" prop="vendor_admission_date">
-                <el-date-picker
-                  v-model="postForm.purchase.vendor_admission_date"
-                  type="date"
-                  placeholder="选择日期"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="预算采购时长" prop="budget_produce_time">
-                <el-input v-model="postForm.purchase.budget_produce_time" placeholder="预算采购时长（周）" />
-              </el-form-item>
-            </el-col>
           </el-row>
           <el-row v-show="false" :gutter="24">
             <el-col>
@@ -243,6 +243,8 @@
 <script>
 import { addProject, editProject } from '@/api/project'
 import { getQaList } from '@/api/user'
+import { addressList } from '@/utils/dict'
+
 const _ = require('lodash')
 export default {
   name: 'AddProject',
@@ -259,6 +261,7 @@ export default {
 
   data() {
     return {
+      addressList,
       qaList: [],
       loadingQa: false,
       percentVal: 0, // 整数

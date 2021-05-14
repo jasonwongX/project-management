@@ -8,7 +8,7 @@
         <div class="title-col"><el-tag type="info">{{ project.dev_mode | devModeFilter }}</el-tag></div>
         <div class="title-col"><el-tag type="info">{{ project.sys_type | sysTypeFilter }}</el-tag></div>
         <div class="title-col"><el-tag type="info">{{ scaleFilter(project.scale) }}</el-tag></div>
-        <div class="title-col"><el-tag type="info">{{ stageFilter(project.stage) }}</el-tag></div>
+        <div class="title-col"><el-tag type="info">{{ stageFilter(project) }}</el-tag></div>
       </el-col>
       <el-col :span="8" class="right-title-row">
         <el-radio-group v-model="project.status" size="medium" @change="statusChange($event)">
@@ -212,9 +212,14 @@ export default {
       const valMap = this.scaleList
       return valMap[val] ? valMap[val] : '未知'
     },
-    stageFilter(val) {
-      const valMap = this.stageList
-      return valMap[val] ? valMap[val] : '未知'
+    stageFilter(project) {
+      const stage = project.stage
+      if (project.dev_mode === '1') {
+        const valMap = this.stageList
+        return valMap[stage] ? valMap[stage] : '未知'
+      } else {
+        return project.agile ? `S${project.agile.sprint_stage}` : '-'
+      }
     },
     goBack() {
       this.$router.go(-1)

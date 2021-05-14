@@ -12,6 +12,13 @@
         />
       </el-col>
     </el-row>
+    <el-row class="header" :gutter="24" type="flex">
+      <el-col :span="24">
+        <div class="desc-header">
+          <span>统计当月的在建项目状态，包含登记投产两个月内的项目，不包括迭代类项目。</span>
+        </div>
+      </el-col>
+    </el-row>
     <el-row class="content-title" align="middle" :gutter="24" type="flex" justify="space-between">
       <el-col :span="12"><div class="title">项目数据概览</div></el-col>
     </el-row>
@@ -108,6 +115,13 @@
     height:60px;
     background: #ffffff;
 }
+.desc-header {
+    min-height: 48px;
+    padding: 10px 10px;
+    background-color: #f5f5f5;
+    color: #323233;
+    font-size: 14px;
+}
 .content-title {
     height:48px;
     margin-top:5px;
@@ -120,7 +134,6 @@
 .data-row {
     padding: 20px 0px;
     background-color: #fff;
-
 }
 .data-group {
     min-height: 80px;

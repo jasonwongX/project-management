@@ -15,8 +15,8 @@
       </el-select>
     </div>
     <div class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.pm" placeholder="项目经理" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.name" clearable placeholder="项目名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.pm" clearable placeholder="项目经理" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select
         v-model="listQuery.user_id"
         filterable
@@ -36,6 +36,19 @@
           :value="item.id"
         />
       </el-select>
+      <el-date-picker
+        v-show="listQuery.devMode === '2'"
+        v-model="listQuery.sprintStartDateRange"
+        style="width: 260px"
+        class="filter-item"
+        type="monthrange"
+        align="right"
+        unlink-panels
+        range-separator="至"
+        start-placeholder="开始月份"
+        end-placeholder="结束月份"
+        :picker-options="pickerOptions"
+      />
       <el-select v-model="listQuery.stage" placeholder="项目阶段" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in stageList" :key="index" :label="item" :value="index" />
       </el-select>
@@ -51,10 +64,13 @@
       <el-select v-model="listQuery.sys_type" placeholder="系统类型" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in sysTypeList" :key="index" :label="item" :value="index" />
       </el-select>
+      <el-select v-model="listQuery.address" placeholder="实施区域" multiple clearable style="width: 130px" class="filter-item">
+        <el-option v-for="(item, index) in addressList" :key="index" :label="item" :value="item" />
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="width:80px;" @click="handleFilter">查询</el-button>
-      <el-button v-if="isMyProject" v-waves class="filter-item" type="primary" icon="el-icon-download" style="float:right" @click="exportMyProject">模板下载</el-button>
+      <el-button v-show="false" v-waves class="filter-item" type="primary" icon="el-icon-download" style="float:right" @click="exportMyProject">模板下载</el-button>
       <el-upload
-        v-if="isMyProject"
+        v-if="name==='wangjs'"
         style="float:right"
         :action="uploadUrl"
         :show-file-list="false"
@@ -101,7 +117,7 @@
       </el-table-column>
       <el-table-column label="完成百分比" min-width="60px" align="center">
         <template slot-scope="scope">
-          <span>{{ formatPercent(scope.row.complete_percent) }}</span>
+          <span>{{ scope.row.dev_mode === 1 ? formatPercent(scope.row.complete_percent) : '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="研发模式" width="80px" align="center">
@@ -109,9 +125,14 @@
           <span>{{ controlModeFilter(scope.row.control_mode) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="项目经理" min-width="80px" align="center">
+      <el-table-column label="项目经理(SM)" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.pm }}</span>
+          <span>{{ scope.row.dev_mode === 1 ? scope.row.pm : scope.row.agile.sm }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="章程发布(试点启动)日期" min-width="80px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.dev_mode === 1 ? scope.row.charter_release_date : scope.row.agile.sprint_start_date }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" min-width="80px" align="center">
@@ -155,11 +176,13 @@
 }
 </style>
 <script>
+import { mapGetters } from 'vuex'
 import { fetchList, fetchMyProjectList, deleteProject } from '@/api/project'
 import { getQaList } from '@/api/user'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { getToken } from '@/utils/auth'
+import { addressList } from '@/utils/dict'
 const _ = require('lodash')
 
 export default {
@@ -237,6 +260,7 @@ export default {
       qaList: [],
       listQuery: {
       },
+      addressList,
       riskOptions: [0, 1, 2, 3],
       scaleList: [],
       stageList: [],
@@ -270,10 +294,37 @@ export default {
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
       downloadLoading: false,
-      uploadUrl: `${process.env.VUE_APP_BASE_API}/import/myProject`
+      uploadUrl: `${process.env.VUE_APP_BASE_API}/import/myProject`,
+      pickerOptions: {
+        shortcuts: [{
+          text: '本月',
+          onClick(picker) {
+            picker.$emit('pick', [new Date(), new Date()])
+          }
+        }, {
+          text: '今年至今',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date(new Date().getFullYear(), 0)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近六个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setMonth(start.getMonth() - 6)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      }
     }
   },
   computed: {
+    ...mapGetters([
+      'name',
+      'real_name'
+    ])
   },
   async created() {
     await this.$store.dispatch('project/initStageList')

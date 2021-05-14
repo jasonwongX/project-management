@@ -15,7 +15,8 @@
       <el-input v-model="listQuery.pm" placeholder="请输入项目经理名称" style="width: 140px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.devMode" placeholder="项目类型" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in devModeList" :key="index" :label="item" :value="index" />
-      </el-select><el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
+      </el-select>
+      <el-select v-model="listQuery.status" placeholder="项目状态" clearable style="width: 130px" class="filter-item">
         <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />
       </el-select>
       <el-select v-model="listQuery.scale" placeholder="请选择规模类型" clearable style="width: 130px" class="filter-item">
@@ -50,7 +51,9 @@
       </el-table-column>
       <el-table-column label="阶段" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ stageFilter(scope.row.stage) }}</span>
+          <span v-if="scope.row.dev_mode===1">{{ stageFilter(scope.row.stage) }}</span>
+          <span v-else-if="scope.row.dev_mode===2 && scope.row.r_agile.sprint_stage">{{ `S${scope.row.r_agile.sprint_stage}` }}</span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="60px" align="center">
@@ -58,14 +61,14 @@
           <el-tag :type="scope.row.status | statusTagTypeFilter">{{ scope.row.status | statusFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="规模" min-width="80px" align="center">
+      <el-table-column label="规模" min-width="60px" align="center">
         <template slot-scope="scope">
           <span>{{ scaleFilter(scope.row.scale) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="完成百分比" min-width="60px" align="center">
         <template slot-scope="scope">
-          <span>{{ formatPercent(scope.row.complete_percent) }}</span>
+          <span>{{ scope.row.dev_mode === 1 ? formatPercent(scope.row.complete_percent) : '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="研发模式" width="80px" align="center">
@@ -73,9 +76,9 @@
           <span>{{ controlModeFilter(scope.row.control_mode) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="项目经理" min-width="80px" align="center">
+      <el-table-column label="项目经理(SM)" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.pm }}</span>
+          <span>{{ scope.row.dev_mode === 1 ? scope.row.pm : scope.row.r_agile.sm }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目QA" min-width="80px" align="center">

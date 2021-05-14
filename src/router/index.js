@@ -121,12 +121,12 @@ export const constantRoutes = [
         name: 'ProjectFollow',
         meta: { title: '项目监理跟踪报表', icon: 'report-table' }
       },
-      {
-        path: '/report/project/agile/follow',
-        component: () => import('@/views/report/AgileProjectStatusReport'),
-        name: 'AgileProjectFollow',
-        meta: { title: '敏捷项目报表', icon: 'report-table' }
-      },
+      // {
+      //   path: '/report/project/agile/follow',
+      //   component: () => import('@/views/report/AgileProjectStatusReport'),
+      //   name: 'AgileProjectFollow',
+      //   meta: { title: '敏捷项目报表', icon: 'report-table' }
+      // },
       {
         path: '/report/project/change',
         component: () => import('@/views/report/ProjectChangeReport'),

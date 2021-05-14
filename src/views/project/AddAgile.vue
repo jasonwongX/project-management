@@ -73,11 +73,7 @@
                 <el-input-number v-model="postForm.agile.sprint_stage" :min="0" :max="100" label="当前迭代" />
               </el-form-item>
             </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="迭代周期(周)" prop="agile.sprint_time">
-                <el-input-number v-model="postForm.agile.sprint_time" :min="0" :max="100" label="请输入迭代周期" />
-              </el-form-item>
-            </el-col>
+
             <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
               <el-form-item label="质量控制人员" prop="user_id">
                 <el-select
@@ -98,6 +94,18 @@
                     :label="item.real_name"
                     :value="item.id"
                   />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="SM" prop="sm">
+                <el-input v-model="postForm.agile.sm" placeholder="SM" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="实施区域" prop="address">
+                <el-select v-model="postForm.address" placeholder="实施区域" clearable>
+                  <el-option v-for="(item, index) in addressList" :key="index" :label="item" :value="item" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -130,6 +138,11 @@
         <el-collapse-item title="度量数据" name="2">
           <el-row :gutter="24">
             <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
+              <el-form-item label="迭代周期(周)" prop="agile.sprint_time">
+                <el-input-number v-model="postForm.agile.sprint_time" :min="0" :max="100" label="请输入迭代周期" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
               <el-form-item label="迭代完成率(%)" prop="metrics.sprint_complete_percent">
                 <el-input-number v-model="postForm.metrics.sprint_complete_percent" :min="0" :max="100" placeholder="平均迭代完成率" />
               </el-form-item>
@@ -141,7 +154,7 @@
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
               <el-form-item label="构建频率" prop="metrics.build_frequency">
-                <el-select v-model="postForm.metrics.build_frequency" placeholder="构建频率">
+                <el-select v-model="postForm.metrics.build_frequency" placeholder="构建频率" clearable>
                   <el-option
                     v-for="(item, index) in buildFrequencyList"
                     :key="index"
@@ -168,11 +181,6 @@
             <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
               <el-form-item label="产品经理" prop="po">
                 <el-input v-model="postForm.agile.po" placeholder="产品经理" />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
-              <el-form-item label="SM" prop="sm">
-                <el-input v-model="postForm.agile.sm" placeholder="SM" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
@@ -379,6 +387,8 @@
 <script>
 import { addProject, editProject } from '@/api/project'
 import { getQaList } from '@/api/user'
+import { addressList } from '@/utils/dict'
+
 const _ = require('lodash')
 export default {
   name: 'AddAgileProject',
@@ -394,6 +404,7 @@ export default {
   },
   data() {
     return {
+      addressList,
       qaList: [],
       percentVal: 0, // 百分比整数
       loadingQa: false,
